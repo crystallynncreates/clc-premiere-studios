@@ -1,7 +1,6 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: ["./app/**/*.{js,jsx,ts,tsx}", "./components/**/*.{js,jsx,ts,tsx}"],
-  presets: [require("nativewind/preset")],
+export default {
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       colors: {
@@ -16,13 +15,11 @@ module.exports = {
           700: "#006B40",
           800: "#004D2D",
           900: "#002E1A",
-          950: "#001A0F",
         },
-        cream: "#FFF8F0",
-        blush: "#FFE4E6",
       },
       fontFamily: {
-        script: ["Georgia", "serif"],
+        script: ["Dancing Script", "cursive"],
+        sans: ["Inter", "sans-serif"],
       },
     },
   },
