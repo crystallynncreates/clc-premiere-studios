@@ -1,0 +1,60 @@
+{
+  "expo": {
+    "name": "CLC Premiere Studios",
+    "slug": "clc-premiere-studios",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "clcpremiere",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#00A86B"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.crystallynncreates.clcpremierestudios",
+      "infoPlist": {
+        "NSCameraUsageDescription": "CLC Premiere Studios needs camera access for live streaming and face cam recording.",
+        "NSMicrophoneUsageDescription": "CLC Premiere Studios needs microphone access for audio recording and AI music creation.",
+        "NSPhotoLibraryUsageDescription": "CLC Premiere Studios needs photo library access to save and import media.",
+        "NSPhotoLibraryAddUsageDescription": "CLC Premiere Studios needs permission to save recordings to your photo library."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#00A86B"
+      },
+      "package": "com.crystallynncreates.clcpremierestudios",
+      "permissions": [
+        "CAMERA",
+        "RECORD_AUDIO",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "FOREGROUND_SERVICE"
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/favicon.png",
+      "name": "CLC Premiere Studios",
+      "shortName": "CLC Studios",
+      "description": "Professional streaming, editing, and social media management by Crystal Lynn Creates"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-camera",
+      [
+        "expo-screen-capture",
+        { "allowScreenCapture": false }
+      ],
+      "expo-media-library"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
