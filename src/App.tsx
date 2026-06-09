@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
 import { Home, Radio, Scissors, Music, Share2, Palette, User } from "lucide-react";
 import Header from "./components/Header";
-import FloralBorder from "./components/FloralBorder";
 import HomePage from "./pages/Home";
 import StudioPage from "./pages/Studio";
 import EditorPage from "./pages/Editor";
@@ -24,7 +23,6 @@ export default function App() {
   return (
     <BrowserRouter>
       <div className="flex flex-col h-screen bg-jade-50 relative">
-        <FloralBorder />
         <Header />
         <div className="flex flex-1 overflow-hidden">
           {/* Sidebar — desktop */}
