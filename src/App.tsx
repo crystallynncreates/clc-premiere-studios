@@ -22,7 +22,7 @@ const NAV = [
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="flex flex-col h-screen bg-jade-50 relative">
+      <div className="flex flex-col h-screen relative" style={{ backgroundColor: '#FFF8F0' }}>
         <Header />
         <div className="flex flex-1 overflow-hidden">
           {/* Sidebar — desktop */}
