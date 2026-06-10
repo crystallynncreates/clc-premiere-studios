@@ -1,21 +1,17 @@
 import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
-import { Home, Radio, Scissors, Music, Share2, Palette, User } from "lucide-react";
+import { Home, Radio, Scissors, Share2, User } from "lucide-react";
 import Header from "./components/Header";
 import HomePage from "./pages/Home";
 import StudioPage from "./pages/Studio";
 import EditorPage from "./pages/Editor";
-import MusicPage from "./pages/Music";
 import SocialPage from "./pages/Social";
-import SkinsPage from "./pages/Skins";
 import AccountPage from "./pages/Account";
 
 const NAV = [
   { to: "/",       icon: Home,     label: "Home"    },
   { to: "/studio", icon: Radio,    label: "Studio"  },
   { to: "/editor", icon: Scissors, label: "Editor"  },
-  { to: "/music",  icon: Music,    label: "Music"   },
   { to: "/social", icon: Share2,   label: "Social"  },
-  { to: "/skins",  icon: Palette,  label: "Skins"   },
   { to: "/account",icon: User,     label: "Account" },
 ];
 
@@ -26,7 +22,7 @@ export default function App() {
         <Header />
         <div className="flex flex-1 overflow-hidden">
           {/* Sidebar — desktop */}
-          <nav className="hidden md:flex flex-col w-48 bg-white border-r border-jade-100 py-4 gap-1 px-2 shrink-0">
+          <nav className="hidden md:flex flex-col w-48 border-r border-jade-100 py-4 gap-1 px-2 shrink-0" style={{ backgroundColor: '#FFF8F0' }}>
             {NAV.map(({ to, icon: Icon, label }) => (
               <NavLink
                 key={to}
@@ -52,16 +48,14 @@ export default function App() {
               <Route path="/"        element={<HomePage />} />
               <Route path="/studio"  element={<StudioPage />} />
               <Route path="/editor"  element={<EditorPage />} />
-              <Route path="/music"   element={<MusicPage />} />
               <Route path="/social"  element={<SocialPage />} />
-              <Route path="/skins"   element={<SkinsPage />} />
               <Route path="/account" element={<AccountPage />} />
             </Routes>
           </main>
         </div>
 
         {/* Bottom nav — mobile */}
-        <nav className="md:hidden flex border-t border-jade-100 bg-white">
+        <nav className="md:hidden flex border-t border-jade-100" style={{ backgroundColor: '#FFF8F0' }}>
           {NAV.map(({ to, icon: Icon, label }) => (
             <NavLink
               key={to}
