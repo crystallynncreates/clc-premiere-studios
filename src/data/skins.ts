@@ -64,6 +64,15 @@ export const ANIME_SKINS: CartoonSkin[] = [
   {id:"anime-28", name:"Dark Alchemist",  era:"anime",category:"Steampunk",     colors:["#78350F","#92400E","#D97706"],isPremium:true,unlocksAt:"pro"},
   {id:"anime-29", name:"Wind Dancer",     era:"anime",category:"Traditional",   colors:["#86EFAC","#D1FAE5","#059669"],isPremium:false},
   {id:"anime-30", name:"Infinite Zero",   era:"anime",category:"Abstract",      colors:["#000000","#FFFFFF","#00A86B"],isPremium:true,unlocksAt:"pro"},
+  {id:"anime-31", name:"Cosmic Angel",    era:"anime",category:"Celestial",     colors:["#E0E7FF","#818CF8","#C084FC"],isPremium:false},
+  {id:"anime-32", name:"Neon Kunoichi",   era:"anime",category:"Ninja",         colors:["#EC4899","#1F2937","#F9A8D4"],isPremium:true,unlocksAt:"basic"},
+  {id:"anime-33", name:"Solar Hero",      era:"anime",category:"Shonen Hero",   colors:["#FCD34D","#EF4444","#1D4ED8"],isPremium:false},
 ];
 
-export const ALL_SKINS = [...RETRO_SKINS, ...ANIME_SKINS];
+export const EXTRA_RETRO: CartoonSkin[] = [
+  {id:"retro-31", name:"Boom Shaka",      era:"retro",category:"80s Dance",     colors:["#FF6B9D","#C44BC4","#FFE66D"],isPremium:false},
+  {id:"retro-32", name:"Toon Villain",    era:"retro",category:"Classic Toon",  colors:["#1F2937","#7C3AED","#DC2626"],isPremium:true,unlocksAt:"basic"},
+  {id:"retro-33", name:"Glam Rock Star",  era:"retro",category:"80s Rock",      colors:["#A855F7","#EC4899","#FCD34D"],isPremium:false},
+];
+
+export const ALL_SKINS = [...RETRO_SKINS, ...ANIME_SKINS, ...EXTRA_RETRO];
