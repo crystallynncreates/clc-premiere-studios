@@ -1,7 +1,6 @@
 import { Shield, Bell, Wifi } from "lucide-react";
 import { useStore } from "../store/useStore";
 import { TIER_LIMITS } from "../types";
-import CLCLogo from "./Logo";
 
 export default function Header() {
   const { user, isRecording, isStreaming } = useStore();
@@ -28,11 +27,6 @@ export default function Header() {
       <div style={{ height: 3, background: "linear-gradient(90deg, #00A86B, #4CAF82, #00A86B)" }} />
 
       <div className="flex items-center px-4 py-2 gap-4">
-
-        {/* ── Logo ── */}
-        <div className="shrink-0" style={{ filter: "drop-shadow(0 1px 4px rgba(0,0,0,0.08))" }}>
-          <CLCLogo size={62} />
-        </div>
 
         {/* ── App name + tagline ── */}
         <div className="flex-1 min-w-0">
