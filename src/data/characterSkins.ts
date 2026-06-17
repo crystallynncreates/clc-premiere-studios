@@ -17,7 +17,7 @@ export const FREE_SKINS: CharSkin[] = [
   {
     id:"c-pup", name:"Scooby-Doo", category:"cartoon", tier:"free",
     label:"Mystery Inc.", bg:"#2D4A1E",
-    imageUrl:"https://pngimg.com/uploads/scooby_doo/scooby_doo_PNG22.png",
+    imageUrl:"",
     emoji:"🐕",
   },
   {
@@ -29,7 +29,7 @@ export const FREE_SKINS: CharSkin[] = [
   {
     id:"c-mouse", name:"Tom Cat", category:"cartoon", tier:"free",
     label:"Tom & Jerry", bg:"#1E2A4A",
-    imageUrl:"https://pngimg.com/uploads/tom_cat/tom_cat_PNG4.png",
+    imageUrl:"https://pngimg.com/uploads/tom_and_jerry/tom_and_jerry_PNG7.png",
     emoji:"🐱",
   },
   {
@@ -41,13 +41,13 @@ export const FREE_SKINS: CharSkin[] = [
   {
     id:"c-robot", name:"Bender", category:"cartoon", tier:"free",
     label:"Futurama", bg:"#1E3A5F",
-    imageUrl:"https://pngimg.com/uploads/futurama/futurama_PNG17.png",
+    imageUrl:"https://pngimg.com/uploads/futurama/futurama_PNG7.png",
     emoji:"🤖",
   },
   {
     id:"c-lion", name:"Simba", category:"cartoon", tier:"free",
     label:"Lion King", bg:"#92400E",
-    imageUrl:"https://pngimg.com/uploads/simba/simba_PNG4.png",
+    imageUrl:"https://pngimg.com/uploads/lion_king/lion_king_PNG4.png",
     emoji:"🦁",
   },
 ];
@@ -75,43 +75,43 @@ export const ANIME_PAID_SKINS: CharSkin[] = [
   {
     id:"a-goku", name:"Son Goku", category:"anime", tier:"basic",
     label:"Super Saiyan", bg:"#1D4ED8",
-    imageUrl:"https://pngimg.com/uploads/goku/goku_PNG12.png",
+    imageUrl:"https://s4.anilist.co/file/anilistcdn/character/large/246-wsRRr6z1kii8.png",
     emoji:"💥",
   },
   {
     id:"a-tanjiro", name:"Tanjiro Kamado", category:"anime", tier:"basic",
     label:"Demon Slayer", bg:"#1E3A5F",
-    imageUrl:"https://pngimg.com/uploads/demon_slayer/demon_slayer_PNG2.png",
+    imageUrl:"https://s4.anilist.co/file/anilistcdn/character/large/b126071-BTNEc1nRIv68.png",
     emoji:"🗡️",
   },
   {
     id:"a-deku", name:"Izuku Midoriya", category:"anime", tier:"basic",
     label:"My Hero Academia", bg:"#166534",
-    imageUrl:"https://pngimg.com/uploads/my_hero_academia/my_hero_academia_PNG30.png",
+    imageUrl:"https://s4.anilist.co/file/anilistcdn/character/large/b89028-8w1I9o1ISHMg.png",
     emoji:"💚",
   },
   {
     id:"a-sasuke", name:"Sasuke Uchiha", category:"anime", tier:"pro",
     label:"Uchiha Clan", bg:"#1E1B4B",
-    imageUrl:"https://pngimg.com/uploads/naruto/naruto_PNG51.png",
+    imageUrl:"https://s4.anilist.co/file/anilistcdn/character/large/b13-SISLEw1oAD7a.png",
     emoji:"👁️",
   },
   {
     id:"a-sailor", name:"Sailor Moon", category:"anime", tier:"pro",
     label:"Moon Guardian", bg:"#4C1D95",
-    imageUrl:"https://pngimg.com/uploads/sailor_moon/sailor_moon_PNG11.png",
+    imageUrl:"https://s4.anilist.co/file/anilistcdn/character/large/b2030-GQvVYPEYkXCy.jpg",
     emoji:"🌙",
   },
   {
     id:"a-saitama", name:"Saitama", category:"anime", tier:"pro",
     label:"One Punch Man", bg:"#78350F",
-    imageUrl:"https://pngimg.com/uploads/one_punch_man/one_punch_man_PNG22.png",
+    imageUrl:"https://s4.anilist.co/file/anilistcdn/character/large/b73935-ON5d0mAcrItd.jpg",
     emoji:"👊",
   },
   {
     id:"a-zoro", name:"Roronoa Zoro", category:"anime", tier:"pro",
     label:"Three Sword Style", bg:"#064E3B",
-    imageUrl:"https://pngimg.com/uploads/one_piece/one_piece_PNG66.png",
+    imageUrl:"https://s4.anilist.co/file/anilistcdn/character/large/b62-S7oAeA9WInjV.png",
     emoji:"⚔️",
   },
 ];
