@@ -4,7 +4,8 @@ import { Film, Plus, Sparkles, Music, Type, Wand2, Scissors, Zap, Upload, Palett
 import { useStore } from "../store/useStore";
 import { TIER_LIMITS } from "../types";
 import { MUSIC_LIBRARY, GENRE_LABELS, formatDuration } from "../data/music";
-import { RETRO_SKINS, ANIME_SKINS } from "../data/skins";
+import { ALL_CHAR_SKINS, FREE_SKINS, ANIME_PAID_SKINS, ARTIST_SKINS } from "../data/characterSkins";
+import { AVATAR_MAP } from "../components/CharacterAvatars";
 
 const FILTERS = ["None","Vivid","Dreamy","Vintage","Chrome","Jade","Neon","Noir"];
 const SPEEDS  = ["0.25x","0.5x","0.75x","1x","1.25x","1.5x","2x","3x"];
@@ -738,55 +739,79 @@ function MusicTab({ limit, navigateToAccount }: { limit: TierLimitShape; navigat
 // ─── Skins Tab (embedded) ─────────────────────────────────────────────────
 function SkinsTab({ navigateToAccount }: { navigateToAccount:()=>void }) {
   const { user, selectedSkinId, setSelectedSkin } = useStore();
-  const [skinTab, setSkinTab] = useState<"retro"|"anime">("retro");
-  const skins = skinTab==="retro" ? RETRO_SKINS : ANIME_SKINS;
+  const [skinTab, setSkinTab] = useState<"cartoon"|"anime"|"artists">("cartoon");
+
+  const SKIN_TABS = [
+    { id: "cartoon" as const, label: "🎭 Cartoon", skins: FREE_SKINS },
+    { id: "anime"   as const, label: "⚡ Anime",   skins: ANIME_PAID_SKINS },
+    { id: "artists" as const, label: "🎤 Artists", skins: ARTIST_SKINS },
+  ];
+
+  const activeSkins = SKIN_TABS.find((t)=>t.id===skinTab)!.skins;
+  const activeName  = ALL_CHAR_SKINS.find((s)=>s.id===selectedSkinId)?.name;
+
+  const canUse = (tier: string) => {
+    if (tier==="free") return true;
+    if (tier==="basic") return user.tier==="basic"||user.tier==="pro";
+    return user.tier==="pro";
+  };
 
   return (
     <div className="space-y-3">
       <div className="flex gap-1">
-        {(["retro","anime"] as const).map((t)=>(
-          <button key={t} onClick={()=>setSkinTab(t)}
-            className={`flex-1 py-2.5 rounded-xl font-bold text-sm transition-colors ${skinTab===t?"bg-jade-500 text-white":"bg-gray-700 text-gray-400 hover:text-gray-200"}`}>
-            {t==="retro"?"📺 80s/90s Retro (30)":"⚡ Anime (30)"}
+        {SKIN_TABS.map((t)=>(
+          <button key={t.id} onClick={()=>setSkinTab(t.id)}
+            className={`flex-1 py-2.5 rounded-xl font-bold text-xs transition-colors ${skinTab===t.id?"bg-jade-500 text-white":"bg-gray-700 text-gray-400 hover:text-gray-200"}`}>
+            {t.label}
           </button>
         ))}
       </div>
-      {selectedSkinId && (
+
+      {skinTab!=="cartoon" && (
+        <div className="bg-amber-900/30 border border-amber-600/50 rounded-xl p-2 text-center">
+          <p className="text-amber-300 text-xs font-semibold">
+            {skinTab==="anime" ? "⚡ Basic+ plan unlocks Anime characters" : "🎤 Basic+ plan unlocks Artist avatars"}
+          </p>
+        </div>
+      )}
+
+      {selectedSkinId && activeName && (
         <div className="bg-jade-900/40 border border-jade-600 rounded-xl p-2 flex items-center gap-2">
           <Check size={14} className="text-jade-400"/>
-          <span className="text-jade-300 font-semibold text-xs">Active: {[...RETRO_SKINS,...ANIME_SKINS].find((s)=>s.id===selectedSkinId)?.name}</span>
+          <span className="text-jade-300 font-semibold text-xs">Active: {activeName}</span>
           <button onClick={()=>setSelectedSkin(null)} className="ml-auto text-gray-500 text-xs hover:text-gray-300">Remove</button>
         </div>
       )}
-      <p className="text-gray-400 text-xs">Tap a skin to apply as your stream background character. Larger view so you can see every detail!</p>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-h-96 overflow-y-auto pr-1">
-        {skins.map((skin, idx)=>{
-          const unlocked = !skin.isPremium || user.unlockedSkins.includes(skin.id);
+
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-h-[480px] overflow-y-auto pr-1">
+        {activeSkins.map((skin)=>{
+          const AvatarComp = AVATAR_MAP[skin.id];
+          const unlocked = canUse(skin.tier);
           const active = selectedSkinId===skin.id;
           return (
             <button key={skin.id} onClick={()=>{
-              if (!unlocked) { if(confirm(`Unlock "${skin.name}"?\nUpgrade to ${skin.unlocksAt} plan.`)) navigateToAccount(); return; }
+              if (!unlocked) { if(confirm(`Unlock "${skin.name}"?\nUpgrade to ${skin.tier} plan.`)) navigateToAccount(); return; }
               setSelectedSkin(active?null:skin.id);
-            }} className={`relative rounded-2xl overflow-hidden border-2 transition-all ${active?"border-jade-400 shadow-lg shadow-jade-900/50":"border-gray-600 hover:border-jade-500"} bg-gray-800`}>
-              <div className="pt-4 pb-2 flex justify-center" style={{backgroundColor:skin.colors[0]+"22"}}>
-                {skin.era==="retro"
-                  ? <RetroAvatar colors={skin.colors} variant={idx} size={110}/>
-                  : <AnimeAvatar colors={skin.colors} variant={idx} size={110}/>
-                }
+            }} className={`relative rounded-2xl overflow-hidden border-2 transition-all ${active?"border-jade-400 shadow-lg shadow-jade-900/50":"border-gray-600 hover:border-jade-500"}`}
+              style={{ backgroundColor: skin.bg }}>
+              <div className="pt-3 pb-1 flex justify-center">
+                {AvatarComp ? <AvatarComp/> : <div className="w-[120px] h-[120px] flex items-center justify-center text-4xl">🎭</div>}
               </div>
-              <div className="p-2 text-center">
+              <div className="p-2 text-center bg-black/30">
                 <p className="text-white text-sm font-bold truncate">{skin.name}</p>
-                <p className="text-gray-400 text-xs truncate">{skin.category}</p>
-                {skin.isPremium && !unlocked && (
-                  <span className="text-jade-400 text-xs font-semibold capitalize">🔒 {skin.unlocksAt}</span>
+                <p className="text-gray-300 text-xs truncate">{skin.label}</p>
+                {!unlocked && (
+                  <span className="text-jade-300 text-xs font-semibold capitalize">🔒 {skin.tier}</span>
                 )}
               </div>
-              {!unlocked&&(
-                <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center rounded-2xl">
-                  <Lock size={22} className="text-jade-400"/><span className="text-jade-400 text-xs mt-1 font-semibold capitalize">{skin.unlocksAt}</span>
+              {!unlocked && (
+                <div className="absolute inset-0 bg-black/55 flex flex-col items-center justify-center rounded-2xl">
+                  <Lock size={26} className="text-jade-400"/>
+                  <span className="text-jade-300 text-xs mt-1 font-bold capitalize">{skin.tier} Plan</span>
+                  <span className="text-gray-300 text-xs mt-0.5">Tap to upgrade</span>
                 </div>
               )}
-              {active&&(
+              {active && (
                 <div className="absolute top-2 right-2 w-6 h-6 bg-jade-500 rounded-full flex items-center justify-center">
                   <Check size={14} className="text-white"/>
                 </div>
