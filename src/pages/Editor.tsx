@@ -314,11 +314,179 @@ function AnimeAvatar({ colors, variant, size=100 }: { colors:string[]; variant:n
 // ─── Music Tab (embedded) ──────────────────────────────────────────────────
 const GENRES = ["all","pop","country","rap","rnb"] as const;
 
+// ─── Billboard chart songs (require licensing — shown for paid plans) ─────────
+const BILLBOARD_SONGS = [
+  // Pop
+  { id:"bb-p1", title:"Espresso",               artist:"Sabrina Carpenter",          genre:"pop",    peak:1  },
+  { id:"bb-p2", title:"Die With A Smile",        artist:"Lady Gaga & Bruno Mars",     genre:"pop",    peak:1  },
+  { id:"bb-p3", title:"Please Please Please",    artist:"Sabrina Carpenter",          genre:"pop",    peak:2  },
+  { id:"bb-p4", title:"APT.",                    artist:"ROSÉ & Bruno Mars",          genre:"pop",    peak:1  },
+  { id:"bb-p5", title:"Beautiful Things",        artist:"Benson Boone",               genre:"pop",    peak:2  },
+  // Country
+  { id:"bb-c1", title:"I Had Some Help",         artist:"Post Malone ft. Morgan Wallen", genre:"country", peak:1 },
+  { id:"bb-c2", title:"White Horse",             artist:"Chris Stapleton",            genre:"country", peak:2  },
+  { id:"bb-c3", title:"Save Me",                 artist:"Jelly Roll",                 genre:"country", peak:4  },
+  { id:"bb-c4", title:"Miles On It",             artist:"Kane Brown & Marshmello",    genre:"country", peak:5  },
+  { id:"bb-c5", title:"Cowgirls",                artist:"Morgan Wallen",              genre:"country", peak:3  },
+  // Rap/Hip-Hop
+  { id:"bb-r1", title:"Not Like Us",             artist:"Kendrick Lamar",             genre:"rap",    peak:1  },
+  { id:"bb-r2", title:"Like That",               artist:"Future, Metro Boomin & Kendrick Lamar", genre:"rap", peak:1 },
+  { id:"bb-r3", title:"CARNIVAL",                artist:"¥$, Kanye West & Ty Dolla $ign", genre:"rap", peak:2 },
+  { id:"bb-r4", title:"Wanna Be",                artist:"GloRilla & Megan Thee Stallion", genre:"rap", peak:3 },
+  { id:"bb-r5", title:"Neon Signs",              artist:"Morgan Wallen",              genre:"rap",    peak:6  },
+  // R&B
+  { id:"bb-b1", title:"Saturn",                  artist:"SZA",                        genre:"rnb",    peak:2  },
+  { id:"bb-b2", title:"On My Mama",              artist:"Victoria Monét",             genre:"rnb",    peak:5  },
+  { id:"bb-b3", title:"Snooze",                  artist:"SZA",                        genre:"rnb",    peak:6  },
+  { id:"bb-b4", title:"Here With Me",            artist:"d4vd",                       genre:"rnb",    peak:8  },
+  { id:"bb-b5", title:"Lose Control",            artist:"Teddy Swims",                genre:"rnb",    peak:1  },
+] as const;
+
+// ─── Web Audio sound effect synthesizer ──────────────────────────────────────
+function playSoundFx(type: string) {
+  const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+
+  if (type === "clap") {
+    // Hand clap = shaped white noise burst
+    for (let hit = 0; hit < 3; hit++) {
+      const buf = ctx.createBuffer(1, ctx.sampleRate * 0.08, ctx.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random()*2-1) * Math.pow(1 - i/d.length, 2.5);
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      const flt = ctx.createBiquadFilter();
+      flt.type = "bandpass"; flt.frequency.value = 1100; flt.Q.value = 0.8;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.55, ctx.currentTime + hit*0.22);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + hit*0.22 + 0.15);
+      src.connect(flt); flt.connect(g); g.connect(ctx.destination);
+      src.start(ctx.currentTime + hit * 0.22);
+    }
+  }
+
+  if (type === "oh") {
+    // "Ohhhh" crowd = descending sine sweep
+    const osc = ctx.createOscillator();
+    const g   = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(520, ctx.currentTime);
+    osc.frequency.linearRampToValueAtTime(360, ctx.currentTime + 1.2);
+    g.gain.setValueAtTime(0, ctx.currentTime);
+    g.gain.linearRampToValueAtTime(0.38, ctx.currentTime + 0.12);
+    g.gain.linearRampToValueAtTime(0.32, ctx.currentTime + 0.8);
+    g.gain.linearRampToValueAtTime(0, ctx.currentTime + 1.4);
+    // add chorus layer
+    const osc2 = ctx.createOscillator();
+    osc2.type = "sine";
+    osc2.frequency.setValueAtTime(516, ctx.currentTime);
+    osc2.frequency.linearRampToValueAtTime(356, ctx.currentTime + 1.2);
+    const g2 = ctx.createGain(); g2.gain.value = 0.18;
+    osc2.connect(g2); g2.connect(ctx.destination);
+    osc2.start(); osc2.stop(ctx.currentTime + 1.5);
+    osc.connect(g); g.connect(ctx.destination);
+    osc.start(); osc.stop(ctx.currentTime + 1.5);
+  }
+
+  if (type === "ah") {
+    // "Ahhh!" crowd = ascending bright cheer
+    const osc = ctx.createOscillator();
+    const g   = ctx.createGain();
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(380, ctx.currentTime);
+    osc.frequency.linearRampToValueAtTime(620, ctx.currentTime + 0.7);
+    osc.frequency.linearRampToValueAtTime(580, ctx.currentTime + 1.3);
+    g.gain.setValueAtTime(0, ctx.currentTime);
+    g.gain.linearRampToValueAtTime(0.42, ctx.currentTime + 0.08);
+    g.gain.linearRampToValueAtTime(0.36, ctx.currentTime + 0.9);
+    g.gain.linearRampToValueAtTime(0, ctx.currentTime + 1.5);
+    const dist = ctx.createWaveShaper();
+    const curve = new Float32Array(256);
+    for (let i=0;i<256;i++) curve[i] = ((i/128)-1)*0.3;
+    dist.curve = curve;
+    osc.connect(dist); dist.connect(g); g.connect(ctx.destination);
+    osc.start(); osc.stop(ctx.currentTime + 1.6);
+  }
+
+  if (type === "drumroll") {
+    for (let i=0;i<18;i++) {
+      const buf = ctx.createBuffer(1, ctx.sampleRate*0.04, ctx.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let j=0;j<d.length;j++) d[j] = (Math.random()*2-1)*Math.pow(1-j/d.length,1.8);
+      const src = ctx.createBufferSource(); src.buffer = buf;
+      const g = ctx.createGain();
+      g.gain.value = 0.3 + (i/18)*0.4;
+      src.connect(g); g.connect(ctx.destination);
+      src.start(ctx.currentTime + i*0.055);
+    }
+  }
+
+  if (type === "ding") {
+    const osc = ctx.createOscillator();
+    const g   = ctx.createGain();
+    osc.type = "sine"; osc.frequency.value = 1760;
+    g.gain.setValueAtTime(0.5, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+    osc.connect(g); g.connect(ctx.destination);
+    osc.start(); osc.stop(ctx.currentTime + 1.3);
+  }
+
+  if (type === "laugh") {
+    // Rhythmic laugh-track bursts
+    for (let i=0;i<5;i++) {
+      const osc = ctx.createOscillator();
+      const g   = ctx.createGain();
+      osc.type = "sawtooth";
+      osc.frequency.value = 220 + Math.random()*80;
+      g.gain.setValueAtTime(0, ctx.currentTime + i*0.18);
+      g.gain.linearRampToValueAtTime(0.25, ctx.currentTime + i*0.18 + 0.04);
+      g.gain.linearRampToValueAtTime(0, ctx.currentTime + i*0.18 + 0.14);
+      const flt = ctx.createBiquadFilter(); flt.type="lowpass"; flt.frequency.value=800;
+      osc.connect(flt); flt.connect(g); g.connect(ctx.destination);
+      osc.start(ctx.currentTime + i*0.18);
+      osc.stop(ctx.currentTime + i*0.18 + 0.18);
+    }
+  }
+
+  if (type === "airhorn") {
+    const osc = ctx.createOscillator();
+    const g   = ctx.createGain();
+    osc.type = "sawtooth"; osc.frequency.value = 440;
+    g.gain.setValueAtTime(0.5, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.9);
+    const flt = ctx.createBiquadFilter(); flt.type="highpass"; flt.frequency.value=300;
+    osc.connect(flt); flt.connect(g); g.connect(ctx.destination);
+    osc.start(); osc.stop(ctx.currentTime + 1.0);
+  }
+
+  if (type === "woosh") {
+    const buf = ctx.createBuffer(1, ctx.sampleRate*0.5, ctx.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i=0;i<d.length;i++) d[i] = (Math.random()*2-1)*Math.sin(Math.PI*i/d.length);
+    const src = ctx.createBufferSource(); src.buffer = buf;
+    const flt = ctx.createBiquadFilter(); flt.type="bandpass"; flt.frequency.value=800; flt.Q.value=0.5;
+    const g = ctx.createGain(); g.gain.value=0.4;
+    src.connect(flt); flt.connect(g); g.connect(ctx.destination);
+    src.start();
+  }
+}
+
+const SOUND_FX = [
+  { id:"clap",     label:"👏 Clapping",    emoji:"👏", free:true,  desc:"Crowd applause"     },
+  { id:"oh",       label:"😮 Ohhh!",       emoji:"😮", free:true,  desc:"Crowd reaction"     },
+  { id:"ah",       label:"🎉 Ahhhh!",      emoji:"🎉", free:true,  desc:"Crowd cheer"        },
+  { id:"drumroll", label:"🥁 Drum Roll",   emoji:"🥁", free:false, desc:"Build up drum roll" },
+  { id:"ding",     label:"🔔 Bell Ding",   emoji:"🔔", free:false, desc:"Notification chime" },
+  { id:"laugh",    label:"😂 Laugh Track", emoji:"😂", free:false, desc:"Studio laugh track" },
+  { id:"airhorn",  label:"📯 Air Horn",    emoji:"📯", free:false, desc:"Hype air horn"      },
+  { id:"woosh",    label:"💨 Woosh",       emoji:"💨", free:false, desc:"Transition woosh"   },
+];
+
 interface TierLimitShape { dailyRecordingSeconds:number; scheduledPosts:number; newSkinsPerMonth:number; aiFeatures:boolean; }
 function MusicTab({ limit, navigateToAccount }: { limit: TierLimitShape; navigateToAccount:()=>void }) {
-  const { aiProcessing, setAiProcessing } = useStore();
-  const [musicSubTab, setMusicSubTab] = useState<"library"|"ai">("library");
+  const { user, aiProcessing, setAiProcessing } = useStore();
+  const [musicSubTab, setMusicSubTab] = useState<"library"|"sfx"|"billboard"|"ai">("library");
   const [genre, setGenre] = useState<typeof GENRES[number]>("all");
+  const [bbGenre, setBbGenre] = useState<"pop"|"country"|"rap"|"rnb">("pop");
   const [playingId, setPlayingId] = useState<string|null>(null);
   const [prompt, setPrompt] = useState("");
   const [style, setStyle] = useState("pop");
@@ -327,6 +495,7 @@ function MusicTab({ limit, navigateToAccount }: { limit: TierLimitShape; navigat
   const audioRef = useRef<HTMLAudioElement|null>(null);
 
   const tracks = genre==="all" ? MUSIC_LIBRARY : MUSIC_LIBRARY.filter((t)=>t.genre===genre);
+  const bbTracks = BILLBOARD_SONGS.filter((t) => t.genre === bbGenre);
 
   const handlePlay = (id: string, url: string) => {
     if (playingId === id) {
@@ -336,7 +505,7 @@ function MusicTab({ limit, navigateToAccount }: { limit: TierLimitShape; navigat
       if (audioRef.current) { audioRef.current.pause(); audioRef.current.src = ""; }
       const audio = new Audio(url);
       audioRef.current = audio;
-      audio.play().catch(()=>alert("Audio blocked by browser. Try clicking play again."));
+      audio.play().catch(()=>alert("Tap play again — browser needs a gesture first."));
       audio.onended = () => setPlayingId(null);
       setPlayingId(id);
     }
@@ -351,18 +520,23 @@ function MusicTab({ limit, navigateToAccount }: { limit: TierLimitShape; navigat
     setTimeout(()=>{ setAiProcessing(false); setResult(`"${prompt||"Voice Creation"}" — ${style} style`); },3000);
   };
 
+  const GENRE_COLORS: Record<string,string> = { pop:"#EC4899", country:"#F59E0B", rap:"#8B5CF6", rnb:"#06B6D4" };
+  const GENRE_ICONS:  Record<string,string> = { pop:"🎤", country:"🤠", rap:"🎧", rnb:"🎵" };
+
   return (
     <div className="space-y-3">
-      <div className="flex gap-1">
-        {(["library","ai"] as const).map((t)=>(
+      {/* Sub-tab bar */}
+      <div className="grid grid-cols-4 gap-1">
+        {([["library","🎵 Library"],["sfx","🔊 Sound FX"],["billboard","🏆 Charts"],["ai","🤖 AI"]] as const).map(([t,label])=>(
           <button key={t} onClick={()=>setMusicSubTab(t)}
-            className={`flex-1 py-2 rounded-xl font-bold text-xs transition-colors ${musicSubTab===t?"bg-jade-500 text-white":"bg-gray-700 text-gray-400 hover:text-gray-200"}`}>
-            {t==="library"?"🎵 Music Library":"🤖 AI Creator"}
+            className={`py-2 rounded-xl font-bold text-xs transition-colors ${musicSubTab===t?"bg-jade-500 text-white":"bg-gray-700 text-gray-400 hover:text-gray-200"}`}>
+            {label}
           </button>
         ))}
       </div>
 
-      {musicSubTab==="library" ? (
+      {/* ── Library tab ── */}
+      {musicSubTab==="library" && (
         <>
           <div className="flex gap-1 flex-wrap">
             {GENRES.map((g)=>(
@@ -399,7 +573,129 @@ function MusicTab({ limit, navigateToAccount }: { limit: TierLimitShape; navigat
             })}
           </div>
         </>
-      ) : (
+      )}
+
+      {/* ── Sound FX tab ── */}
+      {musicSubTab==="sfx" && (
+        <div className="space-y-3">
+          <p className="text-gray-400 text-xs">Tap any sound to preview it instantly — add to your timeline with +</p>
+
+          {/* Free SFX */}
+          <div>
+            <p className="text-jade-400 text-xs font-bold uppercase tracking-wider mb-2">✨ Free Sound Effects</p>
+            <div className="space-y-2">
+              {SOUND_FX.filter(s=>s.free).map((s)=>(
+                <div key={s.id} className="bg-gray-700 rounded-xl p-3 flex items-center gap-3">
+                  <button onClick={()=>playSoundFx(s.id)}
+                    className="w-11 h-11 rounded-full bg-jade-500 hover:bg-jade-400 flex items-center justify-center shrink-0 transition-colors">
+                    <Play size={18} className="text-white"/>
+                  </button>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white font-bold text-sm">{s.label}</p>
+                    <p className="text-gray-400 text-xs">{s.desc}</p>
+                  </div>
+                  <button onClick={()=>alert(`${s.label} added to timeline!`)}
+                    className="text-jade-400 hover:text-jade-300 transition-colors"><Plus size={18}/></button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Paid SFX */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-yellow-400 text-xs font-bold uppercase tracking-wider">🔒 Premium Sound Effects</p>
+              {!limit.aiFeatures && (
+                <button onClick={navigateToAccount} className="text-xs bg-jade-600 text-white px-2 py-0.5 rounded-full font-bold">Upgrade</button>
+              )}
+            </div>
+            <div className="space-y-2">
+              {SOUND_FX.filter(s=>!s.free).map((s)=>(
+                <div key={s.id} className={`rounded-xl p-3 flex items-center gap-3 ${limit.aiFeatures?"bg-gray-700":"bg-gray-800"}`}>
+                  <button onClick={()=>{ if(!limit.aiFeatures){navigateToAccount();return;} playSoundFx(s.id); }}
+                    className={`w-11 h-11 rounded-full flex items-center justify-center shrink-0 transition-colors relative ${limit.aiFeatures?"bg-jade-500 hover:bg-jade-400":"bg-gray-600"}`}>
+                    {limit.aiFeatures ? <Play size={18} className="text-white"/> : <Lock size={16} className="text-jade-400"/>}
+                  </button>
+                  <div className="flex-1 min-w-0">
+                    <p className={`font-bold text-sm ${limit.aiFeatures?"text-white":"text-gray-400"}`}>{s.label}</p>
+                    <p className="text-gray-500 text-xs">{s.desc}</p>
+                  </div>
+                  {limit.aiFeatures
+                    ? <button onClick={()=>alert(`${s.label} added to timeline!`)} className="text-jade-400 hover:text-jade-300 transition-colors"><Plus size={18}/></button>
+                    : <span className="text-jade-500 text-xs font-bold">Basic+</span>
+                  }
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Billboard Charts tab ── */}
+      {musicSubTab==="billboard" && (
+        <div className="space-y-3">
+          {/* Genre selector */}
+          <div className="grid grid-cols-4 gap-1">
+            {(["pop","country","rap","rnb"] as const).map((g)=>(
+              <button key={g} onClick={()=>setBbGenre(g)}
+                className={`py-2 rounded-xl text-xs font-bold transition-colors border ${bbGenre===g?"border-transparent text-white":"border-gray-600 text-gray-400 hover:text-gray-200 bg-gray-800"}`}
+                style={bbGenre===g?{backgroundColor:GENRE_COLORS[g]}:{}}>
+                {GENRE_ICONS[g]} {g==="rnb"?"R&B":g.charAt(0).toUpperCase()+g.slice(1)}
+              </button>
+            ))}
+          </div>
+
+          {/* Licensing notice */}
+          <div className="bg-yellow-900/30 border border-yellow-700/50 rounded-xl p-3 flex gap-2">
+            <span className="text-yellow-400 text-lg shrink-0">⚠️</span>
+            <div>
+              <p className="text-yellow-300 text-xs font-bold">Licensed Music Required</p>
+              <p className="text-yellow-200/70 text-xs mt-0.5">These Billboard chart songs require a streaming license. Upgrade to Pro to request licensing through our music marketplace.</p>
+            </div>
+          </div>
+
+          {/* Songs list */}
+          <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
+            {bbTracks.map((t)=>{
+              const canAccess = user.tier === "pro";
+              return (
+                <div key={t.id} className={`rounded-xl p-3 flex items-center gap-3 ${canAccess?"bg-gray-700":"bg-gray-800"}`}>
+                  {/* Chart rank */}
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 font-bold text-xs"
+                    style={{backgroundColor: GENRE_COLORS[t.genre]+"33", color: GENRE_COLORS[t.genre]}}>
+                    #{t.peak}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className={`font-bold text-sm truncate ${canAccess?"text-white":"text-gray-300"}`}>{t.title}</p>
+                    <p className="text-gray-400 text-xs truncate">{t.artist}</p>
+                  </div>
+                  {canAccess ? (
+                    <button onClick={()=>alert(`License requested for "${t.title}". Our team will process within 24hrs.`)}
+                      className="shrink-0 text-xs bg-jade-500 hover:bg-jade-400 text-white font-bold px-3 py-1.5 rounded-lg transition-colors">
+                      License
+                    </button>
+                  ) : (
+                    <div className="shrink-0 flex items-center gap-1">
+                      <Lock size={13} className="text-jade-500"/>
+                      <button onClick={navigateToAccount} className="text-jade-400 text-xs font-bold hover:text-jade-300">Pro</button>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {!limit.aiFeatures && (
+            <button onClick={navigateToAccount}
+              className="w-full py-3 rounded-xl bg-jade-600 hover:bg-jade-500 text-white font-bold text-sm transition-colors">
+              Upgrade to Pro — Unlock Chart Music Licensing
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* ── AI Creator tab ── */}
+      {musicSubTab==="ai" && (
         <div className={`rounded-2xl p-4 ${limit.aiFeatures?"bg-jade-900/40 border border-jade-700":"bg-gray-700"}`}>
           <div className="flex items-center gap-2 mb-2">
             <Sparkles size={18} className="text-yellow-400"/><h3 className="text-white font-bold">AI Music Creator</h3>
