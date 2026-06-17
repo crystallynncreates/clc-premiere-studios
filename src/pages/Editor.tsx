@@ -788,7 +788,7 @@ function SkinsTab({ navigateToAccount }: { navigateToAccount:()=>void }) {
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-h-[480px] overflow-y-auto pr-1">
         {activeSkins.map((skin)=>{
-          const AvatarComp = AVATAR_MAP[skin.id];
+          const StyleComp = AVATAR_MAP[skin.id]; // only used for style overlays (no imageUrl)
           const unlocked = canUse(skin.tier);
           const active = selectedSkinId===skin.id;
           return (
@@ -797,10 +797,34 @@ function SkinsTab({ navigateToAccount }: { navigateToAccount:()=>void }) {
               setSelectedSkin(active?null:skin.id);
             }} className={`relative rounded-2xl overflow-hidden border-2 transition-all ${active?"border-jade-400 shadow-lg shadow-jade-900/50":"border-gray-600 hover:border-jade-500"}`}
               style={{ backgroundColor: skin.bg }}>
-              <div className="pt-3 pb-1 flex justify-center">
-                {AvatarComp ? <AvatarComp/> : <div className="w-[120px] h-[120px] flex items-center justify-center text-4xl">🎭</div>}
+
+              {/* Image area */}
+              <div className="h-32 flex items-center justify-center overflow-hidden bg-black/20">
+                {skin.imageUrl ? (
+                  <img
+                    src={skin.imageUrl}
+                    alt={skin.name}
+                    className="h-full w-full object-cover object-top"
+                    onError={(e)=>{
+                      const t = e.currentTarget;
+                      t.style.display = "none";
+                      const fb = t.nextElementSibling as HTMLElement|null;
+                      if (fb) fb.style.display = "flex";
+                    }}
+                  />
+                ) : null}
+                {/* fallback shown when image missing or fails */}
+                <div
+                  className="w-full h-full items-center justify-center text-5xl"
+                  style={{ display: skin.imageUrl ? "none" : "flex" }}>
+                  {StyleComp
+                    ? <StyleComp/>
+                    : <span>{skin.emoji}</span>
+                  }
+                </div>
               </div>
-              <div className="p-2 text-center bg-black/30">
+
+              <div className="p-2 text-center bg-black/40">
                 <p className="text-white text-sm font-bold truncate">{skin.name}</p>
                 <p className="text-gray-300 text-xs truncate">{skin.label}</p>
                 {!unlocked && (
@@ -808,7 +832,7 @@ function SkinsTab({ navigateToAccount }: { navigateToAccount:()=>void }) {
                 )}
               </div>
               {!unlocked && (
-                <div className="absolute inset-0 bg-black/55 flex flex-col items-center justify-center rounded-2xl">
+                <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center rounded-2xl">
                   <Lock size={26} className="text-jade-400"/>
                   <span className="text-jade-300 text-xs mt-1 font-bold capitalize">{skin.tier} Plan</span>
                   <span className="text-gray-300 text-xs mt-0.5">Tap to upgrade</span>
