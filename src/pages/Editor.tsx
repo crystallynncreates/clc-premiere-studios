@@ -804,7 +804,7 @@ function SkinsTab({ navigateToAccount }: { navigateToAccount:()=>void }) {
                   <img
                     src={skin.imageUrl}
                     alt={skin.name}
-                    className="h-full w-full object-cover object-top"
+                    className="h-full w-full object-contain p-1"
                     onError={(e)=>{
                       const t = e.currentTarget;
                       t.style.display = "none";
