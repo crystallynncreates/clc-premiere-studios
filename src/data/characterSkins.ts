@@ -48,4 +48,11 @@ export const ARTIST_SKINS: CharSkin[] = [
   { id:"ar-kpop2",   name:"K-Pop Queen",     category:"artist", tier:"pro",   label:"Hallyu Star",      bg:"#701A75" },
 ];
 
-export const ALL_CHAR_SKINS = [...FREE_SKINS, ...ANIME_PAID_SKINS, ...ARTIST_SKINS];
+export const STYLE_SKINS: CharSkin[] = [
+  { id:"st-tiktok",  name:"TikTok Style",    category:"cartoon", tier:"basic", label:"Bold Captions + Subs", bg:"#0A0A1A" },
+  { id:"st-yt-doc",  name:"YT Documentary",  category:"cartoon", tier:"basic", label:"Dark Cinematic Look",  bg:"#0D0D0D" },
+  { id:"st-ig-reel", name:"Instagram Reel",  category:"cartoon", tier:"basic", label:"Bright Fast Cuts",     bg:"#8134AF" },
+  { id:"st-gaming",  name:"Gaming Overlay",  category:"cartoon", tier:"basic", label:"HUD + Crosshair",      bg:"#0A0A14" },
+];
+
+export const ALL_CHAR_SKINS = [...FREE_SKINS, ...ANIME_PAID_SKINS, ...ARTIST_SKINS, ...STYLE_SKINS];

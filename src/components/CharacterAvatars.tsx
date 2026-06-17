@@ -1,615 +1,586 @@
-// Cartoon-style SVG avatar illustrations for each character skin
-// These are original cartoon interpretations, not reproductions of copyrighted artwork
+// Character avatar SVG components — original cartoon-style interpretations
+// Each uses the character's most iconic visual signature features
 
-const S = 120; // standard viewBox size
-
-// ─── FREE CHARACTERS ──────────────────────────────────────────────────────────
+// ─── FREE CARTOON CHARACTERS ──────────────────────────────────────────────────
 
 export function ScoobyAvatar() {
   return (
-    <svg width={S} height={S} viewBox="0 0 120 120">
-      <circle cx="60" cy="65" r="40" fill="#8B6914"/>
-      {/* floppy ears */}
-      <ellipse cx="28" cy="52" rx="14" ry="22" fill="#7A5C10" transform="rotate(-15 28 52)"/>
-      <ellipse cx="92" cy="52" rx="14" ry="22" fill="#7A5C10" transform="rotate(15 92 52)"/>
-      <ellipse cx="28" cy="52" rx="9"  ry="17" fill="#A07820" transform="rotate(-15 28 52)"/>
-      <ellipse cx="92" cy="52" rx="9"  ry="17" fill="#A07820" transform="rotate(15 92 52)"/>
-      {/* snout */}
-      <ellipse cx="60" cy="76" rx="18" ry="14" fill="#C8A030"/>
-      <ellipse cx="60" cy="68" rx="10" ry="6"  fill="#1a1a1a"/>
-      {/* eyes */}
-      <circle cx="46" cy="57" r="9" fill="white"/><circle cx="74" cy="57" r="9" fill="white"/>
-      <circle cx="48" cy="57" r="5" fill="#3B2800"/><circle cx="76" cy="57" r="5" fill="#3B2800"/>
-      <circle cx="49" cy="55" r="2" fill="white"/><circle cx="77" cy="55" r="2" fill="white"/>
-      {/* SD collar tag */}
-      <rect x="46" y="96" width="28" height="8" rx="4" fill="#22C55E"/>
-      <text x="60" y="103" textAnchor="middle" fontSize="6" fill="white" fontWeight="bold">SD</text>
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <ellipse cx="55" cy="70" rx="32" ry="28" fill="#6B8E23"/>
+      <ellipse cx="22" cy="50" rx="13" ry="22" fill="#556B2F" transform="rotate(-12 22 50)"/>
+      <ellipse cx="88" cy="50" rx="13" ry="22" fill="#556B2F" transform="rotate(12 88 50)"/>
+      <ellipse cx="22" cy="50" rx="8" ry="16" fill="#8FBC8F" transform="rotate(-12 22 50)"/>
+      <ellipse cx="88" cy="50" rx="8" ry="16" fill="#8FBC8F" transform="rotate(12 88 50)"/>
+      <ellipse cx="55" cy="52" rx="30" ry="28" fill="#6B8E23"/>
+      <ellipse cx="55" cy="65" rx="16" ry="12" fill="#8FBC8F"/>
+      <ellipse cx="55" cy="58" rx="8" ry="5" fill="#1a1a1a"/>
+      <circle cx="40" cy="47" r="9" fill="white"/>
+      <circle cx="70" cy="47" r="9" fill="white"/>
+      <circle cx="41" cy="48" r="5" fill="#4B0082"/>
+      <circle cx="71" cy="48" r="5" fill="#4B0082"/>
+      <circle cx="42" cy="46" r="2.5" fill="white"/>
+      <circle cx="72" cy="46" r="2.5" fill="white"/>
+      <path d="M42 68 Q55 78 68 68" stroke="#2d4a00" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+      <rect x="38" y="88" width="34" height="10" rx="5" fill="#1B6EBF"/>
+      <circle cx="55" cy="93" r="5" fill="#FFD700" stroke="#B8860B" strokeWidth="1"/>
+      <text x="55" y="96" textAnchor="middle" fontSize="5" fill="#333" fontWeight="bold">SD</text>
+      <circle cx="35" cy="60" r="4" fill="#556B2F" opacity="0.6"/>
+      <circle cx="75" cy="58" r="5" fill="#556B2F" opacity="0.6"/>
     </svg>
   );
 }
 
-export function SpongeSkinAvatar() {
+export function SpongeBobAvatar() {
   return (
-    <svg width={S} height={S} viewBox="0 0 120 120">
-      {/* square sponge body/face */}
-      <rect x="22" y="20" width="76" height="88" rx="8" fill="#FFD700"/>
-      {/* pores */}
-      {[35,50,65,80,35,55,72,42,68,55].map((x,i)=>(
-        <circle key={i} cx={x} cy={30+Math.floor(i/2)*18} r="3" fill="#E6C200" opacity="0.7"/>
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <rect x="18" y="16" width="74" height="84" rx="6" fill="#FFD700"/>
+      {[[28,26],[42,22],[58,24],[72,28],[32,40],[50,38],[68,36],[36,54],[60,50],[44,66],[70,62]].map(([x,y],i)=>(
+        <circle key={i} cx={x} cy={y} r="3.5" fill="#E6B800" opacity="0.7"/>
       ))}
-      {/* eyes */}
-      <circle cx="44" cy="55" r="13" fill="white"/><circle cx="76" cy="55" r="13" fill="white"/>
-      <circle cx="44" cy="55" r="9"  fill="#87CEEB"/><circle cx="76" cy="55" r="9"  fill="#87CEEB"/>
-      <circle cx="44" cy="55" r="5"  fill="#1a1a1a"/><circle cx="76" cy="55" r="5"  fill="#1a1a1a"/>
-      <circle cx="45" cy="53" r="2"  fill="white"/><circle cx="77" cy="53" r="2"  fill="white"/>
-      {/* buck teeth */}
-      <rect x="50" y="76" width="9"  height="14" rx="2" fill="white" stroke="#ddd" strokeWidth="0.5"/>
-      <rect x="61" y="76" width="9"  height="14" rx="2" fill="white" stroke="#ddd" strokeWidth="0.5"/>
-      {/* mouth */}
-      <path d="M40 74 Q60 90 80 74" stroke="#8B6914" strokeWidth="2.5" fill="none"/>
-      {/* pants/tie */}
-      <rect x="35" y="96" width="50" height="10" rx="0" fill="#8B4513"/>
-      <rect x="53" y="82" width="14" height="18" rx="2" fill="#CC0000"/>
+      <ellipse cx="38" cy="48" rx="12" ry="14" fill="white"/>
+      <ellipse cx="72" cy="48" rx="12" ry="14" fill="white"/>
+      <ellipse cx="38" cy="50" rx="8" ry="10" fill="#5DADE2"/>
+      <ellipse cx="72" cy="50" rx="8" ry="10" fill="#5DADE2"/>
+      <circle cx="38" cy="49" r="5" fill="#1a1a1a"/>
+      <circle cx="72" cy="49" r="5" fill="#1a1a1a"/>
+      <circle cx="36" cy="47" r="2.5" fill="white"/>
+      <circle cx="70" cy="47" r="2.5" fill="white"/>
+      <circle cx="26" cy="62" r="4" fill="#E6A817" opacity="0.5"/>
+      <circle cx="84" cy="62" r="4" fill="#E6A817" opacity="0.5"/>
+      <rect x="42" y="70" width="11" height="16" rx="2" fill="white" stroke="#ddd" strokeWidth="0.5"/>
+      <rect x="57" y="70" width="11" height="16" rx="2" fill="white" stroke="#ddd" strokeWidth="0.5"/>
+      <path d="M30 68 Q55 86 80 68" stroke="#8B6914" strokeWidth="2.5" fill="none"/>
+      <rect x="18" y="90" width="74" height="10" rx="0" fill="#8B4513"/>
+      <rect x="49" y="76" width="12" height="16" rx="3" fill="#CC0000"/>
+      <polygon points="55,92 49,82 61,82" fill="#990000"/>
     </svg>
   );
 }
 
-export function ToonMouseAvatar() {
+export function TomCatAvatar() {
   return (
-    <svg width={S} height={S} viewBox="0 0 120 120">
-      {/* ears */}
-      <circle cx="36" cy="30" r="20" fill="#2C2C2C"/>
-      <circle cx="84" cy="30" r="20" fill="#2C2C2C"/>
-      <circle cx="36" cy="30" r="14" fill="#FF9999"/>
-      <circle cx="84" cy="30" r="14" fill="#FF9999"/>
-      {/* head */}
-      <circle cx="60" cy="72" r="38" fill="#2C2C2C"/>
-      {/* face */}
-      <circle cx="60" cy="72" r="30" fill="#C8A080"/>
-      {/* eyes */}
-      <ellipse cx="46" cy="64" rx="8" ry="10" fill="white"/>
-      <ellipse cx="74" cy="64" rx="8" ry="10" fill="white"/>
-      <circle cx="47" cy="65" r="5" fill="#1a1a1a"/>
-      <circle cx="75" cy="65" r="5" fill="#1a1a1a"/>
-      <circle cx="48" cy="63" r="2" fill="white"/>
-      <circle cx="76" cy="63" r="2" fill="white"/>
-      {/* nose */}
-      <ellipse cx="60" cy="78" rx="5" ry="3.5" fill="#FF6B8A"/>
-      {/* smile */}
-      <path d="M46 86 Q60 96 74 86" stroke="#8B4513" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-      {/* cheeks */}
-      <circle cx="36" cy="80" r="7" fill="#FF9999" opacity="0.5"/>
-      <circle cx="84" cy="80" r="7" fill="#FF9999" opacity="0.5"/>
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <polygon points="26,38 18,14 38,30" fill="#708090"/>
+      <polygon points="84,38 92,14 72,30" fill="#708090"/>
+      <polygon points="28,36 22,18 36,30" fill="#FFB6C1"/>
+      <polygon points="82,36 88,18 74,30" fill="#FFB6C1"/>
+      <ellipse cx="55" cy="58" rx="34" ry="34" fill="#708090"/>
+      <ellipse cx="55" cy="62" rx="26" ry="26" fill="#B0C4DE"/>
+      <ellipse cx="42" cy="53" rx="10" ry="12" fill="white"/>
+      <ellipse cx="68" cy="53" rx="10" ry="12" fill="white"/>
+      <ellipse cx="42" cy="54" rx="7" ry="9" fill="#228B22"/>
+      <ellipse cx="68" cy="54" rx="7" ry="9" fill="#228B22"/>
+      <ellipse cx="42" cy="54" rx="2.5" ry="7" fill="#1a1a1a"/>
+      <ellipse cx="68" cy="54" rx="2.5" ry="7" fill="#1a1a1a"/>
+      <circle cx="40" cy="51" r="2" fill="white"/>
+      <circle cx="66" cy="51" r="2" fill="white"/>
+      <ellipse cx="55" cy="66" rx="4" ry="3" fill="#FF69B4"/>
+      <line x1="20" y1="64" x2="45" y2="67" stroke="#555" strokeWidth="1.5"/>
+      <line x1="20" y1="68" x2="45" y2="69" stroke="#555" strokeWidth="1.5"/>
+      <line x1="65" y1="67" x2="90" y2="64" stroke="#555" strokeWidth="1.5"/>
+      <line x1="65" y1="69" x2="90" y2="68" stroke="#555" strokeWidth="1.5"/>
+      <path d="M42 74 Q55 83 68 74" stroke="#556" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+      <ellipse cx="55" cy="30" rx="10" ry="6" fill="#607080"/>
     </svg>
   );
 }
 
-export function MagicPrincessAvatar() {
+export function CinderellaSkinAvatar() {
   return (
-    <svg width={S} height={S} viewBox="0 0 120 120">
-      {/* hair */}
-      <ellipse cx="60" cy="42" rx="38" ry="35" fill="#FFD700"/>
-      <path d="M22 50 Q14 80 18 100 Q24 78 30 70Z" fill="#FFD700"/>
-      <path d="M98 50 Q106 80 102 100 Q96 78 90 70Z" fill="#FFD700"/>
-      {/* face */}
-      <ellipse cx="60" cy="68" rx="30" ry="34" fill="#FDDCB0"/>
-      {/* crown/tiara */}
-      <path d="M34 38 L38 24 L46 34 L54 18 L60 30 L66 18 L74 34 L82 24 L86 38Z"
-        fill="#FFD700" stroke="#FFA500" strokeWidth="1.5"/>
-      {[38,54,60,66,82].map((x,i)=>(
-        <circle key={i} cx={x} cy={i%2===0?24:18} r="3" fill="#FF69B4"/>
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <ellipse cx="55" cy="36" rx="28" ry="22" fill="#FFD700"/>
+      <ellipse cx="55" cy="20" rx="14" ry="12" fill="#E6C200"/>
+      <path d="M35 28 L40 14 L48 22 L55 10 L62 22 L70 14 L75 28Z" fill="#E8E8E8" stroke="#C0C0C0" strokeWidth="1"/>
+      {[40,55,70].map((x,i)=><circle key={i} cx={x} cy={i===1?10:14} r="3.5" fill="#87CEEB"/>)}
+      <ellipse cx="55" cy="65" rx="26" ry="30" fill="#FDDCB0"/>
+      <ellipse cx="41" cy="58" rx="10" ry="12" fill="white"/>
+      <ellipse cx="69" cy="58" rx="10" ry="12" fill="white"/>
+      <ellipse cx="41" cy="60" rx="7" ry="9" fill="#4169E1"/>
+      <ellipse cx="69" cy="60" rx="7" ry="9" fill="#4169E1"/>
+      <circle cx="41" cy="59" r="4" fill="#1a1a1a"/>
+      <circle cx="69" cy="59" r="4" fill="#1a1a1a"/>
+      <circle cx="39" cy="56" r="2.5" fill="white"/>
+      <circle cx="67" cy="56" r="2.5" fill="white"/>
+      {[-6,-2,2,6].map((x,i)=><line key={i} x1={41+x} y1={48} x2={40+x} y2={42} stroke="#1a1a1a" strokeWidth="1.3"/>)}
+      <path d="M43 78 Q55 88 67 78" stroke="#CC4466" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+      <circle cx="32" cy="70" r="5" fill="#FFB6C1" opacity="0.6"/>
+      <circle cx="78" cy="70" r="5" fill="#FFB6C1" opacity="0.6"/>
+      <path d="M29 98 Q55 88 81 98" fill="#4169E1"/>
+      <path d="M40 88 L55 100 L70 88" fill="#4169E1"/>
+    </svg>
+  );
+}
+
+export function BenderRobotAvatar() {
+  return (
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <defs>
+        <linearGradient id="metalG" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#A8A8A8"/>
+          <stop offset="50%" stopColor="#E8E8E8"/>
+          <stop offset="100%" stopColor="#A8A8A8"/>
+        </linearGradient>
+      </defs>
+      <rect x="18" y="22" width="74" height="70" rx="12" fill="url(#metalG)" stroke="#888" strokeWidth="2"/>
+      <line x1="55" y1="22" x2="55" y2="8" stroke="#888" strokeWidth="4"/>
+      <circle cx="55" cy="7" r="5" fill="#FF4500"/>
+      <rect x="26" y="34" width="24" height="18" rx="4" fill="#1a1a1a"/>
+      <rect x="60" y="34" width="24" height="18" rx="4" fill="#1a1a1a"/>
+      <ellipse cx="38" cy="43" rx="8" ry="6" fill="#FFD700"/>
+      <ellipse cx="72" cy="43" rx="8" ry="6" fill="#FFD700"/>
+      <ellipse cx="38" cy="43" rx="5" ry="4" fill="white"/>
+      <ellipse cx="72" cy="43" rx="5" ry="4" fill="white"/>
+      <circle cx="38" cy="43" r="2.5" fill="#1a1a1a"/>
+      <circle cx="72" cy="43" r="2.5" fill="#1a1a1a"/>
+      <rect x="22" y="62" width="66" height="18" rx="6" fill="#999"/>
+      <rect x="24" y="64" width="62" height="14" rx="4" fill="#1a1a1a"/>
+      {[28,36,44,52,60,68,76].map((x,i)=>(
+        <rect key={i} x={x} y={66} width="5" height="10" rx="1" fill={i%2===0?"#FFD700":"#FF4500"}/>
       ))}
-      {/* eyes — big animated eyes */}
-      <ellipse cx="46" cy="64" rx="10" ry="12" fill="white"/>
-      <ellipse cx="74" cy="64" rx="10" ry="12" fill="white"/>
-      <ellipse cx="46" cy="66" rx="7"  ry="9"  fill="#6A0DAD"/>
-      <ellipse cx="74" cy="66" rx="7"  ry="9"  fill="#6A0DAD"/>
-      <circle cx="46" cy="66" r="4" fill="#1a1a1a"/>
-      <circle cx="74" cy="66" r="4" fill="#1a1a1a"/>
-      <circle cx="47" cy="63" r="2.5" fill="white"/>
-      <circle cx="75" cy="63" r="2.5" fill="white"/>
-      {/* smile */}
-      <path d="M48 84 Q60 94 72 84" stroke="#CC4466" strokeWidth="2" fill="none" strokeLinecap="round"/>
-      <circle cx="36" cy="76" r="6" fill="#FFB6C1" opacity="0.6"/>
-      <circle cx="84" cy="76" r="6" fill="#FFB6C1" opacity="0.6"/>
+      <circle cx="18" cy="50" r="7" fill="#888"/>
+      <circle cx="92" cy="50" r="7" fill="#888"/>
+      <circle cx="18" cy="50" r="4" fill="#666"/>
+      <circle cx="92" cy="50" r="4" fill="#666"/>
     </svg>
   );
 }
 
-export function SpaceBotAvatar() {
+export function SimbaAvatar() {
   return (
-    <svg width={S} height={S} viewBox="0 0 120 120">
-      {/* antenna */}
-      <line x1="60" y1="14" x2="60" y2="30" stroke="#94A3B8" strokeWidth="3"/>
-      <circle cx="60" cy="12" r="5" fill="#22D3EE"/>
-      {/* head */}
-      <rect x="24" y="30" width="72" height="62" rx="10" fill="#475569"/>
-      {/* visor */}
-      <rect x="30" y="38" width="60" height="30" rx="6" fill="#0EA5E9" opacity="0.85"/>
-      {/* eyes inside visor */}
-      <circle cx="46" cy="53" r="8" fill="#FCD34D"/><circle cx="74" cy="53" r="8" fill="#FCD34D"/>
-      <circle cx="46" cy="53" r="4" fill="#1a1a1a"/><circle cx="74" cy="53" r="4" fill="#1a1a1a"/>
-      <circle cx="47" cy="51" r="2" fill="white"/><circle cx="75" cy="51" r="2" fill="white"/>
-      {/* mouth panel */}
-      <rect x="34" y="76" width="52" height="10" rx="4" fill="#334155"/>
-      {[38,46,54,62,70,78].map((x,i)=>(
-        <rect key={i} x={x} y="78" width="4" height="6" rx="1" fill={i%2===0?"#22D3EE":"#A78BFA"}/>
-      ))}
-      {/* ear bolts */}
-      <circle cx="24" cy="56" r="5" fill="#64748B"/><circle cx="96" cy="56" r="5" fill="#64748B"/>
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <circle cx="55" cy="58" r="40" fill="#B8860B"/>
+      <circle cx="55" cy="58" r="30" fill="#FFD700"/>
+      <circle cx="25" cy="26" r="14" fill="#FFD700"/>
+      <circle cx="85" cy="26" r="14" fill="#FFD700"/>
+      <circle cx="25" cy="26" r="8" fill="#FF8C00"/>
+      <circle cx="85" cy="26" r="8" fill="#FF8C00"/>
+      <circle cx="42" cy="50" r="10" fill="white"/>
+      <circle cx="68" cy="50" r="10" fill="white"/>
+      <circle cx="43" cy="51" r="7" fill="#DAA520"/>
+      <circle cx="69" cy="51" r="7" fill="#DAA520"/>
+      <circle cx="43" cy="50" r="4" fill="#1a1a1a"/>
+      <circle cx="69" cy="50" r="4" fill="#1a1a1a"/>
+      <circle cx="42" cy="48" r="2" fill="white"/>
+      <circle cx="68" cy="48" r="2" fill="white"/>
+      <ellipse cx="55" cy="66" rx="14" ry="10" fill="#FF8C00"/>
+      <ellipse cx="55" cy="60" rx="7" ry="5" fill="#CC3300"/>
+      <line x1="12" y1="62" x2="40" y2="66" stroke="#8B7355" strokeWidth="1.5"/>
+      <line x1="12" y1="67" x2="40" y2="68" stroke="#8B7355" strokeWidth="1.5"/>
+      <line x1="70" y1="66" x2="98" y2="62" stroke="#8B7355" strokeWidth="1.5"/>
+      <line x1="70" y1="68" x2="98" y2="67" stroke="#8B7355" strokeWidth="1.5"/>
     </svg>
   );
 }
 
-export function JungleKingAvatar() {
-  return (
-    <svg width={S} height={S} viewBox="0 0 120 120">
-      {/* mane */}
-      <circle cx="60" cy="62" r="44" fill="#92400E"/>
-      {/* face */}
-      <circle cx="60" cy="62" r="32" fill="#FCD34D"/>
-      {/* ears */}
-      <circle cx="32" cy="28" r="12" fill="#FCD34D"/>
-      <circle cx="88" cy="28" r="12" fill="#FCD34D"/>
-      <circle cx="32" cy="28" r="6"  fill="#F87171"/>
-      <circle cx="88" cy="28" r="6"  fill="#F87171"/>
-      {/* eyes */}
-      <circle cx="47" cy="55" r="10" fill="#FFFBEB"/><circle cx="73" cy="55" r="10" fill="#FFFBEB"/>
-      <circle cx="47" cy="56" r="6"  fill="#92400E"/><circle cx="73" cy="56" r="6"  fill="#92400E"/>
-      <circle cx="47" cy="55" r="3"  fill="#1a1a1a"/><circle cx="73" cy="55" r="3"  fill="#1a1a1a"/>
-      <circle cx="48" cy="53" r="1.5" fill="white"/><circle cx="74" cy="53" r="1.5" fill="white"/>
-      {/* snout */}
-      <ellipse cx="60" cy="72" rx="14" ry="10" fill="#F97316" opacity="0.8"/>
-      <ellipse cx="60" cy="66" rx="7"  ry="5"  fill="#1a1a1a"/>
-      {/* whiskers */}
-      {[-22,-10,2,10,22].map((x,i)=>(
-        <line key={i} x1={60+x} y1={70} x2={60+x+(i<2?-8:i>2?8:0)} y2={68} stroke="#92400E" strokeWidth="1"/>
-      ))}
-    </svg>
-  );
-}
-
-// ─── PAID ANIME CHARACTERS ────────────────────────────────────────────────────
+// ─── PAID ANIME ───────────────────────────────────────────────────────────────
 
 export function NarutoAvatar() {
   return (
-    <svg width={S} height={S} viewBox="0 0 120 120">
-      {/* spiky blonde hair */}
-      {[-20,-12,-4,4,12,20].map((x,i)=>(
-        <path key={i} d={`M${60+x},46 Q${60+x+(i%2===0?-8:8)},${22+i*3} ${60+x+(i%2===0?-4:4)},12`}
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <path d="M12 96 Q55 84 98 96" fill="#FF8C00"/>
+      <rect x="40" y="84" width="30" height="10" rx="3" fill="#1a1a1a"/>
+      {[[-26,8],[-18,-4],[-8,-12],[2,-16],[12,-12],[20,-4],[26,6]].map(([x,y],i)=>(
+        <path key={i} d={`M${38+i*6},40 Q${38+i*6+x},${22+y} ${40+i*5+x},${10+y}`}
           fill="#FFD700" stroke="#E6B800" strokeWidth="0.5"/>
       ))}
-      <ellipse cx="60" cy="42" rx="32" ry="18" fill="#FFD700"/>
-      {/* face */}
-      <ellipse cx="60" cy="70" rx="28" ry="32" fill="#FFD5A0"/>
-      {/* headband */}
-      <rect x="28" y="42" width="64" height="12" rx="3" fill="#1a6688"/>
-      <rect x="42" y="43" width="36" height="10" rx="2" fill="#C0C0C0"/>
-      <text x="60" y="51" textAnchor="middle" fontSize="8" fill="#4a4a4a" fontWeight="bold">葉</text>
-      {/* whisker marks — 3 each side */}
-      {[-1,0,1].map((i)=><line key={`l${i}`} x1="33" y1={68+i*7} x2="49" y2={70+i*5} stroke="#CC8844" strokeWidth="1.5" strokeLinecap="round"/>)}
-      {[-1,0,1].map((i)=><line key={`r${i}`} x1="87" y1={68+i*7} x2="71" y2={70+i*5} stroke="#CC8844" strokeWidth="1.5" strokeLinecap="round"/>)}
-      {/* eyes */}
-      <circle cx="47" cy="64" r="8" fill="white"/><circle cx="73" cy="64" r="8" fill="white"/>
-      <circle cx="47" cy="65" r="5" fill="#1B6EBF"/><circle cx="73" cy="65" r="5" fill="#1B6EBF"/>
-      <circle cx="47" cy="64" r="3" fill="#1a1a1a"/><circle cx="73" cy="64" r="3" fill="#1a1a1a"/>
-      <circle cx="48" cy="62" r="1.5" fill="white"/><circle cx="74" cy="62" r="1.5" fill="white"/>
-      {/* grin */}
-      <path d="M46 82 Q60 94 74 82" stroke="#CC6633" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-      {/* orange outfit hint */}
-      <path d="M32 102 Q60 95 88 102" fill="#FF8C00" opacity="0.8"/>
+      <ellipse cx="55" cy="36" rx="28" ry="14" fill="#FFD700"/>
+      <ellipse cx="55" cy="65" rx="26" ry="30" fill="#FDDCB0"/>
+      <rect x="24" y="36" width="62" height="12" rx="3" fill="#1B6EBF"/>
+      <rect x="30" y="37" width="50" height="10" rx="2" fill="#C8C8C8"/>
+      <circle cx="55" cy="42" r="3.5" fill="none" stroke="#555" strokeWidth="1.5"/>
+      <path d="M55 42 Q58 39 55 38 Q51 38 51 42 Q51 46 55 47" stroke="#555" strokeWidth="1" fill="none"/>
+      <line x1="28" y1="60" x2="46" y2="62" stroke="#CC8844" strokeWidth="2" strokeLinecap="round"/>
+      <line x1="28" y1="65" x2="46" y2="66" stroke="#CC8844" strokeWidth="2" strokeLinecap="round"/>
+      <line x1="28" y1="70" x2="46" y2="70" stroke="#CC8844" strokeWidth="2" strokeLinecap="round"/>
+      <line x1="64" y1="62" x2="82" y2="60" stroke="#CC8844" strokeWidth="2" strokeLinecap="round"/>
+      <line x1="64" y1="66" x2="82" y2="65" stroke="#CC8844" strokeWidth="2" strokeLinecap="round"/>
+      <line x1="64" y1="70" x2="82" y2="70" stroke="#CC8844" strokeWidth="2" strokeLinecap="round"/>
+      <circle cx="42" cy="62" r="9" fill="white"/>
+      <circle cx="68" cy="62" r="9" fill="white"/>
+      <circle cx="43" cy="63" r="6" fill="#1B6EBF"/>
+      <circle cx="69" cy="63" r="6" fill="#1B6EBF"/>
+      <circle cx="43" cy="62" r="3.5" fill="#1a1a1a"/>
+      <circle cx="69" cy="62" r="3.5" fill="#1a1a1a"/>
+      <circle cx="42" cy="60" r="1.8" fill="white"/>
+      <circle cx="68" cy="60" r="1.8" fill="white"/>
+      <path d="M40 78 Q55 92 70 78" stroke="#8B4513" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+      <path d="M46 78 Q55 89 64 78 L64 84 Q55 92 46 84Z" fill="white" opacity="0.9"/>
     </svg>
   );
 }
 
 export function PikachuAvatar() {
   return (
-    <svg width={S} height={S} viewBox="0 0 120 120">
-      {/* ears — black-tipped pointed */}
-      <path d="M34 48 L26 12 L46 36Z" fill="#FFD700" stroke="#E6B800" strokeWidth="1"/>
-      <path d="M86 48 L94 12 L74 36Z" fill="#FFD700" stroke="#E6B800" strokeWidth="1"/>
-      <path d="M35 44 L29 20 L43 36Z" fill="#1a1a1a"/>
-      <path d="M85 44 L91 20 L77 36Z" fill="#1a1a1a"/>
-      {/* round yellow body/face */}
-      <circle cx="60" cy="72" r="42" fill="#FFD700"/>
-      <circle cx="60" cy="72" r="38" fill="#FFE44D"/>
-      {/* red cheeks — signature! */}
-      <circle cx="34" cy="82" r="11" fill="#FF4444" opacity="0.85"/>
-      <circle cx="86" cy="82" r="11" fill="#FF4444" opacity="0.85"/>
-      {/* big eyes */}
-      <circle cx="46" cy="66" r="11" fill="#1a1a1a"/>
-      <circle cx="74" cy="66" r="11" fill="#1a1a1a"/>
-      <circle cx="46" cy="66" r="8" fill="#2a2a2a"/>
-      <circle cx="74" cy="66" r="8" fill="#2a2a2a"/>
-      <circle cx="44" cy="63" r="4" fill="white"/>
-      <circle cx="72" cy="63" r="4" fill="white"/>
-      <circle cx="43" cy="62" r="2" fill="white" opacity="0.7"/>
-      {/* cute nose */}
-      <ellipse cx="60" cy="78" rx="4" ry="3" fill="#CC4400"/>
-      {/* smile */}
-      <path d="M48 86 Q60 96 72 86" stroke="#CC4400" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-      {/* lightning tail hint at bottom */}
-      <path d="M50 112 L60 100 L70 112 L80 98" stroke="#FFD700" strokeWidth="3" fill="none" strokeLinejoin="round"/>
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <path d="M28 44 L18 8 L42 34Z" fill="#FFD700"/>
+      <path d="M82 44 L92 8 L68 34Z" fill="#FFD700"/>
+      <path d="M29 40 L21 14 L38 32Z" fill="#1a1a1a"/>
+      <path d="M81 40 L89 14 L72 32Z" fill="#1a1a1a"/>
+      <ellipse cx="55" cy="70" rx="42" ry="38" fill="#FFD700"/>
+      <ellipse cx="55" cy="68" rx="38" ry="36" fill="#FFE033"/>
+      <ellipse cx="16" cy="72" rx="8" ry="14" fill="#CC8800" opacity="0.5"/>
+      <ellipse cx="94" cy="72" rx="8" ry="14" fill="#CC8800" opacity="0.5"/>
+      <ellipse cx="22" cy="80" rx="13" ry="10" fill="#FF3333" opacity="0.9"/>
+      <ellipse cx="88" cy="80" rx="13" ry="10" fill="#FF3333" opacity="0.9"/>
+      <circle cx="40" cy="62" r="12" fill="#1a1a1a"/>
+      <circle cx="70" cy="62" r="12" fill="#1a1a1a"/>
+      <circle cx="40" cy="62" r="9" fill="#2a2a2a"/>
+      <circle cx="70" cy="62" r="9" fill="#2a2a2a"/>
+      <circle cx="37" cy="58" r="5" fill="white"/>
+      <circle cx="67" cy="58" r="5" fill="white"/>
+      <circle cx="36" cy="57" r="2.5" fill="white" opacity="0.7"/>
+      <ellipse cx="55" cy="74" rx="4" ry="3" fill="#CC4400"/>
+      <path d="M43 80 Q55 92 67 80" stroke="#CC4400" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+      <path d="M46 105 L58 90 L52 88 L65 72" stroke="#E6B800" strokeWidth="5" fill="none" strokeLinejoin="round"/>
     </svg>
   );
 }
 
 export function LuffyAvatar() {
   return (
-    <svg width={S} height={S} viewBox="0 0 120 120">
-      {/* straw hat */}
-      <ellipse cx="60" cy="36" rx="50" ry="14" fill="#E8C84A" stroke="#B8980A" strokeWidth="2"/>
-      <ellipse cx="60" cy="32" rx="32" ry="20" fill="#E8C84A" stroke="#B8980A" strokeWidth="1.5"/>
-      {/* hat band */}
-      <path d="M28 36 Q60 44 92 36" stroke="#CC0000" strokeWidth="4" fill="none"/>
-      {/* face */}
-      <ellipse cx="60" cy="72" rx="28" ry="30" fill="#FDDCB0"/>
-      {/* scar under left eye */}
-      <path d="M44 72 L50 78" stroke="#CC3333" strokeWidth="2.5" strokeLinecap="round"/>
-      {/* eyes — determined squint */}
-      <ellipse cx="47" cy="66" rx="8" ry="9" fill="white"/>
-      <ellipse cx="73" cy="66" rx="8" ry="9" fill="white"/>
-      <circle cx="47" cy="67" r="5" fill="#1a1a1a"/><circle cx="73" cy="67" r="5" fill="#1a1a1a"/>
-      <circle cx="46" cy="64" r="2" fill="white"/><circle cx="72" cy="64" r="2" fill="white"/>
-      {/* big grin */}
-      <path d="M40 82 Q60 100 80 82" stroke="#8B4513" strokeWidth="3" fill="none" strokeLinecap="round"/>
-      {/* teeth */}
-      <path d="M48 83 Q60 96 72 83 L72 88 Q60 100 48 88Z" fill="white" opacity="0.85"/>
-      {/* black hair */}
-      <path d="M32 52 Q30 42 36 38 Q46 30 60 32 Q74 30 84 38 Q90 42 88 52" fill="#1a1a1a"/>
-      {/* red vest */}
-      <path d="M32 100 Q60 92 88 100" fill="#CC0000"/>
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <ellipse cx="55" cy="32" rx="52" ry="14" fill="#E8C84A" stroke="#B8980A" strokeWidth="2"/>
+      <ellipse cx="55" cy="26" rx="32" ry="20" fill="#E8C84A" stroke="#B8980A" strokeWidth="1.5"/>
+      <path d="M23 32 Q55 42 87 32" stroke="#CC0000" strokeWidth="5" fill="none"/>
+      <path d="M28 48 Q24 38 30 32 Q42 24 55 26 Q68 24 80 32 Q86 38 82 48" fill="#1a1a1a"/>
+      <ellipse cx="55" cy="70" rx="28" ry="30" fill="#FDDCB0"/>
+      <line x1="36" y1="64" x2="44" y2="74" stroke="#CC0000" strokeWidth="3" strokeLinecap="round"/>
+      <circle cx="40" cy="62" r="9" fill="white"/>
+      <circle cx="70" cy="62" r="9" fill="white"/>
+      <circle cx="41" cy="63" r="6" fill="#1a1a1a"/>
+      <circle cx="71" cy="63" r="6" fill="#1a1a1a"/>
+      <circle cx="40" cy="60" r="2.5" fill="white"/>
+      <circle cx="70" cy="60" r="2.5" fill="white"/>
+      <path d="M34 80 Q55 102 76 80" stroke="#8B4513" strokeWidth="3" fill="none" strokeLinecap="round"/>
+      <path d="M40 80 Q55 98 70 80 L70 88 Q55 102 40 88Z" fill="white" opacity="0.9"/>
+      <path d="M27 100 Q55 90 83 100" fill="#CC0000"/>
     </svg>
   );
 }
 
 export function GokuAvatar() {
   return (
-    <svg width={S} height={S} viewBox="0 0 120 120">
-      {/* wild spiked black hair */}
-      {[[-22,10],[-14,-2],[-6,-10],[2,-14],[10,-10],[18,-2],[24,8]].map(([x,y],i)=>(
-        <path key={i} d={`M${50+i*3},44 Q${44+i*4+x},${30+y} ${46+i*3+x},${18+y}`}
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <path d="M12 96 Q55 84 98 96" fill="#FF8C00"/>
+      <path d="M35 86 L55 100 L75 86" fill="#FF8C00"/>
+      <path d="M45 86 L55 94 L65 86" fill="#1B4FCC"/>
+      {[[-22,4],[-15,-8],[-6,-16],[4,-20],[13,-16],[20,-8],[24,2]].map(([x,y],i)=>(
+        <path key={i} d={`M${34+i*7},36 Q${34+i*7+x},${18+y} ${36+i*6+x},${6+y}`}
           fill="#1a1a1a" stroke="#111" strokeWidth="0.5"/>
       ))}
-      <ellipse cx="60" cy="38" rx="30" ry="16" fill="#1a1a1a"/>
-      {/* face */}
-      <ellipse cx="60" cy="70" rx="28" ry="32" fill="#FDDCB0"/>
-      {/* eyes — intense */}
-      <circle cx="46" cy="63" r="8" fill="white"/><circle cx="74" cy="63" r="8" fill="white"/>
-      <circle cx="47" cy="64" r="5" fill="#1a1a1a"/><circle cx="75" cy="64" r="5" fill="#1a1a1a"/>
-      <circle cx="46" cy="62" r="2" fill="white"/><circle cx="74" cy="62" r="2" fill="white"/>
-      {/* scar on cheek */}
-      <line x1="74" y1="72" x2="80" y2="78" stroke="#CC8844" strokeWidth="1.5"/>
-      {/* determined mouth */}
-      <path d="M47 80 Q60 88 73 80" stroke="#AA5533" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-      {/* orange gi collar */}
-      <path d="M32 100 Q60 92 88 100" fill="#FF8C00"/>
-      <path d="M52 92 L60 100 L68 92" fill="#1B4FCC"/>
-      {/* eyebrows — stern */}
-      <path d="M38 56 Q47 52 54 56" stroke="#1a1a1a" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-      <path d="M66 56 Q73 52 82 56" stroke="#1a1a1a" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+      <ellipse cx="55" cy="32" rx="26" ry="14" fill="#1a1a1a"/>
+      <ellipse cx="55" cy="62" rx="26" ry="30" fill="#FDDCB0"/>
+      <path d="M32 50 Q42 44 50 50" stroke="#1a1a1a" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
+      <path d="M60 50 Q68 44 78 50" stroke="#1a1a1a" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
+      <circle cx="42" cy="57" r="9" fill="white"/>
+      <circle cx="68" cy="57" r="9" fill="white"/>
+      <circle cx="43" cy="58" r="6" fill="#1a1a1a"/>
+      <circle cx="69" cy="58" r="6" fill="#1a1a1a"/>
+      <circle cx="42" cy="55" r="2.5" fill="white"/>
+      <circle cx="68" cy="55" r="2.5" fill="white"/>
+      <line x1="70" y1="62" x2="77" y2="70" stroke="#CC8844" strokeWidth="2" strokeLinecap="round"/>
+      <path d="M43 74 Q55 84 67 74" stroke="#8B4513" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
     </svg>
   );
 }
 
 export function TanjiroAvatar() {
   return (
-    <svg width={S} height={S} viewBox="0 0 120 120">
-      {/* checkered haori */}
-      <rect x="0" y="90" width="120" height="30" fill="none"/>
-      {/* hair — dark burgundy */}
-      <ellipse cx="60" cy="44" rx="30" ry="22" fill="#2D1B1B"/>
-      <path d="M30 50 Q22 66 26 82 Q32 60 38 54Z" fill="#2D1B1B"/>
-      {/* face */}
-      <ellipse cx="60" cy="72" rx="28" ry="32" fill="#FDDCB0"/>
-      {/* scar on forehead */}
-      <path d="M48 46 Q58 40 68 46 Q64 50 56 50Z" fill="#CC3333" opacity="0.8"/>
-      {/* hanafuda earrings */}
-      <ellipse cx="28" cy="72" rx="5" ry="8" fill="#FF6B6B" stroke="white" strokeWidth="1"/>
-      <ellipse cx="92" cy="72" rx="5" ry="8" fill="#FF6B6B" stroke="white" strokeWidth="1"/>
-      {/* eyes — kind */}
-      <ellipse cx="46" cy="64" rx="9" ry="10" fill="white"/>
-      <ellipse cx="74" cy="64" rx="9" ry="10" fill="white"/>
-      <ellipse cx="46" cy="65" rx="6" ry="7" fill="#6B2D2D"/>
-      <ellipse cx="74" cy="65" rx="6" ry="7" fill="#6B2D2D"/>
-      <circle cx="46" cy="64" r="3" fill="#1a1a1a"/><circle cx="74" cy="64" r="3" fill="#1a1a1a"/>
-      <circle cx="45" cy="62" r="1.5" fill="white"/><circle cx="73" cy="62" r="1.5" fill="white"/>
-      {/* gentle smile */}
-      <path d="M48 82 Q60 90 72 82" stroke="#AA5533" strokeWidth="2" fill="none" strokeLinecap="round"/>
-      {/* green haori collar */}
-      <path d="M32 100 Q60 93 88 100" fill="#1B6622"/>
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <path d="M10 96 Q55 82 100 96" fill="#1a6622"/>
+      {[10,22,34,46,58,70,82,94].map((x,i)=>(
+        <rect key={i} x={x} y={96} width="12" height="14"
+          fill={i%2===0?"#1a6622":"#1a1a1a"}/>
+      ))}
+      <ellipse cx="55" cy="38" rx="28" ry="18" fill="#8B1A1A"/>
+      {[-14,-6,2,10,18].map((x,i)=>(
+        <path key={i} d={`M${40+i*7},38 Q${40+i*7+x},${20} ${42+i*6+x},${8}`} fill="#6B0000"/>
+      ))}
+      <ellipse cx="55" cy="36" rx="24" ry="14" fill="#8B1A1A"/>
+      <ellipse cx="55" cy="68" rx="26" ry="30" fill="#FDDCB0"/>
+      <path d="M40 42 Q55 36 70 42 Q65 48 55 50 Q45 48 40 42Z" fill="#CC2222" opacity="0.85"/>
+      <ellipse cx="22" cy="70" rx="6" ry="10" fill="white" stroke="#CC0000" strokeWidth="1.5"/>
+      <path d="M22 62 Q28 66 22 70 Q16 66 22 62Z" fill="#CC0000"/>
+      <ellipse cx="88" cy="70" rx="6" ry="10" fill="white" stroke="#CC0000" strokeWidth="1.5"/>
+      <path d="M88 62 Q94 66 88 70 Q82 66 88 62Z" fill="#CC0000"/>
+      <ellipse cx="42" cy="60" rx="9" ry="11" fill="white"/>
+      <ellipse cx="68" cy="60" rx="9" ry="11" fill="white"/>
+      <ellipse cx="42" cy="62" rx="6" ry="8" fill="#6B0000"/>
+      <ellipse cx="68" cy="62" rx="6" ry="8" fill="#6B0000"/>
+      <circle cx="42" cy="61" r="3.5" fill="#1a1a1a"/>
+      <circle cx="68" cy="61" r="3.5" fill="#1a1a1a"/>
+      <circle cx="41" cy="58" r="2" fill="white"/>
+      <circle cx="67" cy="58" r="2" fill="white"/>
+      <path d="M44 78 Q55 87 66 78" stroke="#8B4513" strokeWidth="2" fill="none" strokeLinecap="round"/>
     </svg>
   );
 }
 
 export function DekuAvatar() {
   return (
-    <svg width={S} height={S} viewBox="0 0 120 120">
-      {/* messy green hair */}
-      {[[-18,4],[-10,-4],[-2,-8],[6,-6],[14,-2],[20,6]].map(([x,y],i)=>(
-        <ellipse key={i} cx={36+i*9+x} cy={38+y} rx="8" ry="12" fill="#2D7A2D" transform={`rotate(${-20+i*8} ${36+i*9+x} ${38+y})`}/>
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <path d="M12 96 Q55 84 98 96" fill="#2D7A2D"/>
+      <path d="M38 86 L55 98 L72 86" fill="#2D7A2D"/>
+      <rect x="38" y="88" width="34" height="12" rx="0" fill="#E8E8E8" opacity="0.4"/>
+      {[[-18,2],[-10,-8],[-2,-14],[6,-12],[14,-6],[20,2]].map(([x,y],i)=>(
+        <ellipse key={i} cx={34+i*9+Math.abs(x/2)} cy={34+y}
+          rx="9" ry="13" fill="#2D7A2D"
+          transform={`rotate(${-20+i*8} ${34+i*9} ${34+y})`}/>
       ))}
-      <ellipse cx="60" cy="42" rx="28" ry="14" fill="#2D7A2D"/>
-      {/* face */}
-      <ellipse cx="60" cy="72" rx="27" ry="30" fill="#FDDCB0"/>
-      {/* freckles */}
-      {[[-12,0],[12,0],[-14,6],[14,6]].map(([x,y],i)=>(
-        <circle key={i} cx={60+x} cy={78+y} r="2.5" fill="#CC9966" opacity="0.65"/>
+      <ellipse cx="55" cy="38" rx="26" ry="14" fill="#2D7A2D"/>
+      <ellipse cx="55" cy="68" rx="26" ry="28" fill="#FDDCB0"/>
+      {[[-14,-2],[-18,4],[14,-2],[18,4],[-10,8],[10,8]].map(([x,y],i)=>(
+        <circle key={i} cx={55+x} cy={75+y} r="2.5" fill="#CC9966" opacity="0.65"/>
       ))}
-      {/* eyes — large hopeful */}
-      <ellipse cx="46" cy="64" rx="9" ry="11" fill="white"/>
-      <ellipse cx="74" cy="64" rx="9" ry="11" fill="white"/>
-      <ellipse cx="46" cy="65" rx="6" ry="8" fill="#1B5E1B"/>
-      <ellipse cx="74" cy="65" rx="6" ry="8" fill="#1B5E1B"/>
-      <circle cx="46" cy="65" r="3" fill="#1a1a1a"/><circle cx="74" cy="65" r="3" fill="#1a1a1a"/>
-      <circle cx="45" cy="62" r="2" fill="white"/><circle cx="73" cy="62" r="2" fill="white"/>
-      {/* determined smile */}
-      <path d="M47 83 Q60 93 73 83" stroke="#8B4513" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-      {/* hero suit collar — green */}
-      <path d="M33 100 Q60 93 87 100" fill="#1B5E1B"/>
-      <circle cx="60" cy="93" r="4" fill="#FFD700"/>
+      <ellipse cx="42" cy="60" rx="10" ry="12" fill="white"/>
+      <ellipse cx="68" cy="60" rx="10" ry="12" fill="white"/>
+      <ellipse cx="42" cy="62" rx="7" ry="9" fill="#1B5E1B"/>
+      <ellipse cx="68" cy="62" rx="7" ry="9" fill="#1B5E1B"/>
+      <circle cx="42" cy="61" r="4" fill="#1a1a1a"/>
+      <circle cx="68" cy="61" r="4" fill="#1a1a1a"/>
+      <circle cx="40" cy="58" r="2.5" fill="white"/>
+      <circle cx="66" cy="58" r="2.5" fill="white"/>
+      <path d="M43 78 Q55 89 67 78" stroke="#8B4513" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
     </svg>
   );
 }
 
 export function SasukeAvatar() {
   return (
-    <svg width={S} height={S} viewBox="0 0 120 120">
-      {/* dark spiky hair */}
-      {[[-16,6],[-8,-4],[0,-10],[8,-6],[16,4]].map(([x,y],i)=>(
-        <path key={i} d={`M${44+i*8},44 Q${44+i*8+x},${28+y} ${46+i*7+x},${16+y}`} fill="#1a1a1a"/>
-      ))}
-      <ellipse cx="60" cy="40" rx="28" ry="16" fill="#1a1a1a"/>
-      {/* face */}
-      <ellipse cx="60" cy="72" rx="26" ry="30" fill="#EDD5B0"/>
-      {/* sharingan eyes — red with pattern */}
-      <circle cx="46" cy="64" r="9" fill="white"/><circle cx="74" cy="64" r="9" fill="white"/>
-      <circle cx="46" cy="65" r="6" fill="#CC0000"/><circle cx="74" cy="65" r="6" fill="#CC0000"/>
-      <circle cx="46" cy="65" r="3" fill="#1a1a1a"/><circle cx="74" cy="65" r="3" fill="#1a1a1a"/>
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <path d="M12 96 Q55 82 98 96" fill="#1E1B4B"/>
+      <rect x="38" y="80" width="34" height="20" rx="0" fill="#1E1B4B"/>
+      <path d="M34 80 L38 70 L55 76 L72 70 L76 80 Q55 86 34 80Z" fill="#1E1B4B"/>
+      <ellipse cx="55" cy="38" rx="28" ry="16" fill="#1a1a1a"/>
+      <path d="M62 28 Q78 22 88 34 Q78 30 70 32Z" fill="#1a1a1a"/>
+      <path d="M60 26 Q72 14 85 22 Q74 22 66 28Z" fill="#1a1a1a"/>
+      <ellipse cx="55" cy="65" rx="26" ry="28" fill="#EDD5B0"/>
+      <circle cx="41" cy="57" r="11" fill="white"/>
+      <circle cx="69" cy="57" r="11" fill="white"/>
+      <circle cx="41" cy="58" r="8" fill="#CC0000"/>
+      <circle cx="69" cy="58" r="8" fill="#CC0000"/>
+      <circle cx="41" cy="58" r="4.5" fill="#1a1a1a"/>
+      <circle cx="69" cy="58" r="4.5" fill="#1a1a1a"/>
       {[0,120,240].map((deg,i)=>{
         const r=deg*Math.PI/180;
-        return <path key={i} d={`M${46+Math.sin(r)*3.5},${65-Math.cos(r)*3.5} Q${46+Math.sin(r)*5.5},${65-Math.cos(r)*5.5} ${46+Math.sin(r+0.5)*4},${65-Math.cos(r+0.5)*4}`}
-          stroke="#880000" strokeWidth="1.2" fill="none"/>;
+        return <ellipse key={i} cx={41+Math.sin(r)*5.5} cy={58-Math.cos(r)*5.5}
+          rx="1.8" ry="2.8" fill="#1a1a1a"
+          transform={`rotate(${deg} ${41+Math.sin(r)*5.5} ${58-Math.cos(r)*5.5})`}/>;
       })}
       {[0,120,240].map((deg,i)=>{
         const r=deg*Math.PI/180;
-        return <path key={i} d={`M${74+Math.sin(r)*3.5},${65-Math.cos(r)*3.5} Q${74+Math.sin(r)*5.5},${65-Math.cos(r)*5.5} ${74+Math.sin(r+0.5)*4},${65-Math.cos(r+0.5)*4}`}
-          stroke="#880000" strokeWidth="1.2" fill="none"/>;
+        return <ellipse key={i} cx={69+Math.sin(r)*5.5} cy={58-Math.cos(r)*5.5}
+          rx="1.8" ry="2.8" fill="#1a1a1a"
+          transform={`rotate(${deg} ${69+Math.sin(r)*5.5} ${58-Math.cos(r)*5.5})`}/>;
       })}
-      <circle cx="44" cy="62" r="2" fill="white"/><circle cx="72" cy="62" r="2" fill="white"/>
-      {/* stern expression */}
-      <path d="M48 82 Q60 86 72 82" stroke="#8B4513" strokeWidth="2" fill="none"/>
-      {/* eyebrows — stern */}
-      <path d="M38 56 Q47 52 54 57" stroke="#1a1a1a" strokeWidth="2.5" fill="none"/>
-      <path d="M66 57 Q73 52 82 56" stroke="#1a1a1a" strokeWidth="2.5" fill="none"/>
-      {/* blue outfit */}
-      <path d="M34 100 Q60 93 86 100" fill="#1B4FCC"/>
+      <circle cx="39" cy="55" r="2.5" fill="white"/>
+      <circle cx="67" cy="55" r="2.5" fill="white"/>
+      <path d="M44 76 Q55 81 66 76" stroke="#8B4513" strokeWidth="2" fill="none"/>
+      <path d="M30 48 Q41 42 50 48" stroke="#1a1a1a" strokeWidth="3" fill="none" strokeLinecap="round"/>
+      <path d="M60 48 Q69 42 80 48" stroke="#1a1a1a" strokeWidth="3" fill="none" strokeLinecap="round"/>
     </svg>
   );
 }
 
 export function SailorMoonAvatar() {
   return (
-    <svg width={S} height={S} viewBox="0 0 120 120">
-      {/* twin tails — long blonde */}
-      <ellipse cx="20" cy="70" rx="12" ry="36" fill="#FFD700" transform="rotate(-15 20 70)"/>
-      <ellipse cx="100" cy="70" rx="12" ry="36" fill="#FFD700" transform="rotate(15 100 70)"/>
-      {/* buns on top */}
-      <circle cx="38" cy="30" r="16" fill="#FFD700" stroke="#E6B800" strokeWidth="1"/>
-      <circle cx="82" cy="30" r="16" fill="#FFD700" stroke="#E6B800" strokeWidth="1"/>
-      {/* face */}
-      <ellipse cx="60" cy="72" rx="27" ry="32" fill="#FDDCB0"/>
-      {/* crescent moon on forehead */}
-      <path d="M60 42 Q56 36 62 32 Q58 38 64 40 Q60 36 60 42Z" fill="#FFD700"/>
-      {/* big blue eyes */}
-      <ellipse cx="44" cy="66" rx="11" ry="13" fill="white"/>
-      <ellipse cx="76" cy="66" rx="11" ry="13" fill="white"/>
-      <ellipse cx="44" cy="68" rx="8"  ry="10" fill="#1B6EBF"/>
-      <ellipse cx="76" cy="68" rx="8"  ry="10" fill="#1B6EBF"/>
-      <circle cx="44" cy="67" r="4" fill="#1a1a1a"/><circle cx="76" cy="67" r="4" fill="#1a1a1a"/>
-      <circle cx="42" cy="64" r="2.5" fill="white"/><circle cx="74" cy="64" r="2.5" fill="white"/>
-      {/* smile */}
-      <path d="M47 86 Q60 96 73 86" stroke="#CC4466" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-      <circle cx="34" cy="78" r="6" fill="#FFB6C1" opacity="0.6"/>
-      <circle cx="86" cy="78" r="6" fill="#FFB6C1" opacity="0.6"/>
-      {/* sailor collar */}
-      <path d="M33 100 Q60 93 87 100" fill="#1B4FCC"/>
-      <path d="M52 93 L60 104 L68 93" fill="#1B4FCC"/>
-      <line x1="44" y1="97" x2="76" y2="97" stroke="white" strokeWidth="2"/>
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <path d="M14 60 Q6 84 10 108 Q18 78 24 64Z" fill="#FFD700"/>
+      <path d="M96 60 Q104 84 100 108 Q92 78 86 64Z" fill="#FFD700"/>
+      <circle cx="28" cy="28" r="18" fill="#FFD700" stroke="#E6B800" strokeWidth="1.5"/>
+      <circle cx="82" cy="28" r="18" fill="#FFD700" stroke="#E6B800" strokeWidth="1.5"/>
+      <ellipse cx="55" cy="70" rx="28" ry="32" fill="#FDDCB0"/>
+      <path d="M55 42 Q50 34 56 28 Q51 35 57 38 Q55 32 55 42Z" fill="#FFD700"/>
+      <path d="M27 100 Q55 88 83 100" fill="#1B4FCC"/>
+      <path d="M40 88 L55 100 L70 88 L70 95 L55 107 L40 95Z" fill="#1B4FCC"/>
+      <line x1="33" y1="94" x2="77" y2="94" stroke="white" strokeWidth="2.5"/>
+      <line x1="35" y1="98" x2="75" y2="98" stroke="white" strokeWidth="2"/>
+      <path d="M46 90 L55 95 L64 90 Q58 86 55 85 Q52 86 46 90Z" fill="#CC0000"/>
+      <ellipse cx="40" cy="62" rx="12" ry="14" fill="white"/>
+      <ellipse cx="70" cy="62" rx="12" ry="14" fill="white"/>
+      <ellipse cx="40" cy="65" rx="8" ry="11" fill="#1B4FCC"/>
+      <ellipse cx="70" cy="65" rx="8" ry="11" fill="#1B4FCC"/>
+      <circle cx="40" cy="64" r="5" fill="#1a1a1a"/>
+      <circle cx="70" cy="64" r="5" fill="#1a1a1a"/>
+      <circle cx="38" cy="61" r="3" fill="white"/>
+      <circle cx="68" cy="61" r="3" fill="white"/>
+      {[-7,-3,1,5,9].map((x,i)=>(
+        <line key={i} x1={39+x} y1={50} x2={38+x} y2={44} stroke="#1a1a1a" strokeWidth="1.5"/>
+      ))}
+      <path d="M44 82 Q55 92 66 82" stroke="#CC4466" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+      <circle cx="30" cy="74" r="6" fill="#FFB6C1" opacity="0.6"/>
+      <circle cx="80" cy="74" r="6" fill="#FFB6C1" opacity="0.6"/>
     </svg>
   );
 }
 
-export function OnePunchAvatar() {
+export function SaitamaAvatar() {
   return (
-    <svg width={S} height={S} viewBox="0 0 120 120">
-      {/* completely bald head */}
-      <circle cx="60" cy="62" r="40" fill="#FDDCB0"/>
-      {/* emotionless eyes */}
-      <circle cx="45" cy="58" r="8" fill="white"/><circle cx="75" cy="58" r="8" fill="white"/>
-      <circle cx="45" cy="58" r="5" fill="#1a1a1a"/><circle cx="75" cy="58" r="5" fill="#1a1a1a"/>
-      <circle cx="44" cy="56" r="2" fill="white"/><circle cx="74" cy="56" r="2" fill="white"/>
-      {/* flat mouth — bored expression */}
-      <line x1="48" y1="76" x2="72" y2="76" stroke="#8B4513" strokeWidth="2.5" strokeLinecap="round"/>
-      {/* yellow hero suit */}
-      <path d="M20 100 Q60 90 100 100" fill="#FFD700"/>
-      <path d="M44 90 L60 84 L76 90 L76 100 Q60 108 44 100Z" fill="#FFD700"/>
-      {/* white cape hint */}
-      <path d="M22 86 Q14 92 18 100 Q26 88 32 88Z" fill="white"/>
-      <path d="M98 86 Q106 92 102 100 Q94 88 88 88Z" fill="white"/>
-      {/* gloves */}
-      <circle cx="24" cy="96" r="8" fill="white"/>
-      <circle cx="96" cy="96" r="8" fill="white"/>
-      {/* red boots */}
-      <ellipse cx="44" cy="108" rx="12" ry="8" fill="#CC0000"/>
-      <ellipse cx="76" cy="108" rx="12" ry="8" fill="#CC0000"/>
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <path d="M8 96 Q55 82 102 96" fill="#FFD700"/>
+      <path d="M28 86 L55 100 L82 86" fill="#FFD700"/>
+      <rect x="28" y="94" width="54" height="6" rx="2" fill="#1a1a1a"/>
+      <path d="M8 72 Q2 86 6 100 Q14 80 20 74Z" fill="white"/>
+      <path d="M102 72 Q108 86 104 100 Q96 80 90 74Z" fill="white"/>
+      <circle cx="55" cy="54" r="38" fill="#FDDCB0"/>
+      <circle cx="55" cy="54" r="36" fill="#F5C89A"/>
+      <ellipse cx="44" cy="36" rx="8" ry="5" fill="white" opacity="0.3" transform="rotate(-20 44 36)"/>
+      <circle cx="40" cy="53" r="10" fill="white"/>
+      <circle cx="70" cy="53" r="10" fill="white"/>
+      <circle cx="40" cy="54" r="6.5" fill="#1a1a1a"/>
+      <circle cx="70" cy="54" r="6.5" fill="#1a1a1a"/>
+      <circle cx="38" cy="51" r="3" fill="white"/>
+      <circle cx="68" cy="51" r="3" fill="white"/>
+      <line x1="42" y1="70" x2="68" y2="70" stroke="#8B4513" strokeWidth="2.5" strokeLinecap="round"/>
+      <ellipse cx="16" cy="92" rx="10" ry="8" fill="white"/>
+      <ellipse cx="94" cy="92" rx="10" ry="8" fill="white"/>
     </svg>
   );
 }
 
 export function ZoroAvatar() {
   return (
-    <svg width={S} height={S} viewBox="0 0 120 120">
-      {/* short green hair */}
-      <ellipse cx="60" cy="44" rx="28" ry="16" fill="#2D8A2D"/>
-      <path d="M32 48 Q28 56 32 64 Q36 52 40 48Z" fill="#2D8A2D"/>
-      {/* face */}
-      <ellipse cx="60" cy="72" rx="27" ry="30" fill="#FDDCB0"/>
-      {/* scar over left eye */}
-      <line x1="42" y1="58" x2="52" y2="72" stroke="#CC3333" strokeWidth="3" strokeLinecap="round"/>
-      {/* eyes — one closed/scarred, one fierce */}
-      <ellipse cx="46" cy="66" rx="7" ry="9" fill="white"/>
-      <circle cx="46" cy="67" r="5" fill="#1a1a1a"/>
-      <circle cx="45" cy="64" r="2" fill="white"/>
-      {/* right eye — fierce */}
-      <ellipse cx="74" cy="64" rx="8" ry="10" fill="white"/>
-      <circle cx="74" cy="65" r="5" fill="#1a1a1a"/>
-      <circle cx="73" cy="62" r="2" fill="white"/>
-      {/* bandana around head */}
-      <rect x="28" y="42" width="64" height="10" rx="3" fill="#1a1a1a"/>
-      {/* serious mouth */}
-      <path d="M48 84 L72 84" stroke="#8B4513" strokeWidth="2.5" strokeLinecap="round"/>
-      {/* three swords hint */}
-      <line x1="28" y1="88" x2="36" y2="108" stroke="#C0C0C0" strokeWidth="3"/>
-      <line x1="36" y1="86" x2="44" y2="108" stroke="#C0C0C0" strokeWidth="3"/>
-      {/* green outfit */}
-      <path d="M34 100 Q60 93 86 100" fill="#1B6622"/>
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <line x1="16" y1="78" x2="28" y2="110" stroke="#C0C0C0" strokeWidth="4"/>
+      <line x1="22" y1="76" x2="34" y2="110" stroke="#888" strokeWidth="2"/>
+      <line x1="10" y1="82" x2="22" y2="110" stroke="#C0C0C0" strokeWidth="4"/>
+      <line x1="10" y1="82" x2="22" y2="108" stroke="#888" strokeWidth="2"/>
+      <path d="M18 96 Q55 82 92 96" fill="#1B6622"/>
+      <ellipse cx="55" cy="38" rx="28" ry="16" fill="#2D8A2D"/>
+      {[-12,-4,4,12].map((x,i)=>(
+        <ellipse key={i} cx={43+i*7+x} cy={28} rx="8" ry="10" fill="#228B22" transform={`rotate(${-15+i*10} ${43+i*7+x} 28)`}/>
+      ))}
+      <ellipse cx="55" cy="68" rx="26" ry="28" fill="#FDDCB0"/>
+      <line x1="35" y1="54" x2="46" y2="70" stroke="#CC2222" strokeWidth="3.5" strokeLinecap="round"/>
+      <ellipse cx="40" cy="63" rx="8" ry="9" fill="white"/>
+      <circle cx="40" cy="64" r="5.5" fill="#1a1a1a"/>
+      <circle cx="39" cy="61" r="2" fill="white"/>
+      <ellipse cx="70" cy="61" rx="9" ry="11" fill="white"/>
+      <circle cx="70" cy="62" r="6" fill="#1a1a1a"/>
+      <circle cx="69" cy="59" r="2.5" fill="white"/>
+      <rect x="24" y="36" width="62" height="10" rx="3" fill="#1a1a1a"/>
+      <path d="M44 80 L66 80" stroke="#8B4513" strokeWidth="2.5" strokeLinecap="round"/>
+      <circle cx="88" cy="68" r="4" fill="#FFD700" stroke="#B8860B" strokeWidth="1"/>
     </svg>
   );
 }
 
-// ─── PAID ARTIST CARTOON AVATARS ─────────────────────────────────────────────
+// ─── PAID ARTISTS ─────────────────────────────────────────────────────────────
 
 export function BiggieAvatar() {
   return (
-    <svg width={S} height={S} viewBox="0 0 120 120">
-      {/* crown */}
-      <path d="M28 44 L34 28 L44 38 L54 22 L60 34 L66 22 L76 38 L86 28 L92 44Z"
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <path d="M20 40 L26 20 L38 34 L50 14 L55 28 L60 14 L72 34 L84 20 L90 40Z"
         fill="#FFD700" stroke="#FFA500" strokeWidth="1.5"/>
-      {[34,54,60,66,86].map((x,i)=>(
-        <circle key={i} cx={x} cy={i%2===0?28:22} r="4" fill="#FF1493"/>
+      {[26,50,55,60,84].map((x,i)=>(
+        <circle key={i} cx={x} cy={i===0||i===4?20:i===2?14:20} r="4.5" fill="#FF1493"/>
       ))}
-      {/* large round head */}
-      <circle cx="60" cy="76" r="42" fill="#4A2C0A"/>
-      {/* face */}
-      <circle cx="60" cy="76" r="36" fill="#6B3A14"/>
-      {/* eyes */}
-      <circle cx="45" cy="70" r="9" fill="white"/><circle cx="75" cy="70" r="9" fill="white"/>
-      <circle cx="46" cy="71" r="5" fill="#1a1a1a"/><circle cx="76" cy="71" r="5" fill="#1a1a1a"/>
-      <circle cx="45" cy="68" r="2.5" fill="white"/><circle cx="75" cy="68" r="2.5" fill="white"/>
-      {/* big smile */}
-      <path d="M42 86 Q60 100 78 86" stroke="#1a1a1a" strokeWidth="3" fill="none" strokeLinecap="round"/>
-      {/* teeth */}
-      <path d="M48 87 Q60 98 72 87 L72 93 Q60 100 48 93Z" fill="white" opacity="0.9"/>
-      {/* gold chain */}
-      {[36,44,52,60,68,76,84].map((x,i)=>(
-        <circle key={i} cx={x} cy={108+Math.abs(i-3)*2} r="4" fill="#FFD700" stroke="#B8860B" strokeWidth="1"/>
+      <ellipse cx="55" cy="72" rx="42" ry="38" fill="#3A2008"/>
+      <ellipse cx="55" cy="70" rx="36" ry="34" fill="#5A3010"/>
+      <rect x="14" y="96" width="82" height="14" rx="0" fill="#CC3300"/>
+      {[14,26,38,50,62,74,86].map((x,i)=>(
+        <rect key={i} x={x} y={97} width="10" height="6" rx="0"
+          fill={["#FFD700","#00AA44","#CC3300","#1B4FCC","#FF69B4","#FF8C00","#9B59B6"][i]}/>
       ))}
-      {/* plaid shirt collar */}
-      <path d="M18 108 Q60 98 102 108" fill="#2D5A1B"/>
+      <ellipse cx="40" cy="64" rx="11" ry="9" fill="white"/>
+      <ellipse cx="70" cy="64" rx="11" ry="9" fill="white"/>
+      <circle cx="41" cy="65" r="6" fill="#1a1a1a"/>
+      <circle cx="71" cy="65" r="6" fill="#1a1a1a"/>
+      <circle cx="39" cy="63" r="2.5" fill="white"/>
+      <circle cx="69" cy="63" r="2.5" fill="white"/>
+      <path d="M36 80 Q55 96 74 80" stroke="#1a1a1a" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+      <path d="M42 80 Q55 94 68 80 L68 88 Q55 96 42 88Z" fill="white" opacity="0.9"/>
+      {[22,31,40,49,58,67,76,85].map((x,i)=>(
+        <circle key={i} cx={x} cy={104+Math.abs(i-3.5)*1.5} r="4.5"
+          fill="#FFD700" stroke="#B8860B" strokeWidth="1"/>
+      ))}
     </svg>
   );
 }
 
 export function TupacAvatar() {
   return (
-    <svg width={S} height={S} viewBox="0 0 120 120">
-      {/* red bandana */}
-      <path d="M24 42 Q60 34 96 42 Q90 50 60 52 Q30 50 24 42Z" fill="#CC0000"/>
-      <path d="M80 46 Q90 50 96 60 Q88 56 82 54Z" fill="#CC0000"/>
-      {/* face */}
-      <ellipse cx="60" cy="74" rx="32" ry="36" fill="#5C3010"/>
-      <ellipse cx="60" cy="74" rx="28" ry="32" fill="#7A4520"/>
-      {/* strong jaw */}
-      <ellipse cx="60" cy="92" rx="22" ry="14" fill="#7A4520"/>
-      {/* eyes — intense */}
-      <circle cx="46" cy="68" r="8" fill="white"/><circle cx="74" cy="68" r="8" fill="white"/>
-      <circle cx="47" cy="69" r="5" fill="#1a1a1a"/><circle cx="75" cy="69" r="5" fill="#1a1a1a"/>
-      <circle cx="46" cy="66" r="2" fill="white"/><circle cx="74" cy="66" r="2" fill="white"/>
-      {/* serious expression */}
-      <path d="M48 84 Q60 89 72 84" stroke="#3a1a00" strokeWidth="2.5" fill="none"/>
-      {/* chain */}
-      {[38,48,58,68,78].map((x,i)=>(
-        <circle key={i} cx={x} cy={104+Math.abs(i-2)*3} r="4" fill="#FFD700" stroke="#B8860B" strokeWidth="1"/>
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <path d="M18 38 Q55 28 92 38 Q86 50 55 52 Q24 50 18 38Z" fill="#CC0000"/>
+      <path d="M76 44 Q88 50 92 62 Q84 56 78 54Z" fill="#CC0000"/>
+      <path d="M82 48 Q92 56 90 68 Q84 60 80 56Z" fill="#CC0000"/>
+      <ellipse cx="55" cy="72" rx="30" ry="34" fill="#5C3010"/>
+      <ellipse cx="55" cy="70" rx="26" ry="30" fill="#7A4520"/>
+      <circle cx="42" cy="64" r="10" fill="white"/>
+      <circle cx="68" cy="64" r="10" fill="white"/>
+      <circle cx="43" cy="65" r="6.5" fill="#1a1a1a"/>
+      <circle cx="69" cy="65" r="6.5" fill="#1a1a1a"/>
+      <circle cx="41" cy="62" r="2.5" fill="white"/>
+      <circle cx="67" cy="62" r="2.5" fill="white"/>
+      <path d="M42 80 Q55 87 68 80" stroke="#3a1a00" strokeWidth="2.5" fill="none"/>
+      {[30,39,48,57,66,75].map((x,i)=>(
+        <circle key={i} cx={x} cy={100+Math.abs(i-2.5)*2} r="4" fill="#FFD700" stroke="#B8860B" strokeWidth="1"/>
       ))}
-      {/* dark outfit */}
-      <path d="M28 108 Q60 98 92 108" fill="#1a1a1a"/>
-      {/* tattoo marks — simplified lines */}
-      <line x1="36" y1="62" x2="42" y2="58" stroke="#4a2000" strokeWidth="1" opacity="0.6"/>
-      <line x1="78" y1="62" x2="84" y2="58" stroke="#4a2000" strokeWidth="1" opacity="0.6"/>
+      <path d="M22 104 Q55 92 88 104" fill="#1a1a1a"/>
     </svg>
   );
 }
 
 export function BeyonceAvatar() {
   return (
-    <svg width={S} height={S} viewBox="0 0 120 120">
-      {/* long wavy golden hair */}
-      <path d="M22 46 Q16 76 20 108 Q28 78 34 66Z" fill="#CC9900"/>
-      <path d="M98 46 Q104 76 100 108 Q92 78 86 66Z" fill="#CC9900"/>
-      <ellipse cx="60" cy="42" rx="38" ry="28" fill="#CC9900"/>
-      {/* tiara/crown */}
-      <path d="M34 32 L38 18 L46 28 L54 14 L60 24 L66 14 L74 28 L82 18 L86 32Z"
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <path d="M16 44 Q8 74 12 108 Q20 76 28 62Z" fill="#CC9900"/>
+      <path d="M94 44 Q102 74 98 108 Q90 76 82 62Z" fill="#CC9900"/>
+      <ellipse cx="55" cy="36" rx="40" ry="26" fill="#CC9900"/>
+      <ellipse cx="55" cy="70" rx="28" ry="32" fill="#C8882A"/>
+      <path d="M30 30 L36 14 L44 24 L55 8 L66 24 L74 14 L80 30Z"
         fill="#FFD700" stroke="#FFA500" strokeWidth="1"/>
-      {[38,54,60,66,82].map((x,i)=>(
-        <circle key={i} cx={x} cy={i%2===0?18:14} r="3.5" fill="#FF69B4"/>
-      ))}
-      {/* face */}
-      <ellipse cx="60" cy="72" rx="28" ry="32" fill="#C8882A"/>
-      {/* glamorous eyes */}
-      <ellipse cx="45" cy="65" rx="10" ry="12" fill="white"/>
-      <ellipse cx="75" cy="65" rx="10" ry="12" fill="white"/>
-      {/* lashes */}
+      {[36,55,74].map((x,i)=><circle key={i} cx={x} cy={i===1?8:14} r="4" fill="#FF69B4"/>)}
+      <ellipse cx="41" cy="62" rx="12" ry="14" fill="white"/>
+      <ellipse cx="69" cy="62" rx="12" ry="14" fill="white"/>
+      <ellipse cx="41" cy="62" rx="8" ry="10" fill="#3B1810"/>
+      <ellipse cx="69" cy="62" rx="8" ry="10" fill="#3B1810"/>
+      <circle cx="41" cy="62" r="4.5" fill="#1a1a1a"/>
+      <circle cx="69" cy="62" r="4.5" fill="#1a1a1a"/>
+      <circle cx="39" cy="59" r="2.5" fill="white"/>
+      <circle cx="67" cy="59" r="2.5" fill="white"/>
       {[-8,-4,0,4,8].map((x,i)=>(
-        <line key={i} x1={45+x} y1={54} x2={44+x-1} y2={48} stroke="#1a1a1a" strokeWidth="1.2"/>
+        <line key={i} x1={41+x} y1={50} x2={40+x-1} y2={43} stroke="#1a1a1a" strokeWidth="1.8"/>
       ))}
       {[-8,-4,0,4,8].map((x,i)=>(
-        <line key={i} x1={75+x} y1={54} x2={74+x-1} y2={48} stroke="#1a1a1a" strokeWidth="1.2"/>
+        <line key={i} x1={69+x} y1={50} x2={68+x-1} y2={43} stroke="#1a1a1a" strokeWidth="1.8"/>
       ))}
-      <ellipse cx="45" cy="67" rx="7" ry="9"  fill="#4B1A1A"/>
-      <ellipse cx="75" cy="67" rx="7" ry="9"  fill="#4B1A1A"/>
-      <circle cx="45" cy="66" r="4" fill="#1a1a1a"/><circle cx="75" cy="66" r="4" fill="#1a1a1a"/>
-      <circle cx="43" cy="63" r="2.5" fill="white"/><circle cx="73" cy="63" r="2.5" fill="white"/>
-      {/* luscious lips */}
-      <path d="M44 85 Q60 96 76 85 Q68 92 60 93 Q52 92 44 85Z" fill="#CC2244"/>
-      {/* glam outfit */}
-      <path d="M30 104 Q60 95 90 104" fill="#1a1a1a"/>
-      {/* earrings */}
-      <ellipse cx="26" cy="74" rx="4" ry="8" fill="#FFD700"/>
-      <ellipse cx="94" cy="74" rx="4" ry="8" fill="#FFD700"/>
+      <path d="M40 82 Q55 96 70 82 Q63 90 55 92 Q47 90 40 82Z" fill="#CC2244"/>
+      <path d="M26 102 Q55 90 84 102" fill="#1a1a1a"/>
+      {[30,42,55,68,80].map((x,i)=><circle key={i} cx={x} cy={104} r="2" fill="#FFD700"/>)}
+      <ellipse cx="20" cy="72" rx="4" ry="9" fill="#FFD700"/>
+      <ellipse cx="90" cy="72" rx="4" ry="9" fill="#FFD700"/>
     </svg>
   );
 }
 
 export function CardiBAvatar() {
   return (
-    <svg width={S} height={S} viewBox="0 0 120 120">
-      {/* big colorful wig — red/pink */}
-      <ellipse cx="60" cy="36" rx="48" ry="34" fill="#CC0044"/>
-      <path d="M12 42 Q8 68 14 90 Q20 66 26 56Z" fill="#CC0044"/>
-      <path d="M108 42 Q112 68 106 90 Q100 66 94 56Z" fill="#CC0044"/>
-      {/* face */}
-      <ellipse cx="60" cy="72" rx="28" ry="32" fill="#8B5E3C"/>
-      {/* dramatic eye makeup */}
-      <ellipse cx="44" cy="64" rx="11" ry="13" fill="white"/>
-      <ellipse cx="76" cy="64" rx="11" ry="13" fill="white"/>
-      {/* shadow */}
-      <ellipse cx="44" cy="62" rx="11" ry="5" fill="#9966CC" opacity="0.5"/>
-      <ellipse cx="76" cy="62" rx="11" ry="5" fill="#9966CC" opacity="0.5"/>
-      <ellipse cx="44" cy="65" rx="7" ry="9"  fill="#1a1a1a"/>
-      <ellipse cx="76" cy="65" rx="7" ry="9"  fill="#1a1a1a"/>
-      <circle cx="44" cy="64" r="4" fill="#111"/><circle cx="76" cy="64" r="4" fill="#111"/>
-      <circle cx="42" cy="61" r="2.5" fill="white"/><circle cx="74" cy="61" r="2.5" fill="white"/>
-      {/* bold lips */}
-      <path d="M44 84 Q60 96 76 84 Q68 92 60 93 Q52 92 44 84Z" fill="#FF1493"/>
-      <line x1="44" y1="84" x2="76" y2="84" stroke="#CC0066" strokeWidth="1"/>
-      {/* long nails (cartoon) */}
-      {[34,42,50,70,78,86].map((x,i)=>(
-        <ellipse key={i} cx={x} cy={108} rx="3" ry="8" fill="#FF1493" transform={`rotate(${i<3?-15:15} ${x} 108)`}/>
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <ellipse cx="55" cy="30" rx="50" ry="30" fill="#CC0044"/>
+      <path d="M5 38 Q2 62 8 88 Q14 62 20 50Z" fill="#CC0044"/>
+      <path d="M105 38 Q108 62 102 88 Q96 62 90 50Z" fill="#CC0044"/>
+      {[[-40,16],[40,16],[-36,28],[36,28]].map(([x,y],i)=>(
+        <ellipse key={i} cx={55+x} cy={y} rx="8" ry="14" fill="#AA0033"/>
       ))}
-      {/* jewelry */}
-      {[38,50,62,74,86].map((x,i)=>(
-        <circle key={i} cx={x} cy={100+Math.abs(i-2)*2} r="3.5" fill="#FFD700"/>
+      <ellipse cx="55" cy="70" rx="28" ry="30" fill="#8B5E3C"/>
+      <ellipse cx="40" cy="60" rx="13" ry="15" fill="white"/>
+      <ellipse cx="70" cy="60" rx="13" ry="15" fill="white"/>
+      <ellipse cx="40" cy="57" rx="13" ry="7" fill="#9966CC" opacity="0.5"/>
+      <ellipse cx="70" cy="57" rx="13" ry="7" fill="#9966CC" opacity="0.5"/>
+      <ellipse cx="40" cy="62" rx="8" ry="10" fill="#1a1a1a"/>
+      <ellipse cx="70" cy="62" rx="8" ry="10" fill="#1a1a1a"/>
+      <circle cx="40" cy="61" r="4.5" fill="#111"/>
+      <circle cx="70" cy="61" r="4.5" fill="#111"/>
+      <circle cx="38" cy="58" r="2.5" fill="white"/>
+      <circle cx="68" cy="58" r="2.5" fill="white"/>
+      <path d="M38 80 Q55 96 72 80 Q64 90 55 92 Q46 90 38 80Z" fill="#FF1493"/>
+      {[22,30,38,70,78,86].map((x,i)=>(
+        <ellipse key={i} cx={x} cy={106} rx="3.5" ry="9" fill="#FF1493"
+          transform={`rotate(${i<3?-12:12} ${x} 106)`}/>
+      ))}
+      {[30,40,50,60,70,80].map((x,i)=>(
+        <circle key={i} cx={x} cy={98+Math.abs(i-2.5)*2} r="3.5" fill="#FFD700"/>
       ))}
     </svg>
   );
@@ -617,232 +588,326 @@ export function CardiBAvatar() {
 
 export function NickiMAvatar() {
   return (
-    <svg width={S} height={S} viewBox="0 0 120 120">
-      {/* big pink wig */}
-      <ellipse cx="60" cy="34" rx="50" ry="32" fill="#FF69B4"/>
-      <path d="M10 42 Q6 66 12 86 Q18 64 24 54Z" fill="#FF69B4"/>
-      <path d="M110 42 Q114 66 108 86 Q102 64 96 54Z" fill="#FF69B4"/>
-      {/* face */}
-      <ellipse cx="60" cy="72" rx="28" ry="32" fill="#C8882A"/>
-      {/* bold eye makeup */}
-      <ellipse cx="44" cy="64" rx="12" ry="14" fill="white"/>
-      <ellipse cx="76" cy="64" rx="12" ry="14" fill="white"/>
-      <ellipse cx="44" cy="63" rx="12" ry="6"  fill="#CC0044" opacity="0.4"/>
-      <ellipse cx="76" cy="63" rx="12" ry="6"  fill="#CC0044" opacity="0.4"/>
-      <ellipse cx="44" cy="66" rx="8" ry="10"  fill="#1a1a1a"/>
-      <ellipse cx="76" cy="66" rx="8" ry="10"  fill="#1a1a1a"/>
-      <circle cx="44" cy="64" r="4" fill="#111"/><circle cx="76" cy="64" r="4" fill="#111"/>
-      <circle cx="42" cy="61" r="3" fill="white"/><circle cx="74" cy="61" r="3" fill="white"/>
-      {/* lashes */}
-      {[-6,-2,2,6,10].map((x,i)=>(
-        <line key={i} x1={42+x} y1={52} x2={40+x} y2={46} stroke="#1a1a1a" strokeWidth="1.5"/>
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <ellipse cx="55" cy="28" rx="52" ry="28" fill="#FF1493"/>
+      <path d="M3 36 Q0 60 4 84 Q10 60 16 48Z" fill="#FF1493"/>
+      <path d="M107 36 Q110 60 106 84 Q100 60 94 48Z" fill="#FF1493"/>
+      <ellipse cx="36" cy="20" rx="6" ry="16" fill="#FF69B4" opacity="0.6" transform="rotate(-20 36 20)"/>
+      <ellipse cx="70" cy="18" rx="6" ry="16" fill="#CC0066" opacity="0.4" transform="rotate(15 70 18)"/>
+      <ellipse cx="55" cy="70" rx="28" ry="30" fill="#C8882A"/>
+      <ellipse cx="40" cy="62" rx="13" ry="15" fill="white"/>
+      <ellipse cx="70" cy="62" rx="13" ry="15" fill="white"/>
+      <ellipse cx="40" cy="60" rx="13" ry="6" fill="#CC0044" opacity="0.45"/>
+      <ellipse cx="70" cy="60" rx="13" ry="6" fill="#CC0044" opacity="0.45"/>
+      <ellipse cx="40" cy="64" rx="9" ry="11" fill="#1a1a1a"/>
+      <ellipse cx="70" cy="64" rx="9" ry="11" fill="#1a1a1a"/>
+      <circle cx="40" cy="63" r="5" fill="#111"/>
+      <circle cx="70" cy="63" r="5" fill="#111"/>
+      <circle cx="38" cy="59" r="3" fill="white"/>
+      <circle cx="68" cy="59" r="3" fill="white"/>
+      {[-7,-3,1,5,9].map((x,i)=>(
+        <line key={i} x1={39+x} y1={48} x2={38+x} y2={41} stroke="#1a1a1a" strokeWidth="1.8"/>
       ))}
-      {/* bold lips */}
-      <path d="M44 84 Q60 97 76 84 Q68 92 60 94 Q52 92 44 84Z" fill="#CC0044"/>
-      {/* pink outfit */}
-      <path d="M32 104 Q60 95 88 104" fill="#FF69B4"/>
-      {/* earrings — big hoops */}
-      <circle cx="24" cy="74" r="8" fill="none" stroke="#FFD700" strokeWidth="3"/>
-      <circle cx="96" cy="74" r="8" fill="none" stroke="#FFD700" strokeWidth="3"/>
+      <path d="M38 82 Q55 97 72 82 Q64 92 55 94 Q46 92 38 82Z" fill="#CC0044"/>
+      <path d="M26 102 Q55 90 84 102" fill="#FF1493"/>
+      <circle cx="18" cy="72" r="9" fill="none" stroke="#FFD700" strokeWidth="3.5"/>
+      <circle cx="92" cy="72" r="9" fill="none" stroke="#FFD700" strokeWidth="3.5"/>
     </svg>
   );
 }
 
 export function KeyshiaAvatar() {
   return (
-    <svg width={S} height={S} viewBox="0 0 120 120">
-      {/* long flowing dark hair */}
-      <path d="M22 44 Q16 72 20 106 Q26 76 32 62Z" fill="#1a1a1a"/>
-      <path d="M98 44 Q104 72 100 106 Q94 76 88 62Z" fill="#1a1a1a"/>
-      <ellipse cx="60" cy="40" rx="38" ry="26" fill="#1a1a1a"/>
-      {/* face */}
-      <ellipse cx="60" cy="72" rx="28" ry="32" fill="#7A4520"/>
-      {/* elegant eyes */}
-      <ellipse cx="45" cy="65" rx="10" ry="12" fill="white"/>
-      <ellipse cx="75" cy="65" rx="10" ry="12" fill="white"/>
-      <ellipse cx="45" cy="67" rx="7" ry="9"  fill="#3B1A5A"/>
-      <ellipse cx="75" cy="67" rx="7" ry="9"  fill="#3B1A5A"/>
-      <circle cx="45" cy="66" r="4" fill="#1a1a1a"/><circle cx="75" cy="66" r="4" fill="#1a1a1a"/>
-      <circle cx="43" cy="63" r="2.5" fill="white"/><circle cx="73" cy="63" r="2.5" fill="white"/>
-      {/* lashes */}
-      {[-6,-2,2,6].map((x,i)=>(
-        <line key={i} x1={43+x} y1={54} x2={42+x} y2={49} stroke="#1a1a1a" strokeWidth="1.2"/>
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <path d="M14 42 Q8 70 12 106 Q18 74 24 58Z" fill="#1a1a1a"/>
+      <path d="M96 42 Q102 70 98 106 Q92 74 86 58Z" fill="#1a1a1a"/>
+      <ellipse cx="55" cy="36" rx="40" ry="24" fill="#1a1a1a"/>
+      <ellipse cx="55" cy="70" rx="28" ry="30" fill="#7A4520"/>
+      <ellipse cx="41" cy="62" rx="11" ry="13" fill="white"/>
+      <ellipse cx="69" cy="62" rx="11" ry="13" fill="white"/>
+      <ellipse cx="41" cy="64" rx="7" ry="9" fill="#3B1A5A"/>
+      <ellipse cx="69" cy="64" rx="7" ry="9" fill="#3B1A5A"/>
+      <circle cx="41" cy="63" r="4" fill="#1a1a1a"/>
+      <circle cx="69" cy="63" r="4" fill="#1a1a1a"/>
+      <circle cx="39" cy="60" r="2.5" fill="white"/>
+      <circle cx="67" cy="60" r="2.5" fill="white"/>
+      {[-5,-1,3,7].map((x,i)=>(
+        <line key={i} x1={39+x} y1={51} x2={38+x} y2={45} stroke="#1a1a1a" strokeWidth="1.4"/>
       ))}
-      {/* warm smile */}
-      <path d="M46 84 Q60 94 74 84" stroke="#8B2244" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-      <path d="M50 84 Q60 92 70 84 Q64 90 60 91 Q56 90 50 84Z" fill="#CC3366"/>
-      {/* R&B outfit — purple */}
-      <path d="M32 104 Q60 95 88 104" fill="#4B0082"/>
-      {/* earrings */}
-      <ellipse cx="26" cy="74" rx="3" ry="6" fill="#9966CC"/>
-      <ellipse cx="94" cy="74" rx="3" ry="6" fill="#9966CC"/>
+      <path d="M43 80 Q55 92 67 80" stroke="#8B2244" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+      <path d="M47 80 Q55 90 63 80 Q59 87 55 88 Q51 87 47 80Z" fill="#CC3366"/>
+      <path d="M28 102 Q55 90 82 102" fill="#4B0082"/>
+      <ellipse cx="20" cy="72" rx="3.5" ry="7" fill="#9966CC"/>
+      <ellipse cx="90" cy="72" rx="3.5" ry="7" fill="#9966CC"/>
     </svg>
   );
 }
 
 export function EdSheeranAvatar() {
   return (
-    <svg width={S} height={S} viewBox="0 0 120 120">
-      {/* red/ginger hair — messy */}
-      <ellipse cx="60" cy="42" rx="34" ry="26" fill="#CC4400"/>
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <ellipse cx="55" cy="38" rx="34" ry="24" fill="#CC4400"/>
       {[-16,-8,0,8,16].map((x,i)=>(
-        <ellipse key={i} cx={44+i*8+x} cy={30} rx="7" ry="12" fill="#CC4400" transform={`rotate(${-10+i*5} ${44+i*8+x} 30)`}/>
+        <ellipse key={i} cx={40+i*8} cy={26} rx="9" ry="14" fill="#CC4400"
+          transform={`rotate(${-10+i*5} ${40+i*8} 26)`}/>
       ))}
-      {/* face */}
-      <ellipse cx="60" cy="72" rx="28" ry="32" fill="#F5D5B0"/>
-      {/* freckles */}
-      {[[-14,-2],[14,-2],[-16,4],[16,4],[-10,8],[10,8],[0,6]].map(([x,y],i)=>(
-        <circle key={i} cx={60+x} cy={76+y} r="2" fill="#CC8844" opacity="0.55"/>
+      <ellipse cx="55" cy="68" rx="28" ry="30" fill="#F5D5B0"/>
+      {[[-16,-2],[16,-2],[-18,4],[18,4],[-12,8],[12,8],[0,6],
+        [-8,-6],[8,-6],[-14,12],[14,12],[-6,14],[6,14]].map(([x,y],i)=>(
+        <circle key={i} cx={55+x} cy={74+y} r="1.8" fill="#CC8844" opacity="0.55"/>
       ))}
-      {/* warm eyes — green */}
-      <circle cx="45" cy="65" r="9" fill="white"/><circle cx="75" cy="65" r="9" fill="white"/>
-      <circle cx="46" cy="66" r="6" fill="#228B22"/><circle cx="76" cy="66" r="6" fill="#228B22"/>
-      <circle cx="46" cy="65" r="3" fill="#1a1a1a"/><circle cx="76" cy="65" r="3" fill="#1a1a1a"/>
-      <circle cx="45" cy="63" r="2" fill="white"/><circle cx="75" cy="63" r="2" fill="white"/>
-      {/* friendly smile */}
-      <path d="M46 83 Q60 94 74 83" stroke="#8B4513" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-      {/* casual T-shirt & guitar hint */}
-      <path d="M32 104 Q60 95 88 104" fill="#4A90D9"/>
-      <ellipse cx="94" cy="86" rx="8" ry="22" fill="#8B6914" opacity="0.8"/>
-      <ellipse cx="94" cy="80" rx="11" ry="12" fill="#A0522D"/>
-      <line x1="94" y1="68" x2="94" y2="108" stroke="#8B6914" strokeWidth="3"/>
-      {[70,75,80,85,90,95].map((y,i)=>(
-        <line key={i} x1={88} y1={y} x2={100} y2={y} stroke="#C0C0C0" strokeWidth="0.8"/>
+      <circle cx="41" cy="61" r="10" fill="white"/>
+      <circle cx="69" cy="61" r="10" fill="white"/>
+      <circle cx="42" cy="62" r="6.5" fill="#228B22"/>
+      <circle cx="70" cy="62" r="6.5" fill="#228B22"/>
+      <circle cx="42" cy="61" r="3.5" fill="#1a1a1a"/>
+      <circle cx="70" cy="61" r="3.5" fill="#1a1a1a"/>
+      <circle cx="40" cy="59" r="2" fill="white"/>
+      <circle cx="68" cy="59" r="2" fill="white"/>
+      <path d="M42 79 Q55 91 68 79" stroke="#8B4513" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+      <ellipse cx="92" cy="80" rx="12" ry="14" fill="#A0522D"/>
+      <ellipse cx="92" cy="75" rx="9" ry="10" fill="#8B4513"/>
+      <line x1="92" y1="65" x2="92" y2="96" stroke="#6B3A10" strokeWidth="3"/>
+      {[68,73,78,83,88,93].map((y,i)=>(
+        <line key={i} x1={86} y1={y} x2={98} y2={y} stroke="#DDD" strokeWidth="0.8"/>
       ))}
+      <path d="M28 100 Q55 88 82 100" fill="#4A90D9"/>
     </svg>
   );
 }
 
 export function ChrisStapletonAvatar() {
   return (
-    <svg width={S} height={S} viewBox="0 0 120 120">
-      {/* cowboy hat */}
-      <ellipse cx="60" cy="38" rx="46" ry="12" fill="#4A3728" stroke="#3A2718" strokeWidth="1.5"/>
-      <path d="M28 38 Q28 14 60 12 Q92 14 92 38Z" fill="#5A4738" stroke="#3A2718" strokeWidth="1.5"/>
-      {/* hat band */}
-      <rect x="28" y="35" width="64" height="6" rx="2" fill="#8B6914"/>
-      {/* face */}
-      <ellipse cx="60" cy="74" rx="28" ry="30" fill="#C8882A"/>
-      {/* thick beard */}
-      <path d="M32 82 Q32 104 60 108 Q88 104 88 82 Q82 96 60 98 Q38 96 32 82Z" fill="#3A2A1A"/>
-      {/* mustache */}
-      <path d="M42 78 Q60 84 78 78 Q68 82 60 82 Q52 82 42 78Z" fill="#2A1A0A"/>
-      {/* eyes — soulful */}
-      <circle cx="45" cy="65" r="9" fill="white"/><circle cx="75" cy="65" r="9" fill="white"/>
-      <circle cx="46" cy="66" r="6" fill="#3B2010"/><circle cx="76" cy="66" r="6" fill="#3B2010"/>
-      <circle cx="46" cy="65" r="3" fill="#1a1a1a"/><circle cx="76" cy="65" r="3" fill="#1a1a1a"/>
-      <circle cx="45" cy="63" r="2" fill="white"/><circle cx="75" cy="63" r="2" fill="white"/>
-      {/* flannel shirt */}
-      <path d="M32 104 Q60 96 88 104" fill="#CC3333"/>
-      {[32,40,48,56,64,72,80,88].map((x,i)=>(
-        <line key={i} x1={x} y1={104} x2={x} y2={116} stroke="#AA2222" strokeWidth="3"/>
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <ellipse cx="55" cy="38" rx="50" ry="12" fill="#3A2408" stroke="#2A1408" strokeWidth="1.5"/>
+      <path d="M22 38 Q22 12 55 10 Q88 12 88 38Z" fill="#4A3418" stroke="#2A1408" strokeWidth="1.5"/>
+      <rect x="22" y="34" width="66" height="7" rx="2" fill="#8B6914"/>
+      <path d="M26 80 Q26 108 55 112 Q84 108 84 80 Q78 98 55 100 Q32 98 26 80Z" fill="#2A1A08"/>
+      <path d="M38 74 Q55 82 72 74 Q64 80 55 80 Q46 80 38 74Z" fill="#1A0A00"/>
+      <ellipse cx="55" cy="66" rx="28" ry="28" fill="#C8882A"/>
+      <circle cx="41" cy="60" r="10" fill="white"/>
+      <circle cx="69" cy="60" r="10" fill="white"/>
+      <circle cx="42" cy="61" r="6.5" fill="#3B2010"/>
+      <circle cx="70" cy="61" r="6.5" fill="#3B2010"/>
+      <circle cx="42" cy="60" r="3.5" fill="#1a1a1a"/>
+      <circle cx="70" cy="60" r="3.5" fill="#1a1a1a"/>
+      <circle cx="40" cy="58" r="2" fill="white"/>
+      <circle cx="68" cy="58" r="2" fill="white"/>
+      <path d="M20 102 Q55 90 90 102" fill="#CC3333"/>
+      {[22,31,40,49,58,67,76,85].map((x,i)=>(
+        <line key={i} x1={x} y1={102} x2={x} y2={110} stroke="#AA2020" strokeWidth="3"/>
       ))}
-      <line x1="32" y1="110" x2="88" y2="110" stroke="#AA2222" strokeWidth="2"/>
+      <line x1="20" y1="107" x2="90" y2="107" stroke="#AA2020" strokeWidth="2"/>
     </svg>
   );
 }
 
-export function KPopStarAvatar() {
+export function KPopIdolAvatar() {
   return (
-    <svg width={S} height={S} viewBox="0 0 120 120">
-      {/* stylized colorful hair — lavender/silver */}
-      <ellipse cx="60" cy="38" rx="36" ry="26" fill="#9966CC"/>
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <ellipse cx="55" cy="34" rx="36" ry="24" fill="#B388FF"/>
       {[-14,-6,2,10,18].map((x,i)=>(
-        <path key={i} d={`M${40+i*9},44 Q${40+i*9+x},${24} ${42+i*8+x},${12}`} fill="#B388FF"/>
+        <path key={i} d={`M${36+i*9},38 Q${36+i*9+x},${18} ${38+i*8+x},${8}`}
+          fill={i%2===0?"#B388FF":"#9B59D0"}/>
       ))}
-      {/* face — flawless k-pop aesthetic */}
-      <ellipse cx="60" cy="72" rx="26" ry="30" fill="#F8E8D0"/>
-      {/* gradient eye makeup */}
-      <ellipse cx="44" cy="64" rx="11" ry="13" fill="white"/>
-      <ellipse cx="76" cy="64" rx="11" ry="13" fill="white"/>
-      <ellipse cx="44" cy="63" rx="11" ry="5"  fill="#9966CC" opacity="0.3"/>
-      <ellipse cx="76" cy="63" rx="11" ry="5"  fill="#9966CC" opacity="0.3"/>
-      <ellipse cx="44" cy="66" rx="7"  ry="9"  fill="#1a1a1a"/>
-      <ellipse cx="76" cy="66" rx="7"  ry="9"  fill="#1a1a1a"/>
-      <circle cx="44" cy="65" r="4" fill="#111"/><circle cx="76" cy="65" r="4" fill="#111"/>
-      <circle cx="42" cy="62" r="2.5" fill="white"/><circle cx="74" cy="62" r="2.5" fill="white"/>
-      {/* perfect smile */}
-      <path d="M48 84 Q60 92 72 84" stroke="#CC4466" strokeWidth="2" fill="none" strokeLinecap="round"/>
-      <circle cx="34" cy="76" r="5" fill="#FFB6C1" opacity="0.55"/>
-      <circle cx="86" cy="76" r="5" fill="#FFB6C1" opacity="0.55"/>
-      {/* stage outfit — sparkly */}
-      <path d="M34 104 Q60 95 86 104" fill="#6600CC"/>
-      {[36,44,52,60,68,76,84].map((x,i)=>(
-        <circle key={i} cx={x} cy={106} r="2" fill="#FFD700"/>
+      <ellipse cx="55" cy="70" rx="26" ry="28" fill="#F8E8D0"/>
+      <ellipse cx="40" cy="62" rx="12" ry="14" fill="white"/>
+      <ellipse cx="70" cy="62" rx="12" ry="14" fill="white"/>
+      <ellipse cx="40" cy="60" rx="12" ry="5" fill="#9966CC" opacity="0.35"/>
+      <ellipse cx="70" cy="60" rx="12" ry="5" fill="#9966CC" opacity="0.35"/>
+      <ellipse cx="40" cy="64" rx="8" ry="10" fill="#1a1a1a"/>
+      <ellipse cx="70" cy="64" rx="8" ry="10" fill="#1a1a1a"/>
+      <circle cx="40" cy="63" r="4.5" fill="#111"/>
+      <circle cx="70" cy="63" r="4.5" fill="#111"/>
+      <circle cx="38" cy="60" r="2.8" fill="white"/>
+      <circle cx="68" cy="60" r="2.8" fill="white"/>
+      <circle cx="28" cy="74" r="6" fill="#FFB6C1" opacity="0.5"/>
+      <circle cx="82" cy="74" r="6" fill="#FFB6C1" opacity="0.5"/>
+      <path d="M44 82 Q55 90 66 82" stroke="#CC4466" strokeWidth="2" fill="none" strokeLinecap="round"/>
+      <path d="M28 102 Q55 88 82 102" fill="#6600CC"/>
+      {[28,37,46,55,64,73,82].map((x,i)=>(
+        <circle key={i} cx={x} cy={104} r="2.5" fill="#FFD700"/>
       ))}
-      {/* microphone */}
-      <circle cx="94" cy="72" r="8" fill="#888"/>
-      <line x1="94" y1="80" x2="94" y2="100" stroke="#666" strokeWidth="3"/>
+      <circle cx="90" cy="68" r="9" fill="#888"/>
+      <circle cx="90" cy="68" r="7" fill="#999"/>
+      <line x1="90" y1="77" x2="90" y2="100" stroke="#666" strokeWidth="3"/>
     </svg>
   );
 }
 
 export function KPopQueenAvatar() {
   return (
-    <svg width={S} height={S} viewBox="0 0 120 120">
-      {/* flowing black/dark hair with highlights */}
-      <path d="M22 42 Q16 70 18 104 Q24 74 30 60Z" fill="#1a1a1a"/>
-      <path d="M98 42 Q104 70 102 104 Q96 74 90 60Z" fill="#1a1a1a"/>
-      <ellipse cx="60" cy="38" rx="38" ry="26" fill="#1a1a1a"/>
-      {/* highlight streaks */}
-      <path d="M38 20 Q44 34 40 50" stroke="#9966CC" strokeWidth="3" fill="none" opacity="0.7"/>
-      <path d="M78 22 Q72 36 76 52" stroke="#FF69B4" strokeWidth="3" fill="none" opacity="0.7"/>
-      {/* face */}
-      <ellipse cx="60" cy="72" rx="26" ry="30" fill="#F5E0C8"/>
-      {/* jeweled bindi/gem */}
-      <circle cx="60" cy="46" r="4" fill="#FF1493"/>
-      <circle cx="60" cy="46" r="2" fill="#FFD700"/>
-      {/* stunning eyes */}
-      <ellipse cx="44" cy="64" rx="11" ry="13" fill="white"/>
-      <ellipse cx="76" cy="64" rx="11" ry="13" fill="white"/>
-      <ellipse cx="44" cy="64" rx="7"  ry="9"  fill="#1a1a1a"/>
-      <ellipse cx="76" cy="64" rx="7"  ry="9"  fill="#1a1a1a"/>
-      <circle cx="44" cy="63" r="4" fill="#111"/><circle cx="76" cy="63" r="4" fill="#111"/>
-      <circle cx="42" cy="60" r="2.5" fill="white"/><circle cx="74" cy="60" r="2.5" fill="white"/>
-      {/* eyeliner wings */}
-      <path d="M33 57 Q38 55 44 57" stroke="#1a1a1a" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-      <path d="M76 57 Q82 55 87 57" stroke="#1a1a1a" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-      {/* perfect lips */}
-      <path d="M46 83 Q60 93 74 83 Q66 90 60 91 Q54 90 46 83Z" fill="#CC2244"/>
-      <circle cx="34" cy="75" r="5" fill="#FFB6C1" opacity="0.5"/>
-      <circle cx="86" cy="75" r="5" fill="#FFB6C1" opacity="0.5"/>
-      {/* idol outfit */}
-      <path d="M34 104 Q60 95 86 104" fill="#CC0044"/>
-      {/* earrings */}
-      <path d="M22 70 L22 84" stroke="#FFD700" strokeWidth="3" strokeLinecap="round"/>
-      <circle cx="22" cy="86" r="4" fill="#FFD700"/>
-      <path d="M98 70 L98 84" stroke="#FFD700" strokeWidth="3" strokeLinecap="round"/>
-      <circle cx="98" cy="86" r="4" fill="#FFD700"/>
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <path d="M14 40 Q8 68 10 106 Q16 72 22 56Z" fill="#1a1a1a"/>
+      <path d="M96 40 Q102 68 100 106 Q94 72 88 56Z" fill="#1a1a1a"/>
+      <ellipse cx="55" cy="34" rx="40" ry="24" fill="#1a1a1a"/>
+      <line x1="30" y1="16" x2="38" y2="48" stroke="#FF1493" strokeWidth="4" opacity="0.8" strokeLinecap="round"/>
+      <line x1="74" y1="18" x2="68" y2="50" stroke="#9966CC" strokeWidth="4" opacity="0.8" strokeLinecap="round"/>
+      <ellipse cx="55" cy="70" rx="26" ry="28" fill="#F5E0C8"/>
+      <circle cx="55" cy="44" r="5" fill="#FF1493"/>
+      <circle cx="55" cy="44" r="2.5" fill="#FFD700"/>
+      <ellipse cx="40" cy="62" rx="12" ry="14" fill="white"/>
+      <ellipse cx="70" cy="62" rx="12" ry="14" fill="white"/>
+      <ellipse cx="40" cy="62" rx="8" ry="10" fill="#1a1a1a"/>
+      <ellipse cx="70" cy="62" rx="8" ry="10" fill="#1a1a1a"/>
+      <circle cx="40" cy="61" r="4.5" fill="#111"/>
+      <circle cx="70" cy="61" r="4.5" fill="#111"/>
+      <circle cx="38" cy="58" r="3" fill="white"/>
+      <circle cx="68" cy="58" r="3" fill="white"/>
+      <path d="M26 54 Q34 50 40 54" stroke="#1a1a1a" strokeWidth="2" fill="none" strokeLinecap="round"/>
+      <path d="M70 54 Q76 50 84 54" stroke="#1a1a1a" strokeWidth="2" fill="none" strokeLinecap="round"/>
+      <path d="M42 80 Q55 92 68 80 Q61 88 55 90 Q49 88 42 80Z" fill="#CC0044"/>
+      <circle cx="28" cy="73" r="5" fill="#FFB6C1" opacity="0.5"/>
+      <circle cx="82" cy="73" r="5" fill="#FFB6C1" opacity="0.5"/>
+      <path d="M28 102 Q55 90 82 102" fill="#CC0044"/>
+      {[30,40,55,70,80].map((x,i)=><circle key={i} cx={x} cy={104} r="2.5" fill="#FFD700"/>)}
+      <line x1="17" y1="68" x2="17" y2="82" stroke="#FFD700" strokeWidth="2.5" strokeLinecap="round"/>
+      <path d="M12 82 L17 90 L22 82" stroke="#FFD700" strokeWidth="2" fill="none"/>
+      <line x1="93" y1="68" x2="93" y2="82" stroke="#FFD700" strokeWidth="2.5" strokeLinecap="round"/>
+      <path d="M88 82 L93 90 L98 82" stroke="#FFD700" strokeWidth="2" fill="none"/>
     </svg>
   );
 }
 
-// Map id → component
+// ─── CONTENT STYLE OVERLAYS ──────────────────────────────────────────────────
+
+export function TikTokStyleAvatar() {
+  return (
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <rect x="20" y="6" width="70" height="98" rx="10" fill="#1a1a1a" stroke="#333" strokeWidth="2"/>
+      <rect x="24" y="14" width="62" height="82" rx="4" fill="#1A1A2E"/>
+      <ellipse cx="55" cy="38" rx="12" ry="12" fill="#FF6B6B" opacity="0.8"/>
+      <path d="M38 70 Q55 52 72 70" fill="#FF6B6B" opacity="0.8"/>
+      <rect x="24" y="68" width="62" height="28" rx="0" fill="black" opacity="0.7"/>
+      <rect x="26" y="71" width="58" height="10" rx="3" fill="white"/>
+      <text x="55" y="79" textAnchor="middle" fontSize="7" fontWeight="bold" fill="#1a1a1a">BOLD CAPTION</text>
+      <rect x="26" y="83" width="44" height="9" rx="3" fill="#FF0050"/>
+      <text x="48" y="90" textAnchor="middle" fontSize="7" fontWeight="bold" fill="white">SUBTITLE</text>
+      <rect x="24" y="14" width="4" height="82" rx="2" fill="#00F2EA" opacity="0.6"/>
+      <text x="80" y="50" fontSize="10" fill="#FF0050">♥</text>
+      <text x="80" y="62" fontSize="8" fill="white">💬</text>
+      <text x="80" y="74" fontSize="8" fill="white">↗</text>
+    </svg>
+  );
+}
+
+export function YTDocumentaryAvatar() {
+  return (
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <rect x="4" y="4" width="102" height="102" rx="6" fill="#0D0D0D"/>
+      <rect x="4" y="4" width="102" height="18" rx="6" fill="#000"/>
+      <rect x="4" y="88" width="102" height="18" rx="6" fill="#000"/>
+      <rect x="4" y="22" width="102" height="66" fill="#0D1F2D"/>
+      {[[14,30],[28,40],[44,28],[60,36],[76,30],[90,42],[18,56],[36,60],[54,52],[70,58],[88,50],[24,72],[48,68],[66,72],[84,66]].map(([x,y],i)=>(
+        <circle key={i} cx={x} cy={y} r="0.8" fill="white" opacity="0.18"/>
+      ))}
+      <ellipse cx="55" cy="46" rx="10" ry="10" fill="#1B3A4B"/>
+      <path d="M40 66 Q55 52 70 66" fill="#1B3A4B"/>
+      <rect x="4" y="22" width="102" height="66" fill="#0D2030" opacity="0.5"/>
+      <ellipse cx="82" cy="32" rx="6" ry="3" fill="white" opacity="0.15"/>
+      <ellipse cx="82" cy="32" rx="2" ry="1" fill="white" opacity="0.4"/>
+      <rect x="18" y="80" width="74" height="11" rx="2" fill="black" opacity="0.8"/>
+      <text x="55" y="88" textAnchor="middle" fontSize="6" fill="white" opacity="0.9">▶ Documentary Look</text>
+      <rect x="38" y="45" width="34" height="22" rx="5" fill="#FF0000" opacity="0.85"/>
+      <polygon points="48,50 64,56 48,62" fill="white"/>
+    </svg>
+  );
+}
+
+export function IGReelAvatar() {
+  return (
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <defs>
+        <linearGradient id="igG" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#F58529"/>
+          <stop offset="33%" stopColor="#DD2A7B"/>
+          <stop offset="66%" stopColor="#8134AF"/>
+          <stop offset="100%" stopColor="#515BD4"/>
+        </linearGradient>
+      </defs>
+      <rect x="4" y="4" width="102" height="102" rx="16" fill="url(#igG)"/>
+      <rect x="16" y="10" width="78" height="90" rx="8" fill="#0A0A0A"/>
+      <rect x="18" y="16" width="74" height="78" rx="4" fill="#1A0A2E"/>
+      <rect x="18" y="16" width="74" height="78" rx="4" fill="#FF6B9D" opacity="0.3"/>
+      <circle cx="55" cy="40" r="11" fill="#FF6B9D" opacity="0.9"/>
+      <path d="M40 66 Q50 48 55 50 Q60 48 70 66" fill="#FF6B9D" opacity="0.9"/>
+      <line x1="18" y1="38" x2="28" y2="38" stroke="white" strokeWidth="2" opacity="0.6"/>
+      <line x1="18" y1="50" x2="32" y2="50" stroke="white" strokeWidth="2" opacity="0.6"/>
+      <text x="74" y="38" fontSize="14" fill="white" opacity="0.9">♪</text>
+      <rect x="18" y="16" width="30" height="11" rx="3" fill="#1a1a1a" opacity="0.7"/>
+      <text x="33" y="24" textAnchor="middle" fontSize="7" fill="white" fontWeight="bold">REELS</text>
+      <rect x="18" y="76" width="74" height="18" rx="0" fill="black" opacity="0.65"/>
+      <rect x="20" y="78" width="52" height="8" rx="3" fill="white"/>
+      <text x="46" y="84" textAnchor="middle" fontSize="6" fill="#1a1a1a" fontWeight="bold">✨ Bright &amp; Fast</text>
+      <text x="80" y="52" fontSize="9" fill="white">♥</text>
+      <text x="80" y="63" fontSize="8" fill="white">💬</text>
+    </svg>
+  );
+}
+
+export function GamingOverlayAvatar() {
+  return (
+    <svg width="110" height="110" viewBox="0 0 110 110">
+      <rect x="4" y="4" width="102" height="102" rx="8" fill="#0A0A14"/>
+      <rect x="4" y="4" width="102" height="102" rx="8" fill="none" stroke="#00FF41" strokeWidth="2" opacity="0.8"/>
+      <rect x="10" y="10" width="50" height="8" rx="3" fill="#333"/>
+      <rect x="10" y="10" width="34" height="8" rx="3" fill="#00FF41"/>
+      <text x="12" y="17" fontSize="5" fill="white">HP</text>
+      <rect x="78" y="8" width="26" height="26" rx="3" fill="#1a1a2e" stroke="#00FF41" strokeWidth="1" opacity="0.8"/>
+      <circle cx="88" cy="21" r="3" fill="#00FF41" opacity="0.8"/>
+      <circle cx="96" cy="16" r="2" fill="#FF0050" opacity="0.8"/>
+      <circle cx="94" cy="27" r="2" fill="#FF0050" opacity="0.8"/>
+      <rect x="10" y="22" width="30" height="8" rx="2" fill="#1a1a2e" opacity="0.8"/>
+      <text x="12" y="28" fontSize="4.5" fill="#00FF41">SCORE: 99,999</text>
+      <circle cx="55" cy="60" r="12" fill="none" stroke="#00FF41" strokeWidth="1.5" opacity="0.7"/>
+      <line x1="55" y1="44" x2="55" y2="52" stroke="#00FF41" strokeWidth="1.5" opacity="0.9"/>
+      <line x1="55" y1="68" x2="55" y2="76" stroke="#00FF41" strokeWidth="1.5" opacity="0.9"/>
+      <line x1="39" y1="60" x2="47" y2="60" stroke="#00FF41" strokeWidth="1.5" opacity="0.9"/>
+      <line x1="63" y1="60" x2="71" y2="60" stroke="#00FF41" strokeWidth="1.5" opacity="0.9"/>
+      <circle cx="55" cy="60" r="2" fill="#00FF41" opacity="0.9"/>
+      <rect x="72" y="82" width="30" height="16" rx="3" fill="#1a1a2e" stroke="#00FF41" strokeWidth="1" opacity="0.9"/>
+      <text x="87" y="88" textAnchor="middle" fontSize="5" fill="white">AMMO</text>
+      <text x="87" y="96" textAnchor="middle" fontSize="7" fill="#00FF41" fontWeight="bold">30/90</text>
+      <rect x="32" y="92" width="38" height="12" rx="4" fill="#7B2FBE" opacity="0.9"/>
+      <text x="51" y="101" textAnchor="middle" fontSize="7" fill="white" fontWeight="bold">GAMING</text>
+      {[20,30,40,50,60,70,80].map((y,i)=>(
+        <line key={i} x1="4" y1={y} x2="106" y2={y} stroke="white" strokeWidth="0.4" opacity="0.04"/>
+      ))}
+    </svg>
+  );
+}
+
+// ─── AVATAR MAP ───────────────────────────────────────────────────────────────
+
 export const AVATAR_MAP: Record<string, React.FC> = {
-  "c-pup":       ScoobyAvatar,
-  "c-sponge":    SpongeSkinAvatar,
-  "c-mouse":     ToonMouseAvatar,
-  "c-princess":  MagicPrincessAvatar,
-  "c-robot":     SpaceBotAvatar,
-  "c-lion":      JungleKingAvatar,
-  "a-naruto":    NarutoAvatar,
-  "a-pikachu":   PikachuAvatar,
-  "a-luffy":     LuffyAvatar,
-  "a-goku":      GokuAvatar,
-  "a-tanjiro":   TanjiroAvatar,
-  "a-deku":      DekuAvatar,
-  "a-sasuke":    SasukeAvatar,
-  "a-sailor":    SailorMoonAvatar,
-  "a-saitama":   OnePunchAvatar,
-  "a-zoro":      ZoroAvatar,
-  "ar-biggie":   BiggieAvatar,
-  "ar-tupac":    TupacAvatar,
-  "ar-beyonce":  BeyonceAvatar,
-  "ar-cardib":   CardiBAvatar,
-  "ar-nicki":    NickiMAvatar,
-  "ar-keisha":   KeyshiaAvatar,
-  "ar-ed":       EdSheeranAvatar,
-  "ar-stapleton":ChrisStapletonAvatar,
-  "ar-kpop1":    KPopStarAvatar,
-  "ar-kpop2":    KPopQueenAvatar,
+  "c-pup":        ScoobyAvatar,
+  "c-sponge":     SpongeBobAvatar,
+  "c-mouse":      TomCatAvatar,
+  "c-princess":   CinderellaSkinAvatar,
+  "c-robot":      BenderRobotAvatar,
+  "c-lion":       SimbaAvatar,
+  "a-naruto":     NarutoAvatar,
+  "a-pikachu":    PikachuAvatar,
+  "a-luffy":      LuffyAvatar,
+  "a-goku":       GokuAvatar,
+  "a-tanjiro":    TanjiroAvatar,
+  "a-deku":       DekuAvatar,
+  "a-sasuke":     SasukeAvatar,
+  "a-sailor":     SailorMoonAvatar,
+  "a-saitama":    SaitamaAvatar,
+  "a-zoro":       ZoroAvatar,
+  "ar-biggie":    BiggieAvatar,
+  "ar-tupac":     TupacAvatar,
+  "ar-beyonce":   BeyonceAvatar,
+  "ar-cardib":    CardiBAvatar,
+  "ar-nicki":     NickiMAvatar,
+  "ar-keisha":    KeyshiaAvatar,
+  "ar-ed":        EdSheeranAvatar,
+  "ar-stapleton": ChrisStapletonAvatar,
+  "ar-kpop1":     KPopIdolAvatar,
+  "ar-kpop2":     KPopQueenAvatar,
+  "st-tiktok":    TikTokStyleAvatar,
+  "st-yt-doc":    YTDocumentaryAvatar,
+  "st-ig-reel":   IGReelAvatar,
+  "st-gaming":    GamingOverlayAvatar,
 };

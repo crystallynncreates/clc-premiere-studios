@@ -4,7 +4,7 @@ import { Film, Plus, Sparkles, Music, Type, Wand2, Scissors, Zap, Upload, Palett
 import { useStore } from "../store/useStore";
 import { TIER_LIMITS } from "../types";
 import { MUSIC_LIBRARY, GENRE_LABELS, formatDuration } from "../data/music";
-import { ALL_CHAR_SKINS, FREE_SKINS, ANIME_PAID_SKINS, ARTIST_SKINS } from "../data/characterSkins";
+import { ALL_CHAR_SKINS, FREE_SKINS, ANIME_PAID_SKINS, ARTIST_SKINS, STYLE_SKINS } from "../data/characterSkins";
 import { AVATAR_MAP } from "../components/CharacterAvatars";
 
 const FILTERS = ["None","Vivid","Dreamy","Vintage","Chrome","Jade","Neon","Noir"];
@@ -739,12 +739,13 @@ function MusicTab({ limit, navigateToAccount }: { limit: TierLimitShape; navigat
 // ─── Skins Tab (embedded) ─────────────────────────────────────────────────
 function SkinsTab({ navigateToAccount }: { navigateToAccount:()=>void }) {
   const { user, selectedSkinId, setSelectedSkin } = useStore();
-  const [skinTab, setSkinTab] = useState<"cartoon"|"anime"|"artists">("cartoon");
+  const [skinTab, setSkinTab] = useState<"cartoon"|"anime"|"artists"|"styles">("cartoon");
 
   const SKIN_TABS = [
     { id: "cartoon" as const, label: "🎭 Cartoon", skins: FREE_SKINS },
     { id: "anime"   as const, label: "⚡ Anime",   skins: ANIME_PAID_SKINS },
     { id: "artists" as const, label: "🎤 Artists", skins: ARTIST_SKINS },
+    { id: "styles"  as const, label: "🎬 Styles",  skins: STYLE_SKINS },
   ];
 
   const activeSkins = SKIN_TABS.find((t)=>t.id===skinTab)!.skins;
@@ -770,7 +771,9 @@ function SkinsTab({ navigateToAccount }: { navigateToAccount:()=>void }) {
       {skinTab!=="cartoon" && (
         <div className="bg-amber-900/30 border border-amber-600/50 rounded-xl p-2 text-center">
           <p className="text-amber-300 text-xs font-semibold">
-            {skinTab==="anime" ? "⚡ Basic+ plan unlocks Anime characters" : "🎤 Basic+ plan unlocks Artist avatars"}
+            {skinTab==="anime" ? "⚡ Basic+ unlocks Anime characters"
+            : skinTab==="artists" ? "🎤 Basic+ unlocks Artist avatars"
+            : "🎬 Basic+ unlocks Content Style overlays"}
           </p>
         </div>
       )}
