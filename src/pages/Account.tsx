@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Check } from "lucide-react";
 import { useStore } from "../store/useStore";
-import { TIER_LIMITS, TIER_PRICES, type SubscriptionTier } from "../types";
+import { TIER_LIMITS, TIER_PRICES, TIER_PRICES_ANNUAL, type SubscriptionTier } from "../types";
 import CLCLogo from "../components/Logo";
 
 const PLANS = [
@@ -13,6 +13,7 @@ const PLANS = [
     features: [
       "3 min recording/day",
       "Basic video editing",
+      "Upload & export video (free)",
       "2 starter skins",
       "Royalty-free music library",
       "Local video export",
@@ -26,13 +27,12 @@ const PLANS = [
     features: [
       "50 min recording/day",
       "Full video editor",
-      "AI-powered editing & recommendations",
-      "AI audio perfection",
-      "AI music creator with your voice",
-      "1 new cartoon skin/month",
-      "1 scheduled social post/month",
+      "Go Live on all platforms",
+      "Add clips via YouTube/social URL",
+      "5 scheduled social posts/month",
       "YouTube, Instagram, X, Snapchat posting",
-      "Live streaming",
+      "1 new cartoon skin/month",
+      "Premium stickers & overlays",
     ],
   },
   {
@@ -43,12 +43,14 @@ const PLANS = [
     features: [
       "UNLIMITED recording",
       "Full editor — all features",
-      "All AI tools",
+      "🤖 AI-Powered Studio (Pro exclusive)",
+      "AI voice blend with top artists",
+      "AI music creator with your voice",
       "AI thumbnail & caption creator",
-      "1 new cartoon skin/month",
       "UNLIMITED scheduled posts",
-      "Post to all platforms",
-      "Live streaming with AI enhancement",
+      "Per-platform scheduling (different times)",
+      "Go Live with AI enhancement",
+      "1 new cartoon skin/month",
       "Priority processing",
     ],
   },
@@ -63,8 +65,14 @@ const CARD = {
 export default function AccountPage() {
   const { user, setTier } = useStore();
   const [processing, setProcessing] = useState(false);
+  const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
   const limit = TIER_LIMITS[user.tier];
   const used  = user.recordingSecondsUsedToday;
+
+  const getDisplayPrice = (tier: SubscriptionTier) => {
+    if (tier === "free") return "Free";
+    return billing === "annual" ? TIER_PRICES_ANNUAL[tier] : TIER_PRICES[tier];
+  };
 
   const upgrade = (tier: SubscriptionTier) => {
     if (tier === user.tier) return;
@@ -72,7 +80,9 @@ export default function AccountPage() {
       if (confirm("Downgrade to Free? You'll lose premium features.")) setTier("free");
       return;
     }
-    if (confirm(`Upgrade to ${tier} — ${TIER_PRICES[tier]}/month?\n\n(In production this opens a Stripe payment sheet)`)) {
+    const price = getDisplayPrice(tier);
+    const billingNote = billing === "annual" ? " (billed annually)" : " billed monthly";
+    if (confirm(`Upgrade to ${tier} — ${price}${billingNote}?\n\n(In production this opens a Stripe payment sheet)`)) {
       setProcessing(true);
       setTimeout(() => {
         setTier(tier);
@@ -146,11 +156,32 @@ export default function AccountPage() {
       {/* Plans */}
       <div>
         <p className="text-white font-bold text-xl text-center mb-1">Choose Your Plan</p>
-        <p className="text-white/40 text-sm text-center mb-5">Cancel anytime · Secure payment via Stripe</p>
+        <p className="text-white/40 text-sm text-center mb-4">Cancel anytime · Secure payment via Stripe</p>
+
+        {/* Billing toggle */}
+        <div className="flex items-center justify-center gap-1 mb-5">
+          {(["monthly", "annual"] as const).map((b) => (
+            <button
+              key={b}
+              onClick={() => setBilling(b)}
+              className="px-5 py-2 rounded-xl font-bold text-sm transition-all"
+              style={billing === b
+                ? { background: "linear-gradient(135deg, #7C5CF6, #9D6FF7)", color: "white" }
+                : { background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.4)" }
+              }
+            >
+              {b === "monthly" ? "Monthly" : "Annual"}
+              {b === "annual" && (
+                <span className="ml-1.5 text-xs opacity-70">(Pro: $120/yr)</span>
+              )}
+            </button>
+          ))}
+        </div>
 
         <div className="space-y-4">
           {PLANS.map((plan) => {
             const isCurrent = user.tier === plan.tier;
+            const displayPrice = getDisplayPrice(plan.tier);
             return (
               <div
                 key={plan.tier}
@@ -171,13 +202,27 @@ export default function AccountPage() {
                     ★ MOST POPULAR
                   </div>
                 )}
+                {plan.tier === "pro" && (
+                  <div
+                    className="py-1.5 text-center text-xs font-bold tracking-widest"
+                    style={{ background: "linear-gradient(90deg, #7C5CF6, #9D6FF7)", color: "white" }}
+                  >
+                    🤖 AI STUDIO INCLUDED
+                  </div>
+                )}
                 <div className="p-5">
                   <div className="flex items-start justify-between mb-4">
                     <div>
                       <p className="text-white font-bold text-xl capitalize">{plan.tier}</p>
                       <p className="text-2xl font-bold mt-0.5" style={{ color: plan.color }}>
-                        {TIER_PRICES[plan.tier]}
+                        {displayPrice}
                       </p>
+                      {plan.tier !== "free" && billing === "annual" && (
+                        <p className="text-white/30 text-xs mt-0.5">billed annually</p>
+                      )}
+                      {plan.tier !== "free" && billing === "monthly" && (
+                        <p className="text-white/30 text-xs mt-0.5">billed monthly</p>
+                      )}
                     </div>
                     {isCurrent && (
                       <span
@@ -211,7 +256,7 @@ export default function AccountPage() {
                       ? "Current Plan"
                       : plan.tier === "free"
                       ? "Downgrade to Free"
-                      : `Upgrade — ${TIER_PRICES[plan.tier]}`}
+                      : `Upgrade — ${displayPrice}`}
                   </button>
                 </div>
               </div>
@@ -224,11 +269,13 @@ export default function AccountPage() {
       <div style={CARD} className="p-4">
         <p className="text-white/70 font-bold text-sm mb-3">Billing Info</p>
         {[
-          "Billed monthly · Cancel anytime",
+          "Monthly or annual billing · Cancel anytime",
           "Secure payments via Stripe",
           "Apple Pay & Google Pay supported",
+          "Pro annual: $120/yr · Basic annual: $47.99/yr",
           "Unused recording time does not roll over",
           "1 new skin per month from the monthly drop",
+          "At least one social account must be connected to post",
         ].map((item, i) => (
           <p key={i} className="text-white/35 text-xs mb-1.5 flex gap-2">
             <span style={{ color: "#00D485" }}>·</span>
@@ -240,7 +287,7 @@ export default function AccountPage() {
       {/* Footer logo */}
       <div className="flex flex-col items-center pt-2">
         <CLCLogo size={50} showText={true} />
-        <p className="text-white/20 text-xs mt-3">© 2025 Crystal Lynn Creates · CLC Premiere Studios</p>
+        <p className="text-white/20 text-xs mt-3">© 2025 Crystal Lynn Creates · CLC Premier Studios</p>
       </div>
     </div>
   );

@@ -493,7 +493,21 @@ function MusicTab({ limit, navigateToAccount }: { limit: TierLimitShape; navigat
   const [style, setStyle] = useState("pop");
   const [voiceRec, setVoiceRec] = useState(false);
   const [result, setResult] = useState<string|null>(null);
+  const [selectedArtist, setSelectedArtist] = useState<string|null>(null);
+  const [voiceBlendRec, setVoiceBlendRec] = useState(false);
+  const [blendResult, setBlendResult] = useState<string|null>(null);
   const audioRef = useRef<HTMLAudioElement|null>(null);
+
+  const VOICE_ARTISTS = [
+    { name:"Ariana Grande", genre:"Pop",        emoji:"🎤" },
+    { name:"Beyoncé",       genre:"R&B/Pop",    emoji:"👑" },
+    { name:"Garth Brooks",  genre:"Country",    emoji:"🤠" },
+    { name:"Fantasia",      genre:"Soul/R&B",   emoji:"🌟" },
+    { name:"Patti LaBelle", genre:"Gospel/Soul",emoji:"✨" },
+    { name:"Aretha Franklin",genre:"Soul/Gospel",emoji:"🎵" },
+    { name:"Rihanna",       genre:"Pop/R&B",    emoji:"💎" },
+    { name:"Trey Songz",    genre:"R&B",        emoji:"🎶" },
+  ];
 
   const tracks = genre==="all" ? MUSIC_LIBRARY : MUSIC_LIBRARY.filter((t)=>t.genre===genre);
   const bbTracks = BILLBOARD_SONGS.filter((t) => t.genre === bbGenre);
@@ -730,6 +744,65 @@ function MusicTab({ limit, navigateToAccount }: { limit: TierLimitShape; navigat
               </div>
             </div>
           )}
+
+          {/* ── AI VOICE ARTIST BLEND ── */}
+          <div className="mt-4 pt-4 border-t border-gray-600">
+            <div className="flex items-center gap-2 mb-2">
+              <Mic size={18} className="text-pink-400"/>
+              <h3 className="text-white font-bold">AI Voice Artist Blend</h3>
+              {!limit.aiFeatures && (
+                <button onClick={navigateToAccount}
+                  className="ml-auto bg-violet-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                  Pro Only
+                </button>
+              )}
+            </div>
+            <p className="text-gray-400 text-xs mb-3">
+              Blend your voice with a top artist — creates a smooth, harmonious, uniquely different sound.
+            </p>
+            <div className="grid grid-cols-2 gap-2 mb-3">
+              {VOICE_ARTISTS.map((a) => (
+                <button key={a.name}
+                  onClick={() => { if (!limit.aiFeatures) { navigateToAccount(); return; } setSelectedArtist(a.name); }}
+                  className={`p-2.5 rounded-xl text-left border transition-all ${selectedArtist===a.name?"border-jade-400 bg-jade-900/40":"border-gray-700 bg-gray-800"}`}>
+                  <p className="text-lg mb-0.5">{a.emoji}</p>
+                  <p className="text-white text-xs font-bold leading-tight">{a.name}</p>
+                  <p className="text-gray-500 text-xs">{a.genre}</p>
+                </button>
+              ))}
+            </div>
+            <button onClick={() => { if(!limit.aiFeatures) return; setVoiceBlendRec(!voiceBlendRec); }}
+              className={`w-full rounded-xl p-3 flex items-center gap-2 border-2 border-dashed mb-3 transition-colors ${voiceBlendRec?"border-jade-500 bg-jade-900/30":"border-gray-600 bg-gray-800"}`}>
+              {voiceBlendRec ? <Mic size={20} className="text-jade-400"/> : <MicOff size={20} className="text-gray-500"/>}
+              <span className={`text-sm font-semibold ${voiceBlendRec?"text-jade-400":"text-gray-400"}`}>
+                {voiceBlendRec ? "Voice Captured ✓" : "Record your voice to blend"}
+              </span>
+            </button>
+            <button
+              onClick={() => {
+                if (!limit.aiFeatures) { navigateToAccount(); return; }
+                if (!selectedArtist) { alert("Select an artist to blend with."); return; }
+                if (!voiceBlendRec) { alert("Record your voice first."); return; }
+                setAiProcessing(true);
+                setTimeout(() => {
+                  setAiProcessing(false);
+                  setBlendResult(`Your voice × ${selectedArtist} — smooth harmonious blend`);
+                }, 3500);
+              }}
+              disabled={aiProcessing}
+              className={`w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors ${aiProcessing?"bg-gray-600 text-gray-400":limit.aiFeatures?"bg-violet-600 text-white hover:bg-violet-500":"bg-gray-700 text-gray-400"}`}>
+              <Sparkles size={16}/>{aiProcessing?"Blending voices...":limit.aiFeatures?"Create Voice Blend":"Upgrade to Pro"}
+            </button>
+            {blendResult && (
+              <div className="mt-3 bg-violet-900/40 border border-violet-600 rounded-xl p-3">
+                <p className="text-violet-300 font-bold text-sm mb-1">✅ Voice Blend Ready: {blendResult}</p>
+                <div className="flex gap-2">
+                  <button className="flex-1 bg-violet-600 text-white font-bold py-2 rounded-xl text-sm hover:bg-violet-500 transition-colors">Add to Video</button>
+                  <button className="flex-1 bg-gray-700 text-gray-200 font-bold py-2 rounded-xl text-sm hover:bg-gray-600 transition-colors">Save Audio</button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
@@ -862,11 +935,28 @@ export default function EditorPage() {
   const [filter, setFilter] = useState("None");
   const [speed, setSpeed] = useState("1x");
   const [volume, setVolume] = useState(80);
+  const [clipUrl, setClipUrl] = useState("");
+  const [showUrlInput, setShowUrlInput] = useState(false);
   const uploadRef = useRef<HTMLInputElement>(null);
   const limit = TIER_LIMITS[user.tier];
   const COLORS = ["#00A86B","#8B5CF6","#EF4444","#F59E0B","#0EA5E9","#EC4899"];
 
   const addClip = () => setClips((c) => [...c, { id:`clip-${Date.now()}`, label:`Clip ${c.length+1}`, duration: Math.floor(Math.random()*15)+5, color: COLORS[c.length%COLORS.length], type:"clip" }]);
+
+  const addClipFromUrl = (url: string) => {
+    const isYT = url.includes("youtube.com") || url.includes("youtu.be");
+    const isIG = url.includes("instagram.com");
+    const isTT = url.includes("tiktok.com");
+    const isX  = url.includes("twitter.com") || url.includes("x.com");
+    const source = isYT ? "YouTube" : isIG ? "Instagram" : isTT ? "TikTok" : isX ? "X/Twitter" : "Web";
+    setClips((c) => [...c, {
+      id: `url-${Date.now()}`,
+      label: `${source} Clip`,
+      duration: Math.floor(Math.random() * 60) + 10,
+      color: isYT ? "#FF0000" : isIG ? "#E1306C" : isTT ? "#010101" : isX ? "#1D9BF0" : "#8B5CF6",
+      type: "clip",
+    }]);
+  };
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -956,6 +1046,54 @@ export default function EditorPage() {
 
         {tab==="clips" && (
           <div className="space-y-4">
+            {/* ── Add Clip via URL (paid feature) ── */}
+            <div className="rounded-xl overflow-hidden bg-gray-800">
+              <div className="p-3 flex items-center justify-between">
+                <div>
+                  <p className="text-white font-bold text-sm">Add Clip from URL</p>
+                  <p className="text-gray-400 text-xs mt-0.5">YouTube, TikTok, Instagram, X/Twitter</p>
+                </div>
+                {!limit.canAddClipUrl ? (
+                  <button onClick={()=>navigate("/account")}
+                    className="text-xs bg-jade-600 text-white px-3 py-1.5 rounded-full font-bold hover:bg-jade-500 transition-colors">
+                    Basic+
+                  </button>
+                ) : (
+                  <button onClick={()=>setShowUrlInput(!showUrlInput)}
+                    className="text-xs bg-jade-600 text-white px-3 py-1.5 rounded-full font-bold hover:bg-jade-500 transition-colors">
+                    {showUrlInput ? "Cancel" : "+ URL"}
+                  </button>
+                )}
+              </div>
+              {showUrlInput && limit.canAddClipUrl && (
+                <div className="p-3 border-t border-gray-700 space-y-2">
+                  <input
+                    type="url"
+                    value={clipUrl}
+                    onChange={(e) => setClipUrl(e.target.value)}
+                    placeholder="https://youtube.com/watch?v=..."
+                    className="w-full bg-gray-700 rounded-xl p-3 text-white text-sm outline-none border border-gray-600 focus:border-jade-500"
+                  />
+                  <button
+                    onClick={() => {
+                      if (!clipUrl) { alert("Paste a video URL first."); return; }
+                      try { new URL(clipUrl); } catch { alert("That doesn't look like a valid URL."); return; }
+                      addClipFromUrl(clipUrl);
+                      setClipUrl("");
+                      setShowUrlInput(false);
+                    }}
+                    className="w-full py-2.5 rounded-xl font-bold text-sm bg-jade-500 text-white hover:bg-jade-600 transition-colors"
+                  >
+                    Add Clip from URL
+                  </button>
+                </div>
+              )}
+              {!limit.canAddClipUrl && (
+                <div className="px-3 pb-3">
+                  <p className="text-gray-500 text-xs">Upgrade to Basic or Pro to insert clips from YouTube, TikTok, Instagram, and more.</p>
+                </div>
+              )}
+            </div>
             <div>
               <p className="text-gray-300 font-bold mb-2">Filters</p>
               <div className="flex gap-2 flex-wrap">

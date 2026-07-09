@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Youtube, Instagram, Twitter, Camera, Shield, Calendar, Lock } from "lucide-react";
+import { Youtube, Instagram, Twitter, Camera, Shield, Calendar, Lock, AlertCircle, Clock } from "lucide-react";
 import { useStore } from "../store/useStore";
 import { TIER_LIMITS } from "../types";
 
 const PLATFORMS = [
   { id:"youtube",   label:"YouTube",      Icon:Youtube,   color:"#FF0000" },
   { id:"instagram", label:"Instagram",    Icon:Instagram, color:"#E1306C" },
-  { id:"twitter",   label:"X (Twitter)", Icon:Twitter,  color:"#1D9BF0" },
+  { id:"twitter",   label:"X (Twitter)", Icon:Twitter,   color:"#1D9BF0" },
   { id:"snapchat",  label:"Snapchat",     Icon:Camera,    color:"#FFCC00" },
 ];
 
@@ -23,31 +23,64 @@ export default function SocialPage() {
   const [tab, setTab]         = useState<"accounts"|"schedule">("accounts");
   const [caption, setCaption] = useState("");
   const [selPlat, setSelPlat] = useState<string[]>([]);
-  const [date, setDate]       = useState("");
-  const [time, setTime]       = useState("");
+  // Per-platform date/time: { platformId: { date: string, time: string } }
+  const [platSchedules, setPlatSchedules] = useState<Record<string, { date: string; time: string }>>({});
   const limit = TIER_LIMITS[user.tier];
 
+  const connectedPlatforms = user.connectedAccounts.filter((a) => a.connected);
+  const hasAnyConnection   = connectedPlatforms.length > 0;
+
   const handleConnect = (id: string, label: string) => {
-    if (confirm(`Connect your ${label} account?\n\nThis lets CLC Premiere Studios post videos on your behalf. Disconnect anytime.`)) {
+    if (confirm(`Connect your ${label} account?\n\nThis lets CLC Premier Studios post videos on your behalf. Disconnect anytime.`)) {
       connectSocial(id, "@crystallynncreates");
     }
   };
 
+  const updatePlatSchedule = (platId: string, field: "date" | "time", value: string) => {
+    setPlatSchedules((prev) => ({
+      ...prev,
+      [platId]: { ...prev[platId], [field]: value },
+    }));
+  };
+
   const schedule = () => {
     if (limit.scheduledPosts === 0) { navigate("/account"); return; }
+    if (!hasAnyConnection) { alert("Please connect at least one social media account first."); setTab("accounts"); return; }
     if (!caption) { alert("Add a caption."); return; }
     if (!selPlat.length) { alert("Select at least one platform."); return; }
-    if (!date || !time) { alert("Set a date and time."); return; }
-    addScheduledPost({ id:`post-${Date.now()}`, videoUri:"", caption, platforms: selPlat, scheduledAt:`${date} at ${time}`, status:"pending" });
-    alert("✅ Post scheduled!");
-    setCaption(""); setSelPlat([]); setDate(""); setTime("");
+
+    // Check each selected platform has a date/time
+    const missing = selPlat.filter((p) => !platSchedules[p]?.date || !platSchedules[p]?.time);
+    if (missing.length) {
+      const names = missing.map((id) => PLATFORMS.find((p) => p.id === id)?.label).join(", ");
+      alert(`Please set a date and time for: ${names}`);
+      return;
+    }
+
+    // Create a separate scheduled post for each platform with its own time
+    selPlat.forEach((platId) => {
+      const { date, time } = platSchedules[platId];
+      addScheduledPost({
+        id: `post-${Date.now()}-${platId}`,
+        videoUri: "",
+        caption,
+        platforms: [platId],
+        scheduledAt: `${date} at ${time}`,
+        status: "pending",
+      });
+    });
+
+    alert(`✅ ${selPlat.length} post${selPlat.length > 1 ? "s" : ""} scheduled!`);
+    setCaption("");
+    setSelPlat([]);
+    setPlatSchedules({});
   };
 
   return (
     <div className="flex flex-col h-full" style={{ background: "#0D0D14" }}>
       {/* Tab bar */}
       <div
-        className="flex gap-2 p-4"
+        className="flex gap-2 p-4 shrink-0"
         style={{ background: "#13131E", borderBottom: "1px solid rgba(255,255,255,0.07)" }}
       >
         {(["accounts","schedule"] as const).map((t) => (
@@ -66,8 +99,25 @@ export default function SocialPage() {
       </div>
 
       <div className="flex-1 overflow-y-auto p-4">
+        {/* ── ACCOUNTS TAB ── */}
         {tab === "accounts" ? (
           <div className="space-y-3 max-w-lg mx-auto">
+            {/* Mandatory connection banner */}
+            {!hasAnyConnection && (
+              <div
+                className="flex items-start gap-3 p-4 rounded-2xl"
+                style={{ background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.3)" }}
+              >
+                <AlertCircle size={20} style={{ color: "#F59E0B", flexShrink: 0, marginTop: 1 }} />
+                <div>
+                  <p className="text-white font-bold text-sm">Connection Required</p>
+                  <p className="text-white/50 text-xs mt-0.5">
+                    CLC Premier Studios is for vloggers. Connect at least one social account to post and schedule content.
+                  </p>
+                </div>
+              </div>
+            )}
+
             <p className="text-white/40 text-sm">
               Connect accounts to post and schedule videos. We only request permission to post — never access DMs or passwords.
             </p>
@@ -123,37 +173,52 @@ export default function SocialPage() {
             </div>
           </div>
         ) : (
+          /* ── SCHEDULE TAB ── */
           <div className="space-y-4 max-w-lg mx-auto">
-            {limit.scheduledPosts === 0 && (
+            {/* Must connect first */}
+            {!hasAnyConnection && (
               <div
-                onClick={() => navigate("/account")}
+                onClick={() => setTab("accounts")}
                 className="flex items-center gap-3 p-4 rounded-2xl cursor-pointer transition-all hover:opacity-80"
-                style={{
-                  background: "rgba(124,92,246,0.1)",
-                  border: "1px solid rgba(124,92,246,0.25)",
-                  borderRadius: "1rem",
-                }}
+                style={{ background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.3)" }}
               >
-                <Lock size={20} style={{ color: "#7C5CF6" }} />
+                <AlertCircle size={20} style={{ color: "#F59E0B" }} />
                 <div>
-                  <p className="text-white font-bold text-sm">Upgrade to Schedule Posts</p>
-                  <p className="text-white/40 text-xs">Basic $4.99: 1 post/mo · Pro $10: Unlimited</p>
+                  <p className="text-white font-bold text-sm">Connect an account first</p>
+                  <p className="text-white/40 text-xs">Tap to go to Connected Accounts →</p>
                 </div>
               </div>
             )}
 
+            {/* Paid gate for scheduling */}
+            {limit.scheduledPosts === 0 && (
+              <div
+                onClick={() => navigate("/account")}
+                className="flex items-center gap-3 p-4 rounded-2xl cursor-pointer transition-all hover:opacity-80"
+                style={{ background: "rgba(124,92,246,0.1)", border: "1px solid rgba(124,92,246,0.25)" }}
+              >
+                <Lock size={20} style={{ color: "#7C5CF6" }} />
+                <div>
+                  <p className="text-white font-bold text-sm">Upgrade to Schedule Posts</p>
+                  <p className="text-white/40 text-xs">Basic $4.99: 5 posts/mo · Pro $9.99: Unlimited</p>
+                </div>
+              </div>
+            )}
+
+            {/* Caption */}
             <div className="p-4 rounded-2xl space-y-2" style={CARD}>
               <p className="text-white/70 font-bold text-sm">Caption</p>
               <textarea
                 className="w-full rounded-xl p-3 text-white text-sm resize-none outline-none"
-                style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", minHeight: 100 }}
+                style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", minHeight: 90 }}
                 placeholder="Write your caption and hashtags..."
                 value={caption}
                 onChange={(e) => setCaption(e.target.value)}
-                disabled={limit.scheduledPosts === 0}
+                disabled={limit.scheduledPosts === 0 || !hasAnyConnection}
               />
             </div>
 
+            {/* Platform selection */}
             <div className="p-4 rounded-2xl" style={CARD}>
               <p className="text-white/70 font-bold text-sm mb-3">Post To</p>
               <div className="flex flex-wrap gap-2">
@@ -164,9 +229,14 @@ export default function SocialPage() {
                     <button
                       key={id}
                       onClick={() => {
-                        if (!acc?.connected) { alert(`Connect ${label} first.`); return; }
+                        if (!acc?.connected) { alert(`Connect ${label} first in the Connected Accounts tab.`); return; }
                         if (limit.scheduledPosts === 0) { navigate("/account"); return; }
-                        setSelPlat(sel ? selPlat.filter((p) => p !== id) : [...selPlat, id]);
+                        const next = sel ? selPlat.filter((p) => p !== id) : [...selPlat, id];
+                        setSelPlat(next);
+                        // Remove schedule entry if deselected
+                        if (sel) {
+                          setPlatSchedules((prev) => { const n = {...prev}; delete n[id]; return n; });
+                        }
                       }}
                       className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold transition-all"
                       style={{
@@ -185,59 +255,87 @@ export default function SocialPage() {
               </div>
             </div>
 
-            <div className="p-4 rounded-2xl space-y-3" style={CARD}>
-              <p className="text-white/70 font-bold text-sm">Schedule Date & Time</p>
-              <input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                disabled={limit.scheduledPosts === 0}
-                className="w-full rounded-xl p-3 text-white outline-none text-sm"
-                style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
-              />
-              <input
-                type="time"
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
-                disabled={limit.scheduledPosts === 0}
-                className="w-full rounded-xl p-3 text-white outline-none text-sm"
-                style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
-              />
-            </div>
+            {/* Per-platform date/time scheduling */}
+            {selPlat.length > 0 && (
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <Clock size={15} style={{ color: "#00D485" }} />
+                  <p className="text-white/70 font-bold text-sm">Schedule — Set Time Per Platform</p>
+                </div>
+                {selPlat.map((platId) => {
+                  const plat = PLATFORMS.find((p) => p.id === platId);
+                  if (!plat) return null;
+                  const sched = platSchedules[platId] ?? { date: "", time: "" };
+                  return (
+                    <div key={platId} className="p-4 rounded-2xl space-y-2" style={CARD}>
+                      <div className="flex items-center gap-2 mb-1">
+                        <plat.Icon size={15} style={{ color: plat.color }} />
+                        <p className="text-white font-semibold text-sm">{plat.label}</p>
+                      </div>
+                      <input
+                        type="date"
+                        value={sched.date}
+                        onChange={(e) => updatePlatSchedule(platId, "date", e.target.value)}
+                        disabled={limit.scheduledPosts === 0}
+                        className="w-full rounded-xl p-3 text-white outline-none text-sm"
+                        style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
+                      />
+                      <input
+                        type="time"
+                        value={sched.time}
+                        onChange={(e) => updatePlatSchedule(platId, "time", e.target.value)}
+                        disabled={limit.scheduledPosts === 0}
+                        className="w-full rounded-xl p-3 text-white outline-none text-sm"
+                        style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            )}
 
+            {/* Schedule button */}
             <button
               onClick={schedule}
               className="w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all hover:opacity-90"
-              style={limit.scheduledPosts === 0
+              style={limit.scheduledPosts === 0 || !hasAnyConnection
                 ? { background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.25)" }
                 : { background: "linear-gradient(135deg, #00D485, #00A86B)", color: "white" }
               }
             >
               <Calendar size={18} />
-              {limit.scheduledPosts === 0 ? "Upgrade to Schedule" : "Schedule Post"}
+              {!hasAnyConnection
+                ? "Connect an Account First"
+                : limit.scheduledPosts === 0
+                ? "Upgrade to Schedule"
+                : "Schedule Posts"}
             </button>
 
+            {/* Scheduled posts list */}
             {scheduledPosts.length > 0 && (
               <div className="space-y-2">
                 <p className="text-white/70 font-bold text-sm">Scheduled Posts</p>
-                {scheduledPosts.map((p) => (
-                  <div key={p.id} className="flex items-center gap-3 p-3 rounded-xl" style={CARD}>
-                    <Calendar size={16} style={{ color: "#0EA5E9" }} className="shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-white/80 text-sm font-semibold truncate">{p.caption || "No caption"}</p>
-                      <p className="text-white/30 text-xs">{p.platforms.join(", ")} · {p.scheduledAt}</p>
+                {scheduledPosts.map((p) => {
+                  const plat = PLATFORMS.find((x) => x.id === p.platforms[0]);
+                  return (
+                    <div key={p.id} className="flex items-center gap-3 p-3 rounded-xl" style={CARD}>
+                      {plat ? <plat.Icon size={16} style={{ color: plat.color, flexShrink: 0 }} /> : <Calendar size={16} style={{ color: "#0EA5E9" }} className="shrink-0" />}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-white/80 text-sm font-semibold truncate">{p.caption || "No caption"}</p>
+                        <p className="text-white/30 text-xs">{p.platforms.join(", ")} · {p.scheduledAt}</p>
+                      </div>
+                      <span
+                        className="text-xs font-bold px-2 py-0.5 rounded-full shrink-0"
+                        style={p.status === "pending"
+                          ? { background: "rgba(245,158,11,0.15)", color: "#F59E0B" }
+                          : { background: "rgba(0,212,133,0.15)", color: "#00D485" }
+                        }
+                      >
+                        {p.status}
+                      </span>
                     </div>
-                    <span
-                      className="text-xs font-bold px-2 py-0.5 rounded-full shrink-0"
-                      style={p.status === "pending"
-                        ? { background: "rgba(245,158,11,0.15)", color: "#F59E0B" }
-                        : { background: "rgba(0,212,133,0.15)", color: "#00D485" }
-                      }
-                    >
-                      {p.status}
-                    </span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>

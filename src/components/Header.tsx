@@ -47,7 +47,7 @@ export default function Header() {
               className="font-semibold text-sm tracking-wider text-white/70"
               style={{ letterSpacing: "0.07em", fontFamily: "Georgia, serif" }}
             >
-              Premiere Studios
+              Premier Studios
             </span>
           </div>
           <div className="flex items-center gap-2 mt-0.5 flex-wrap">

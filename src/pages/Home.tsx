@@ -185,19 +185,19 @@ export default function HomePage() {
           <div className="flex-1">
             <h3 className="text-white font-bold text-base mb-1">AI-Powered Studio</h3>
             <p className="text-white/50 text-sm mb-3">
-              Enhance audio, perfect video, generate music with your voice, and get smart editing suggestions.
+              Enhance audio, perfect video, generate music with your voice, blend your voice with top artists, and get smart editing suggestions. Pro exclusive.
             </p>
-            {!limit.aiFeatures ? (
+            {user.tier !== "pro" ? (
               <button
                 onClick={() => navigate("/account")}
                 className="font-bold px-4 py-2 rounded-xl text-sm transition-all hover:opacity-90"
                 style={{ background: "linear-gradient(135deg, #7C5CF6, #9D6FF7)", color: "white" }}
               >
-                Unlock AI — $4.99/mo
+                Unlock AI — Pro $9.99/mo or $120/yr
               </button>
             ) : (
               <div className="flex items-center gap-2 text-sm" style={{ color: "#7C5CF6" }}>
-                <Sparkles size={14} /><span className="font-semibold">AI features active on your plan</span>
+                <Sparkles size={14} /><span className="font-semibold">AI Studio active — Pro plan</span>
               </div>
             )}
           </div>
