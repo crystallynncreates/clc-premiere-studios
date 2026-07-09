@@ -74,9 +74,9 @@ export default function CLCLogo({ size = 60, showText = false }: LogoProps) {
         <defs>
           <path id="clcTextRing" d={arcPath} />
           <radialGradient id="ovalBg" cx="40%" cy="38%" r="65%">
-            <stop offset="0%" stopColor="#FFF2F8" />
-            <stop offset="50%" stopColor="#F8DFEC" />
-            <stop offset="100%" stopColor="#EDD0E2" />
+            <stop offset="0%" stopColor="#FFF8F3" />
+            <stop offset="55%" stopColor="#F7EDE4" />
+            <stop offset="100%" stopColor="#EFE0D4" />
           </radialGradient>
         </defs>
 
