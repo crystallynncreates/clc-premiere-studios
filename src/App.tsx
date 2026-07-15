@@ -6,6 +6,8 @@ import StudioPage from "./pages/Studio";
 import EditorPage from "./pages/Editor";
 import SocialPage from "./pages/Social";
 import AccountPage from "./pages/Account";
+import LoginPage from "./pages/Login";
+import { useStore } from "./store/useStore";
 
 const NAV = [
   { to: "/",        icon: Home,     label: "Home"   },
@@ -16,9 +18,17 @@ const NAV = [
 ];
 
 export default function App() {
+  const isLoggedIn = useStore((s) => s.isLoggedIn);
+
   return (
     <BrowserRouter>
       <div className="flex flex-col h-screen overflow-hidden" style={{ background: "#080812" }}>
+        {!isLoggedIn && (
+          <div className="relative flex flex-col h-full overflow-y-auto" style={{ zIndex: 1 }}>
+            <LoginPage />
+          </div>
+        )}
+        {isLoggedIn && (<>
 
         {/* ── Aurora background blobs ── */}
         <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
@@ -176,6 +186,7 @@ export default function App() {
             ))}
           </nav>
         </div>
+        </>)}
       </div>
     </BrowserRouter>
   );

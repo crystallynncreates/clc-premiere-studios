@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Radio, Scissors, Music, Share2, Palette, Sparkles, Film, Calendar, Zap, ArrowRight } from "lucide-react";
+import { Radio, Scissors, Music, Share2, Palette, Sparkles, Film, Calendar, Zap, ArrowRight, Trash2 } from "lucide-react";
 import { useStore } from "../store/useStore";
 import { TIER_LIMITS } from "../types";
 import CLCLogo from "../components/Logo";
@@ -35,7 +35,7 @@ function AnimWaveform({ color = "#00D485", bars = 18, h = 28 }: { color?: string
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const { user, projects, scheduledPosts } = useStore();
+  const { user, projects, scheduledPosts, deleteProject } = useStore();
   const limit     = TIER_LIMITS[user.tier];
   const used      = user.recordingSecondsUsedToday;
   const max       = limit.dailyRecordingSeconds;
@@ -238,15 +238,66 @@ export default function HomePage() {
 
       {/* ── Recent Projects ── */}
       <div className="fade-up fade-up-4">
+        {/* Header row with save count */}
         <div className="flex items-center justify-between mb-3">
-          <p className="text-xs font-bold uppercase tracking-[0.2em]" style={{ color: "rgba(255,255,255,0.35)" }}>
-            Recent Projects
-          </p>
+          <div className="flex items-center gap-2">
+            <p className="text-xs font-bold uppercase tracking-[0.2em]" style={{ color: "rgba(255,255,255,0.35)" }}>
+              Saved Videos
+            </p>
+            {/* Save count badge */}
+            {(() => {
+              const limit = TIER_LIMITS[user.tier].savedVideos;
+              const count = projects.length;
+              const pct = limit === Infinity ? 0 : count / limit;
+              const limitLabel = limit === Infinity ? "∞" : limit;
+              return (
+                <span
+                  className="text-xs font-bold px-2.5 py-0.5 rounded-full"
+                  style={{
+                    background: pct >= 0.9
+                      ? "rgba(239,68,68,0.15)"
+                      : pct >= 0.7
+                      ? "rgba(245,158,11,0.15)"
+                      : "rgba(0,212,133,0.1)",
+                    color: pct >= 0.9 ? "#FCA5A5" : pct >= 0.7 ? "#FCD34D" : "#4ade8e",
+                    border: `1px solid ${pct >= 0.9 ? "rgba(239,68,68,0.25)" : pct >= 0.7 ? "rgba(245,158,11,0.25)" : "rgba(0,212,133,0.2)"}`,
+                  }}
+                >
+                  {count}/{limitLabel}
+                </span>
+              );
+            })()}
+          </div>
           <button onClick={() => navigate("/editor")} className="text-xs font-semibold flex items-center gap-1"
             style={{ color: "rgba(0,212,133,0.7)" }}>
             All <ArrowRight size={10} />
           </button>
         </div>
+
+        {/* Save limit warning */}
+        {(() => {
+          const limit = TIER_LIMITS[user.tier].savedVideos;
+          if (limit !== Infinity && projects.length >= limit) {
+            return (
+              <div
+                className="mb-3 flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold"
+                style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", color: "#FCA5A5" }}
+              >
+                <Film size={14} />
+                <span>You've reached your {limit}-video limit.</span>
+                <button
+                  onClick={() => navigate("/account")}
+                  className="ml-auto font-bold px-3 py-1 rounded-lg transition-all hover:opacity-80"
+                  style={{ background: "rgba(239,68,68,0.15)", color: "#FCA5A5", border: "1px solid rgba(239,68,68,0.25)" }}
+                >
+                  Upgrade
+                </button>
+              </div>
+            );
+          }
+          return null;
+        })()}
+
         {projects.length === 0 ? (
           <div
             className="p-8 text-center rounded-2xl"
@@ -271,10 +322,10 @@ export default function HomePage() {
           </div>
         ) : (
           <div className="space-y-2">
-            {projects.slice(0, 3).map((p) => (
+            {projects.slice(0, 5).map((p) => (
               <div
                 key={p.id}
-                className="card-lift flex items-center gap-4 p-4 rounded-2xl"
+                className="card-lift flex items-center gap-4 p-4 rounded-2xl group"
                 style={{ background: "rgba(15,15,30,0.7)", border: "1px solid rgba(255,255,255,0.06)" }}
               >
                 <div
@@ -284,20 +335,43 @@ export default function HomePage() {
                   <Film size={18} style={{ color: "#00D485" }} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-white">{p.name}</p>
+                  <p className="text-sm font-semibold text-white truncate">{p.name}</p>
                   <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.3)" }}>
                     {p.clipCount} clips · {Math.floor(p.duration / 60)}:{String(p.duration % 60).padStart(2, "0")}
                   </p>
                 </div>
-                <button
-                  onClick={() => navigate("/editor")}
-                  className="text-xs font-bold px-3 py-1.5 rounded-lg"
-                  style={{ background: "rgba(0,212,133,0.1)", color: "#00D485", border: "1px solid rgba(0,212,133,0.2)" }}
-                >
-                  Edit
-                </button>
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    onClick={() => navigate("/editor")}
+                    className="text-xs font-bold px-3 py-1.5 rounded-lg"
+                    style={{ background: "rgba(0,212,133,0.1)", color: "#00D485", border: "1px solid rgba(0,212,133,0.2)" }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (window.confirm(`Delete "${p.name}"? This can't be undone.`)) {
+                        deleteProject(p.id);
+                      }
+                    }}
+                    className="w-8 h-8 rounded-lg flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 hover:!opacity-100"
+                    style={{ background: "rgba(239,68,68,0.1)", color: "#F87171", border: "1px solid rgba(239,68,68,0.2)" }}
+                    title="Delete project"
+                  >
+                    <Trash2 size={13} />
+                  </button>
+                </div>
               </div>
             ))}
+            {projects.length > 5 && (
+              <button
+                onClick={() => navigate("/editor")}
+                className="w-full py-3 rounded-2xl text-sm font-semibold flex items-center justify-center gap-2"
+                style={{ background: "rgba(15,15,30,0.5)", border: "1px solid rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.3)" }}
+              >
+                +{projects.length - 5} more <ArrowRight size={12} />
+              </button>
+            )}
           </div>
         )}
       </div>

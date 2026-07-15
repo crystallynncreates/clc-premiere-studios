@@ -13,6 +13,7 @@ const PLANS = [
     badge: null,
     features: [
       "3 min recording/day",
+      "Save up to 20 videos",
       "Basic video editing",
       "Upload & export video (always free)",
       "2 starter skins",
@@ -28,6 +29,7 @@ const PLANS = [
     badge: "★ MOST POPULAR",
     features: [
       "50 min recording/day",
+      "Save up to 50 videos",
       "Full video editor",
       "Go Live on all platforms",
       "Add clips via YouTube / social URL",
@@ -46,6 +48,7 @@ const PLANS = [
     badge: "🤖 AI STUDIO INCLUDED",
     features: [
       "UNLIMITED recording",
+      "Save UNLIMITED videos",
       "Full editor — all features",
       "AI-Powered Studio (Pro exclusive)",
       "AI voice blend with Beyoncé, Ariana Grande & more",

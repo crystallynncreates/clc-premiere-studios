@@ -80,12 +80,7 @@ export default function CLCLogo({ size = 60, showText = false }: LogoProps) {
           </radialGradient>
         </defs>
 
-        {/* ── Cream background ── */}
-        <rect width={W} height={H} fill="#F2EDE4" />
-
-        {/* ── Outer decorative rings ── */}
-        <circle cx={cx} cy={cy} r={243} fill="none" stroke="#C8B8A0" strokeWidth="1.2" opacity="0.4" />
-        <circle cx={cx} cy={cy} r={237} fill="none" stroke="#C8B8A0" strokeWidth="0.5" opacity="0.22" />
+        {/* background intentionally transparent */}
 
         {/* ── TOP ARC TEXT: clockwise through top, reads L→R from outside ── */}
         <text

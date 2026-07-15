@@ -4,7 +4,7 @@ import { Film, Plus, Sparkles, Music, Type, Wand2, Scissors, Zap, Upload, Palett
 import { useStore } from "../store/useStore";
 import { TIER_LIMITS } from "../types";
 import { MUSIC_LIBRARY, GENRE_LABELS, formatDuration } from "../data/music";
-import { ALL_CHAR_SKINS, FREE_SKINS, ANIME_PAID_SKINS, ARTIST_SKINS, STYLE_SKINS } from "../data/characterSkins";
+import { ALL_CHAR_SKINS, FREE_SKINS, ANIME_PAID_SKINS, ARTIST_SKINS, STYLE_SKINS, MARVEL_DISNEY_SKINS } from "../data/characterSkins";
 import { AVATAR_MAP } from "../components/CharacterAvatars";
 
 const FILTERS = ["None","Vivid","Dreamy","Vintage","Chrome","Jade","Neon","Noir"];
@@ -726,22 +726,24 @@ function MusicTab({ limit, navigateToAccount }: { limit: TierLimitShape; navigat
 // ─── Skins Tab ────────────────────────────────────────────────────────────
 function SkinsTab({ navigateToAccount }: { navigateToAccount:()=>void }) {
   const { user, selectedSkinId, setSelectedSkin } = useStore();
-  const [skinTab, setSkinTab] = useState<"cartoon"|"anime"|"artists"|"styles">("cartoon");
+  const [skinTab, setSkinTab] = useState<"cartoon"|"anime"|"marvel"|"artists"|"styles">("cartoon");
 
   const SKIN_TABS = [
-    { id: "cartoon" as const, label: "🎭 Cartoon", skins: FREE_SKINS },
-    { id: "anime"   as const, label: "⚡ Anime",   skins: ANIME_PAID_SKINS },
-    { id: "artists" as const, label: "🎤 Artists", skins: ARTIST_SKINS },
-    { id: "styles"  as const, label: "🎬 Styles",  skins: STYLE_SKINS },
+    { id: "cartoon" as const, label: "🎭 Cartoon",      skins: FREE_SKINS },
+    { id: "anime"   as const, label: "⚡ Anime",         skins: ANIME_PAID_SKINS },
+    { id: "marvel"  as const, label: "🦸 Marvel/Disney", skins: MARVEL_DISNEY_SKINS },
+    { id: "artists" as const, label: "🎤 Artists",       skins: ARTIST_SKINS },
+    { id: "styles"  as const, label: "🎬 Styles",        skins: STYLE_SKINS },
   ];
 
-  const activeSkins = SKIN_TABS.find((t)=>t.id===skinTab)!.skins;
+  // narrow the type so TypeScript accepts the id
+  const activeSkins = SKIN_TABS.find((t) => (t.id as string) === skinTab)!.skins;
   const activeName  = ALL_CHAR_SKINS.find((s)=>s.id===selectedSkinId)?.name;
 
   const canUse = (tier: string) => {
-    if (tier==="free") return true;
-    if (tier==="basic") return user.tier==="basic"||user.tier==="pro";
-    return user.tier==="pro";
+    if (tier === "free")  return true;
+    if (tier === "basic") return user.tier === "basic" || user.tier === "pro";
+    return user.tier === "pro";
   };
 
   return (
@@ -760,12 +762,13 @@ function SkinsTab({ navigateToAccount }: { navigateToAccount:()=>void }) {
         ))}
       </div>
 
-      {skinTab!=="cartoon" && (
+      {skinTab !== "cartoon" && (
         <div className="rounded-xl p-2 text-center"
           style={{ background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.25)" }}>
           <p className="text-xs font-semibold" style={{ color: "#F59E0B" }}>
-            {skinTab==="anime" ? "⚡ Basic+ unlocks Anime characters"
-            : skinTab==="artists" ? "🎤 Basic+ unlocks Artist avatars"
+            {skinTab === "anime"   ? "⚡ Basic+ unlocks Anime character frames"
+            : skinTab === "marvel" ? "🦸 Pro plan · Marvel © Disney · Disney © Disney — commercial license required at launch"
+            : skinTab === "artists"? "🎤 Basic+ unlocks Artist avatar frames"
             : "🎬 Basic+ unlocks Content Style overlays"}
           </p>
         </div>
@@ -861,7 +864,7 @@ interface Clip { id:string; label:string; duration:number; color:string; type:"c
 
 export default function EditorPage() {
   const navigate = useNavigate();
-  const { user, aiProcessing, setAiProcessing, addProject } = useStore();
+  const { user, projects, aiProcessing, setAiProcessing, addProject } = useStore();
   const [tab, setTab] = useState("clips");
   const [clips, setClips] = useState<Clip[]>([]);
   const [filter, setFilter] = useState("None");
@@ -909,6 +912,12 @@ export default function EditorPage() {
 
   const exportVideo = () => {
     if (!clips.length) { alert("Add clips to your timeline first."); return; }
+    const saveLimit = limit.savedVideos;
+    if (saveLimit !== Infinity && projects.length >= saveLimit) {
+      alert(`You've reached your ${saveLimit}-video save limit. Delete an existing project or upgrade your plan to save more.`);
+      navigate("/account");
+      return;
+    }
     addProject({ id:`proj-${Date.now()}`, name:`Project ${new Date().toLocaleDateString()}`, clipCount: clips.length, duration: clips.reduce((a,c)=>a+c.duration,0), createdAt: new Date().toLocaleDateString() });
     if (confirm("Project saved! Go to Social to schedule posting?")) navigate("/social");
   };
