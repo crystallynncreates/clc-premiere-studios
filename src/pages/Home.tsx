@@ -1,203 +1,235 @@
 import { useNavigate } from "react-router-dom";
-import { Radio, Scissors, Music, Share2, Palette, Sparkles, Film, Calendar, Infinity } from "lucide-react";
+import { Radio, Scissors, Music, Share2, Palette, Sparkles, Film, Calendar, Zap, ArrowRight } from "lucide-react";
 import { useStore } from "../store/useStore";
 import { TIER_LIMITS } from "../types";
 import CLCLogo from "../components/Logo";
 
 const ACTIONS = [
-  { icon: Radio,    label: "Go Live",       route: "/studio", color: "#EF4444", glow: "rgba(239,68,68,0.25)"    },
-  { icon: Film,     label: "Record",        route: "/studio", color: "#00D485", glow: "rgba(0,212,133,0.25)"   },
-  { icon: Scissors, label: "Edit Video",    route: "/editor", color: "#7C5CF6", glow: "rgba(124,92,246,0.25)"  },
-  { icon: Music,    label: "AI Music",      route: "/editor", color: "#F59E0B", glow: "rgba(245,158,11,0.25)"  },
-  { icon: Share2,   label: "Schedule Post", route: "/social", color: "#0EA5E9", glow: "rgba(14,165,233,0.25)"  },
-  { icon: Palette,  label: "Skins",         route: "/editor", color: "#EC4899", glow: "rgba(236,72,153,0.25)"  },
+  { icon: Radio,    label: "Go Live",       sub: "Stream now",     route: "/studio", color: "#EF4444", grad: "linear-gradient(135deg, #EF4444, #DC2626)" },
+  { icon: Film,     label: "Record",        sub: "Capture it",     route: "/studio", color: "#00D485", grad: "linear-gradient(135deg, #00D485, #00A86B)" },
+  { icon: Scissors, label: "Edit Video",    sub: "Cut & create",   route: "/editor", color: "#7C5CF6", grad: "linear-gradient(135deg, #7C5CF6, #6D4FE0)" },
+  { icon: Music,    label: "AI Music",      sub: "Your sound",     route: "/editor", color: "#F59E0B", grad: "linear-gradient(135deg, #F59E0B, #D97706)" },
+  { icon: Share2,   label: "Schedule Post", sub: "Plan content",   route: "/social", color: "#0EA5E9", grad: "linear-gradient(135deg, #0EA5E9, #0284C7)" },
+  { icon: Palette,  label: "Skins & Style", sub: "Be you",         route: "/editor", color: "#FF6B9D", grad: "linear-gradient(135deg, #FF6B9D, #E0456B)" },
 ];
 
-const CARD = {
-  background: "#13131E",
-  border: "1px solid rgba(255,255,255,0.07)",
-  borderRadius: "1rem",
-};
+function AnimWaveform({ color = "#00D485", bars = 18, h = 28 }: { color?: string; bars?: number; h?: number }) {
+  return (
+    <div className="flex items-end gap-0.5" style={{ height: h }}>
+      {Array.from({ length: bars }).map((_, i) => (
+        <div
+          key={i}
+          className="wave-bar rounded-full flex-1"
+          style={{
+            background: color,
+            height: "100%",
+            opacity: 0.6 + (i % 3) * 0.13,
+            "--dur": `${0.5 + (i % 5) * 0.15}s`,
+            "--delay": `${(i * 0.08) % 0.8}s`,
+          } as React.CSSProperties}
+        />
+      ))}
+    </div>
+  );
+}
 
 export default function HomePage() {
   const navigate = useNavigate();
   const { user, projects, scheduledPosts } = useStore();
-  const limit = TIER_LIMITS[user.tier];
-  const used  = user.recordingSecondsUsedToday;
-  const max   = limit.dailyRecordingSeconds;
+  const limit     = TIER_LIMITS[user.tier];
+  const used      = user.recordingSecondsUsedToday;
+  const max       = limit.dailyRecordingSeconds;
   const progress  = max === Infinity ? 0 : Math.min(1, used / max);
   const remaining = max === Infinity ? null : Math.max(0, max - used);
 
   return (
-    <div className="p-4 md:p-6 max-w-4xl mx-auto space-y-5">
+    <div className="min-h-full p-4 md:p-6 space-y-5 max-w-4xl mx-auto pb-8">
 
-      {/* ── Hero ── */}
+      {/* ── HERO ── */}
       <div
-        className="rounded-2xl p-6 flex flex-col md:flex-row items-center gap-5 relative overflow-hidden"
+        className="fade-up relative rounded-3xl overflow-hidden"
         style={{
-          background: "linear-gradient(135deg, #13131E 0%, #1C1C2C 60%, #13131E 100%)",
-          border: "1px solid rgba(0,212,133,0.18)",
-          boxShadow: "0 0 40px rgba(0,212,133,0.08), inset 0 1px 0 rgba(255,255,255,0.05)",
+          background: "linear-gradient(135deg, #0F0F20 0%, #13132A 50%, #0F1824 100%)",
+          border: "1px solid rgba(0,212,133,0.2)",
+          boxShadow: "0 0 60px rgba(0,212,133,0.06), 0 0 120px rgba(124,92,246,0.04)",
         }}
       >
-        {/* Background glow blobs */}
-        <div
-          className="absolute top-0 right-0 w-48 h-48 rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle, rgba(0,212,133,0.08) 0%, transparent 70%)" }}
-        />
-        <div
-          className="absolute bottom-0 left-0 w-32 h-32 rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle, rgba(124,92,246,0.08) 0%, transparent 70%)" }}
-        />
+        {/* Corner glow orbs */}
+        <div className="absolute top-0 right-0 w-64 h-64 rounded-full pointer-events-none"
+          style={{ background: "radial-gradient(circle, rgba(0,212,133,0.1) 0%, transparent 70%)", transform: "translate(30%,-30%)" }} />
+        <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full pointer-events-none"
+          style={{ background: "radial-gradient(circle, rgba(124,92,246,0.1) 0%, transparent 70%)", transform: "translate(-30%,30%)" }} />
 
-        <div className="relative shrink-0">
-          <CLCLogo size={88} showText={false} />
-        </div>
+        <div className="relative p-6 flex flex-col md:flex-row items-center gap-6">
+          <div className="float shrink-0">
+            <CLCLogo size={96} showText={false} />
+          </div>
 
-        <div className="relative text-center md:text-left">
-          <p className="text-white/50 text-xs font-semibold tracking-[0.2em] uppercase mb-1">
-            Welcome back
-          </p>
-          <h2 className="text-white text-2xl font-bold mb-1">{user.name}</h2>
-          <p
-            className="text-sm font-semibold"
-            style={{ color: "#00D485" }}
-          >
-            Stream · Edit · Create · Share
-          </p>
-
-          <div className="flex items-center gap-2 mt-3 justify-center md:justify-start flex-wrap">
-            <span
-              className="text-xs font-bold px-3 py-1 rounded-full capitalize"
-              style={{
-                background: user.tier === "pro"
-                  ? "rgba(124,92,246,0.2)"
-                  : user.tier === "basic"
-                  ? "rgba(0,212,133,0.15)"
-                  : "rgba(107,114,128,0.2)",
-                color: user.tier === "pro" ? "#7C5CF6" : user.tier === "basic" ? "#00D485" : "#9CA3AF",
-                border: `1px solid ${user.tier === "pro" ? "#7C5CF6" : user.tier === "basic" ? "#00D485" : "#6B7280"}30`,
-              }}
+          <div className="flex-1 text-center md:text-left">
+            <p className="text-xs font-bold tracking-[0.3em] uppercase mb-1" style={{ color: "rgba(0,212,133,0.7)" }}>
+              Welcome back
+            </p>
+            <h1
+              className="text-3xl md:text-4xl font-bold mb-2"
+              style={{ fontFamily: "Georgia, serif", lineHeight: 1.15 }}
             >
-              {user.tier} Plan
-            </span>
-            {remaining !== null ? (
-              <span className="text-white/40 text-xs">
-                {Math.floor(remaining / 60)}:{String(remaining % 60).padStart(2, "0")} recording left today
+              <span className="holo-text">{user.name}</span>
+            </h1>
+            <p className="text-sm mb-4" style={{ color: "rgba(255,255,255,0.45)" }}>
+              Your creative studio is ready · Stream · Edit · Create · Share
+            </p>
+
+            {/* Waveform decoration */}
+            <div className="mb-4 opacity-60">
+              <AnimWaveform bars={24} h={24} />
+            </div>
+
+            <div className="flex items-center gap-3 justify-center md:justify-start flex-wrap">
+              <span
+                className="text-xs font-bold px-3 py-1.5 rounded-full capitalize"
+                style={{
+                  background: user.tier === "pro" ? "rgba(124,92,246,0.2)" : user.tier === "basic" ? "rgba(0,212,133,0.15)" : "rgba(156,163,175,0.15)",
+                  color: user.tier === "pro" ? "#7C5CF6" : user.tier === "basic" ? "#00D485" : "#9CA3AF",
+                  border: `1px solid ${user.tier === "pro" ? "#7C5CF620" : user.tier === "basic" ? "#00D48520" : "#6B728020"}`,
+                }}
+              >
+                {user.tier} Plan
               </span>
-            ) : (
-              <span className="text-xs font-semibold" style={{ color: "#00D485" }}>
-                <Infinity size={12} className="inline mr-1" />Unlimited recording
-              </span>
-            )}
+              {remaining !== null ? (
+                <span className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>
+                  {Math.floor(remaining / 60)}:{String(remaining % 60).padStart(2, "0")} recording left today
+                </span>
+              ) : (
+                <span className="text-xs font-semibold flex items-center gap-1" style={{ color: "#00D485" }}>
+                  <Zap size={11} fill="#00D485" /> Unlimited recording
+                </span>
+              )}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* ── Usage bar ── */}
+      {/* ── Recording Usage Bar ── */}
       {max !== Infinity && (
-        <div style={CARD} className="p-4">
+        <div
+          className="fade-up fade-up-1 rounded-2xl p-4 relative overflow-hidden"
+          style={{ background: "rgba(15,15,30,0.8)", border: "1px solid rgba(255,255,255,0.07)", backdropFilter: "blur(12px)" }}
+        >
           <div className="flex items-center justify-between mb-3">
-            <p className="text-white/80 font-semibold text-sm">Recording Time Today</p>
+            <p className="text-sm font-bold" style={{ color: "rgba(255,255,255,0.8)" }}>Recording Time Today</p>
             <button
               onClick={() => navigate("/account")}
-              className="text-xs font-bold px-3 py-1 rounded-full transition-all hover:opacity-80"
-              style={{ background: "rgba(0,212,133,0.15)", color: "#00D485", border: "1px solid rgba(0,212,133,0.2)" }}
+              className="text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1 transition-all hover:opacity-80"
+              style={{ background: "rgba(0,212,133,0.12)", color: "#00D485", border: "1px solid rgba(0,212,133,0.2)" }}
             >
-              Upgrade →
+              Upgrade <ArrowRight size={10} />
             </button>
           </div>
-          <div
-            className="h-2 rounded-full overflow-hidden mb-2"
-            style={{ background: "rgba(255,255,255,0.07)" }}
-          >
+          <div className="h-2 rounded-full overflow-hidden mb-2" style={{ background: "rgba(255,255,255,0.07)" }}>
             <div
               className="h-2 rounded-full transition-all"
               style={{
                 width: `${progress * 100}%`,
                 background: progress > 0.8
                   ? "linear-gradient(90deg, #EF4444, #F59E0B)"
-                  : "linear-gradient(90deg, #00D485, #00A86B)",
+                  : "linear-gradient(90deg, #00D485, #7C5CF6)",
+                boxShadow: `0 0 8px ${progress > 0.8 ? "rgba(239,68,68,0.5)" : "rgba(0,212,133,0.5)"}`,
               }}
             />
           </div>
-          <p className="text-white/35 text-xs">
-            {Math.floor(used / 60)}:{String(used % 60).padStart(2, "0")} used of{" "}
-            {Math.floor(max / 60)} min
+          <p className="text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>
+            {Math.floor(used / 60)}:{String(used % 60).padStart(2, "0")} used of {Math.floor(max / 60)} min
           </p>
         </div>
       )}
 
       {/* ── Quick Actions ── */}
-      <div>
-        <p className="text-white/70 text-xs font-bold uppercase tracking-widest mb-3">Quick Actions</p>
+      <div className="fade-up fade-up-2">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] mb-3" style={{ color: "rgba(255,255,255,0.35)" }}>
+          Quick Actions
+        </p>
         <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
-          {ACTIONS.map((a) => (
+          {ACTIONS.map((a, i) => (
             <button
               key={a.label}
               onClick={() => navigate(a.route)}
-              className="flex flex-col items-center gap-2 p-4 rounded-2xl transition-all hover:-translate-y-0.5 hover:shadow-lg"
+              className="card-lift glow-border flex flex-col items-center gap-2.5 p-4 rounded-2xl group relative overflow-hidden"
               style={{
-                background: "#13131E",
+                background: "rgba(15,15,30,0.8)",
                 border: "1px solid rgba(255,255,255,0.07)",
-              }}
-              onMouseEnter={e => {
-                (e.currentTarget as HTMLElement).style.border = `1px solid ${a.color}40`;
-                (e.currentTarget as HTMLElement).style.boxShadow = `0 8px 24px ${a.glow}`;
-              }}
-              onMouseLeave={e => {
-                (e.currentTarget as HTMLElement).style.border = "1px solid rgba(255,255,255,0.07)";
-                (e.currentTarget as HTMLElement).style.boxShadow = "none";
+                backdropFilter: "blur(12px)",
               }}
             >
+              {/* Glow blob on hover */}
               <div
-                className="w-11 h-11 rounded-xl flex items-center justify-center"
-                style={{ backgroundColor: a.color + "18" }}
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl"
+                style={{ background: `radial-gradient(circle at center, ${a.color}15 0%, transparent 70%)` }}
+              />
+              <div
+                className="relative w-12 h-12 rounded-2xl flex items-center justify-center"
+                style={{ background: `${a.color}15`, border: `1px solid ${a.color}25` }}
               >
-                <a.icon size={20} style={{ color: a.color }} />
+                <a.icon size={22} style={{ color: a.color }} />
               </div>
-              <span className="text-white/70 text-xs font-semibold text-center leading-tight">{a.label}</span>
+              <div className="relative text-center">
+                <p className="text-white text-xs font-bold leading-tight">{a.label}</p>
+                <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.65rem" }}>{a.sub}</p>
+              </div>
             </button>
           ))}
         </div>
       </div>
 
-      {/* ── AI Banner ── */}
+      {/* ── AI Studio Banner ── */}
       <div
-        className="rounded-2xl p-5 relative overflow-hidden"
+        className="fade-up fade-up-3 relative rounded-2xl overflow-hidden cursor-pointer"
         style={{
-          background: "linear-gradient(135deg, #1C1427 0%, #241838 100%)",
-          border: "1px solid rgba(124,92,246,0.25)",
-          boxShadow: "0 0 30px rgba(124,92,246,0.08)",
+          background: "linear-gradient(135deg, #120D28 0%, #1A1040 50%, #120D28 100%)",
+          border: "1px solid rgba(124,92,246,0.3)",
+          boxShadow: "0 0 40px rgba(124,92,246,0.08)",
         }}
+        onClick={() => user.tier !== "pro" && navigate("/account")}
       >
-        <div
-          className="absolute top-0 right-0 w-40 h-40 rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle, rgba(124,92,246,0.12) 0%, transparent 70%)" }}
-        />
-        <div className="relative flex items-start gap-3">
+        {/* Animated orb */}
+        <div className="absolute right-0 top-0 w-48 h-48 pointer-events-none"
+          style={{ background: "radial-gradient(circle, rgba(124,92,246,0.15) 0%, transparent 70%)", transform: "translate(20%,-20%)" }} />
+        <div className="absolute left-1/2 bottom-0 w-40 h-32 pointer-events-none"
+          style={{ background: "radial-gradient(circle, rgba(255,107,157,0.08) 0%, transparent 70%)" }} />
+
+        <div className="relative p-5 flex items-start gap-4">
           <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 mt-0.5"
-            style={{ background: "rgba(124,92,246,0.2)" }}
+            className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 float"
+            style={{ background: "rgba(124,92,246,0.2)", border: "1px solid rgba(124,92,246,0.3)", boxShadow: "0 0 20px rgba(124,92,246,0.2)" }}
           >
-            <Sparkles size={20} style={{ color: "#7C5CF6" }} />
+            <Sparkles size={22} style={{ color: "#A78BFA" }} />
           </div>
-          <div className="flex-1">
-            <h3 className="text-white font-bold text-base mb-1">AI-Powered Studio</h3>
-            <p className="text-white/50 text-sm mb-3">
-              Enhance audio, perfect video, generate music with your voice, blend your voice with top artists, and get smart editing suggestions. Pro exclusive.
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <h3 className="text-white font-bold text-base">AI-Powered Studio</h3>
+              <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(124,92,246,0.2)", color: "#A78BFA" }}>
+                PRO
+              </span>
+            </div>
+            <p className="text-sm mb-3" style={{ color: "rgba(255,255,255,0.45)" }}>
+              Generate music, blend your voice with top artists, smart edits, AI captions — all in one creative engine.
             </p>
             {user.tier !== "pro" ? (
               <button
-                onClick={() => navigate("/account")}
-                className="font-bold px-4 py-2 rounded-xl text-sm transition-all hover:opacity-90"
-                style={{ background: "linear-gradient(135deg, #7C5CF6, #9D6FF7)", color: "white" }}
+                className="font-bold px-5 py-2 rounded-xl text-sm flex items-center gap-2 transition-all hover:opacity-90"
+                style={{
+                  background: "linear-gradient(135deg, #7C5CF6, #A78BFA)",
+                  color: "white",
+                  boxShadow: "0 0 20px rgba(124,92,246,0.4)",
+                }}
               >
+                <Zap size={14} fill="white" />
                 Unlock AI — Pro $9.99/mo or $120/yr
               </button>
             ) : (
-              <div className="flex items-center gap-2 text-sm" style={{ color: "#7C5CF6" }}>
-                <Sparkles size={14} /><span className="font-semibold">AI Studio active — Pro plan</span>
+              <div className="flex items-center gap-2 text-sm" style={{ color: "#A78BFA" }}>
+                <Sparkles size={14} />
+                <span className="font-semibold">AI Studio active</span>
+                <span style={{ color: "rgba(255,255,255,0.3)" }}>· Pro plan</span>
               </div>
             )}
           </div>
@@ -205,24 +237,34 @@ export default function HomePage() {
       </div>
 
       {/* ── Recent Projects ── */}
-      <div>
-        <p className="text-white/70 text-xs font-bold uppercase tracking-widest mb-3">Recent Projects</p>
+      <div className="fade-up fade-up-4">
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-xs font-bold uppercase tracking-[0.2em]" style={{ color: "rgba(255,255,255,0.35)" }}>
+            Recent Projects
+          </p>
+          <button onClick={() => navigate("/editor")} className="text-xs font-semibold flex items-center gap-1"
+            style={{ color: "rgba(0,212,133,0.7)" }}>
+            All <ArrowRight size={10} />
+          </button>
+        </div>
         {projects.length === 0 ? (
           <div
             className="p-8 text-center rounded-2xl"
-            style={CARD}
+            style={{ background: "rgba(15,15,30,0.7)", border: "1px solid rgba(255,255,255,0.06)" }}
           >
             <div
-              className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3"
-              style={{ background: "rgba(255,255,255,0.04)" }}
+              className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
+              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}
             >
-              <Film size={28} className="text-white/20" />
+              <Film size={30} style={{ color: "rgba(255,255,255,0.15)" }} />
             </div>
-            <p className="text-white/40 mb-4 text-sm">No projects yet — start recording or editing!</p>
+            <p className="text-sm mb-4" style={{ color: "rgba(255,255,255,0.35)" }}>
+              No projects yet — your creative journey starts here.
+            </p>
             <button
               onClick={() => navigate("/studio")}
-              className="font-bold px-5 py-2.5 rounded-xl text-sm transition-all hover:opacity-90"
-              style={{ background: "linear-gradient(135deg, #00D485, #00A86B)", color: "white" }}
+              className="font-bold px-6 py-2.5 rounded-xl text-sm transition-all hover:opacity-90"
+              style={{ background: "linear-gradient(135deg, #00D485, #00A86B)", color: "white", boxShadow: "0 0 20px rgba(0,212,133,0.3)" }}
             >
               Start Creating
             </button>
@@ -232,25 +274,25 @@ export default function HomePage() {
             {projects.slice(0, 3).map((p) => (
               <div
                 key={p.id}
-                className="flex items-center gap-3 p-4 rounded-xl"
-                style={CARD}
+                className="card-lift flex items-center gap-4 p-4 rounded-2xl"
+                style={{ background: "rgba(15,15,30,0.7)", border: "1px solid rgba(255,255,255,0.06)" }}
               >
                 <div
-                  className="w-12 h-9 rounded-lg flex items-center justify-center shrink-0"
-                  style={{ background: "rgba(0,212,133,0.1)" }}
+                  className="w-14 h-10 rounded-xl flex items-center justify-center shrink-0"
+                  style={{ background: "rgba(0,212,133,0.08)", border: "1px solid rgba(0,212,133,0.15)" }}
                 >
                   <Film size={18} style={{ color: "#00D485" }} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-white font-semibold text-sm">{p.name}</p>
-                  <p className="text-white/35 text-xs">
+                  <p className="text-sm font-semibold text-white">{p.name}</p>
+                  <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.3)" }}>
                     {p.clipCount} clips · {Math.floor(p.duration / 60)}:{String(p.duration % 60).padStart(2, "0")}
                   </p>
                 </div>
                 <button
                   onClick={() => navigate("/editor")}
-                  className="text-xs font-bold px-3 py-1.5 rounded-lg transition-all hover:opacity-80"
-                  style={{ background: "rgba(0,212,133,0.12)", color: "#00D485" }}
+                  className="text-xs font-bold px-3 py-1.5 rounded-lg"
+                  style={{ background: "rgba(0,212,133,0.1)", color: "#00D485", border: "1px solid rgba(0,212,133,0.2)" }}
                 >
                   Edit
                 </button>
@@ -261,38 +303,43 @@ export default function HomePage() {
       </div>
 
       {/* ── Scheduled Posts ── */}
-      <div className="pb-4">
-        <p className="text-white/70 text-xs font-bold uppercase tracking-widest mb-3">Scheduled Posts</p>
+      <div className="fade-up fade-up-5 pb-4">
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-xs font-bold uppercase tracking-[0.2em]" style={{ color: "rgba(255,255,255,0.35)" }}>
+            Scheduled Posts
+          </p>
+          <button onClick={() => navigate("/social")} className="text-xs font-semibold flex items-center gap-1"
+            style={{ color: "rgba(0,212,133,0.7)" }}>
+            Manage <ArrowRight size={10} />
+          </button>
+        </div>
         {scheduledPosts.length === 0 ? (
           <div
             className="flex items-center gap-4 p-4 rounded-2xl"
-            style={CARD}
+            style={{ background: "rgba(15,15,30,0.7)", border: "1px solid rgba(255,255,255,0.06)" }}
           >
-            <Calendar size={24} className="text-white/20 shrink-0" />
-            <p className="text-white/35 text-sm">
+            <Calendar size={22} style={{ color: "rgba(255,255,255,0.2)" }} className="shrink-0" />
+            <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>
               No posts scheduled — connect your social accounts to get started.
             </p>
           </div>
         ) : (
           <div className="space-y-2">
             {scheduledPosts.slice(0, 3).map((p) => (
-              <div
-                key={p.id}
-                className="flex items-center gap-3 p-3 rounded-xl"
-                style={CARD}
-              >
-                <Calendar size={18} style={{ color: "#0EA5E9" }} className="shrink-0" />
+              <div key={p.id} className="flex items-center gap-3 p-3 rounded-xl"
+                style={{ background: "rgba(15,15,30,0.7)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <Calendar size={16} style={{ color: "#0EA5E9" }} className="shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-white/80 text-sm font-semibold truncate">{p.caption || "No caption"}</p>
-                  <p className="text-white/30 text-xs">{p.platforms.join(", ")} · {p.scheduledAt}</p>
+                  <p className="text-sm font-semibold text-white truncate">{p.caption || "No caption"}</p>
+                  <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.3)" }}>
+                    {p.platforms.join(", ")} · {p.scheduledAt}
+                  </p>
                 </div>
                 <span
                   className="text-xs font-bold px-2 py-0.5 rounded-full shrink-0"
-                  style={
-                    p.status === "pending"
-                      ? { background: "rgba(245,158,11,0.15)", color: "#F59E0B" }
-                      : { background: "rgba(0,212,133,0.15)", color: "#00D485" }
-                  }
+                  style={p.status === "pending"
+                    ? { background: "rgba(245,158,11,0.12)", color: "#F59E0B" }
+                    : { background: "rgba(0,212,133,0.12)", color: "#00D485" }}
                 >
                   {p.status}
                 </span>

@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Camera, CameraOff, Mic, MicOff, Radio, Monitor, Sparkles, Shield, X, Lock } from "lucide-react";
+import { Camera, CameraOff, Mic, MicOff, Radio, Monitor, Sparkles, Shield, X, Lock, Zap } from "lucide-react";
 import { useStore } from "../store/useStore";
 import { TIER_LIMITS } from "../types";
 import { ALL_SKINS } from "../data/skins";
 
-// ─── Sticker SVGs ────────────────────────────────────────────────────────────
+// ─── Sticker SVGs (unchanged) ─────────────────────────────────────────────────
 
 function StarSticker({ size=44 }: { size?:number }) {
   return (
@@ -156,8 +156,6 @@ function EiffelSticker({ size=52 }: { size?:number }) {
       <line x1="12" y1="56" x2="44" y2="56" stroke="#8B7355" strokeWidth="2"/>
       <line x1="18" y1="38" x2="38" y2="38" stroke="#8B7355" strokeWidth="1.5"/>
       <line x1="22" y1="24" x2="34" y2="24" stroke="#8B7355" strokeWidth="1.5"/>
-      <path d="M10 70 Q16 62 22 70" fill="none" stroke="#8B7355" strokeWidth="1.5"/>
-      <path d="M34 70 Q40 62 46 70" fill="none" stroke="#8B7355" strokeWidth="1.5"/>
     </svg>
   );
 }
@@ -201,6 +199,31 @@ const STICKERS: Sticker[] = [
   { id:"redhrt",   label:"Red Heart",    free:false, unlocksAt:"pro",   Component:RedHeartSticker,     overlayPos:"bottom-16 left-14" },
 ];
 
+// ── Animated waveform for audio visualizer ────────────────────────────────────
+function Waveform({ active, color = "#00D485" }: { active: boolean; color?: string }) {
+  const bars = 32;
+  return (
+    <div className="flex items-end gap-0.5 h-8">
+      {Array.from({ length: bars }).map((_, i) => (
+        <div
+          key={i}
+          className="flex-1 rounded-full"
+          style={{
+            background: color,
+            height: "100%",
+            opacity: active ? (0.4 + (i % 4) * 0.15) : 0.15,
+            transformOrigin: "bottom",
+            transform: active ? undefined : "scaleY(0.2)",
+            animation: active ? `wave-bar ${0.4 + (i % 5) * 0.12}s ease-in-out infinite` : "none",
+            animationDelay: active ? `${(i * 0.06) % 0.7}s` : "0s",
+            transition: "transform 0.3s, opacity 0.3s",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 export default function StudioPage() {
   const navigate = useNavigate();
   const { user, isRecording, isStreaming, setIsRecording, setIsStreaming, addRecordingSeconds, selectedSkinId, setSelectedSkin } = useStore();
@@ -222,11 +245,7 @@ export default function StudioPage() {
 
   const startCamera = async () => {
     try {
-      // facingMode: "user" ensures front camera on mobile
-      const s = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "user" },
-        audio: micOn,
-      });
+      const s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: micOn });
       setStream(s);
       if (videoRef.current) videoRef.current.srcObject = s;
       setCamOn(true);
@@ -250,11 +269,9 @@ export default function StudioPage() {
       setScreenStream(s);
       if (videoRef.current) videoRef.current.srcObject = s;
       setScreenSharing(true);
-      // Auto-stop when user ends share via browser UI
       s.getVideoTracks()[0].addEventListener("ended", () => {
         setScreenSharing(false);
         setScreenStream(null);
-        // Restore camera stream if cam was on
         if (camOn && stream && videoRef.current) videoRef.current.srcObject = stream;
       });
     } catch {
@@ -303,29 +320,54 @@ export default function StudioPage() {
     return false;
   };
 
-  const freeStickers  = STICKERS.filter((s) => s.free);
-  const paidStickers  = STICKERS.filter((s) => !s.free);
-
-  const DARK = { background: "#13131E", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "0.75rem" };
+  const freeStickers = STICKERS.filter((s) => s.free);
+  const paidStickers = STICKERS.filter((s) => !s.free);
 
   return (
-    <div className="flex flex-col h-full" style={{ background: "#0D0D14" }}>
+    <div className="flex flex-col h-full" style={{ background: "transparent" }}>
 
-      {/* ── Camera / Screen preview ── */}
+      {/* ── Camera / Screen Preview ── */}
       <div
-        className="relative flex-1 min-h-64 max-h-96 flex items-center justify-center overflow-hidden"
-        style={{ background: "#000" }}
+        className="relative flex-shrink-0 overflow-hidden"
+        style={{
+          height: "min(55vw, 340px)",
+          background: "#000",
+        }}
       >
+        {/* Neon corner frames */}
+        {(camOn || screenSharing) && (
+          <>
+            <div className="absolute top-2 left-2 w-8 h-8 pointer-events-none z-10"
+              style={{ borderTop: "2px solid #00D485", borderLeft: "2px solid #00D485", borderRadius: "4px 0 0 0" }} />
+            <div className="absolute top-2 right-2 w-8 h-8 pointer-events-none z-10"
+              style={{ borderTop: "2px solid #00D485", borderRight: "2px solid #00D485", borderRadius: "0 4px 0 0" }} />
+            <div className="absolute bottom-2 left-2 w-8 h-8 pointer-events-none z-10"
+              style={{ borderBottom: "2px solid #00D485", borderLeft: "2px solid #00D485", borderRadius: "0 0 0 4px" }} />
+            <div className="absolute bottom-2 right-2 w-8 h-8 pointer-events-none z-10"
+              style={{ borderBottom: "2px solid #00D485", borderRight: "2px solid #00D485", borderRadius: "0 0 4px 0" }} />
+            {/* Scan line */}
+            <div className="scan-line z-10" />
+          </>
+        )}
+
         {(camOn || screenSharing) ? (
           <video ref={videoRef} autoPlay muted playsInline className="w-full h-full object-cover" />
         ) : (
-          <div className="flex flex-col items-center gap-3">
-            <Camera size={60} className="text-white/20" />
-            <p className="text-white/40">Camera is off</p>
+          <div
+            className="flex flex-col items-center justify-center gap-4 h-full"
+            style={{ background: "linear-gradient(135deg, #080812 0%, #0F0F20 100%)" }}
+          >
+            <div
+              className="w-20 h-20 rounded-full flex items-center justify-center float"
+              style={{ background: "rgba(0,212,133,0.08)", border: "2px dashed rgba(0,212,133,0.2)" }}
+            >
+              <Camera size={36} style={{ color: "rgba(0,212,133,0.4)" }} />
+            </div>
+            <p className="text-sm font-medium" style={{ color: "rgba(255,255,255,0.3)" }}>Camera is off</p>
             <button
               onClick={startCamera}
-              className="font-bold px-5 py-2 rounded-xl text-sm transition-all hover:opacity-90"
-              style={{ background: "linear-gradient(135deg, #00D485, #00A86B)", color: "white" }}
+              className="font-bold px-6 py-2.5 rounded-2xl text-sm transition-all hover:opacity-90"
+              style={{ background: "linear-gradient(135deg, #00D485, #00A86B)", color: "white", boxShadow: "0 0 24px rgba(0,212,133,0.4)" }}
             >
               Enable Camera
             </button>
@@ -345,69 +387,81 @@ export default function StudioPage() {
 
         {/* REC badge */}
         {isRecording && (
-          <div className="absolute top-3 left-3 flex items-center gap-2 bg-red-600 px-3 py-1 rounded-full animate-pulse z-10">
-            <div className="w-2 h-2 bg-white rounded-full" />
-            <span className="text-white text-sm font-bold">REC {fmt(timer)}</span>
+          <div className="absolute top-3 left-10 flex items-center gap-2 px-3 py-1.5 rounded-full z-20 rec-active"
+            style={{ background: "#EF4444" }}>
+            <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
+            <span className="text-white text-sm font-bold tracking-widest">REC {fmt(timer)}</span>
           </div>
         )}
-        {/* LIVE badge */}
         {isStreaming && !isRecording && (
-          <div className="absolute top-3 left-3 flex items-center gap-2 bg-red-600 px-3 py-1 rounded-full animate-pulse z-10">
-            <div className="w-2 h-2 bg-white rounded-full" />
-            <span className="text-white text-sm font-bold">LIVE</span>
+          <div className="absolute top-3 left-10 flex items-center gap-2 px-3 py-1.5 rounded-full z-20 rec-active"
+            style={{ background: "#EF4444" }}>
+            <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
+            <span className="text-white text-sm font-bold tracking-widest">LIVE</span>
           </div>
         )}
-        {/* Screen share badge */}
         {screenSharing && (
-          <div className="absolute top-3 right-3 flex items-center gap-2 px-2 py-1 rounded-full z-10"
-            style={{ background: "rgba(124,92,246,0.85)" }}>
+          <div className="absolute top-3 right-10 flex items-center gap-2 px-2.5 py-1 rounded-full z-20"
+            style={{ background: "rgba(124,92,246,0.9)", boxShadow: "0 0 12px rgba(124,92,246,0.5)" }}>
             <Monitor size={12} className="text-white" />
             <span className="text-white text-xs font-bold">SCREEN</span>
           </div>
         )}
 
-        {/* Active skin badge */}
+        {/* Skin badge */}
         {currentSkin && (
           <div
-            className="absolute bottom-3 left-3 w-14 h-14 rounded-full border-2 border-white flex items-center justify-center text-center text-white text-xs font-bold z-10"
-            style={{ backgroundColor: currentSkin.colors[0] + "CC" }}
+            className="absolute bottom-3 left-3 w-14 h-14 rounded-full border-2 border-white/60 flex items-center justify-center text-center text-white text-xs font-bold z-10"
+            style={{ backgroundColor: currentSkin.colors[0] + "CC", boxShadow: "0 0 12px rgba(0,0,0,0.4)" }}
           >
             {currentSkin.name}
           </div>
         )}
 
-        {/* AI Enhanced badge */}
+        {/* AI Enhanced */}
         {aiOn && limit.aiFeatures && (
-          <div className="absolute bottom-3 left-20 flex items-center gap-1 px-2 py-1 rounded-full z-10"
-            style={{ background: "rgba(124,92,246,0.75)" }}>
+          <div className="absolute bottom-3 left-20 flex items-center gap-1 px-2.5 py-1 rounded-full z-10"
+            style={{ background: "rgba(124,92,246,0.85)", boxShadow: "0 0 12px rgba(124,92,246,0.4)" }}>
             <Sparkles size={12} className="text-yellow-300" />
-            <span className="text-white text-xs">AI Enhanced</span>
+            <span className="text-white text-xs font-semibold">AI Enhanced</span>
           </div>
         )}
 
-        {/* Protected badge */}
-        <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-black/60 px-2 py-1 rounded-full z-10">
-          <Shield size={12} className="text-green-400" />
+        {/* Protected */}
+        <div className="absolute bottom-3 right-3 flex items-center gap-1 px-2 py-1 rounded-full z-10"
+          style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(8px)", border: "1px solid rgba(0,212,133,0.2)" }}>
+          <Shield size={11} style={{ color: "#00D485" }} />
           <span className="text-white text-xs">Protected</span>
         </div>
       </div>
 
+      {/* ── Audio waveform ── */}
+      <div
+        className="px-4 pt-3 pb-2"
+        style={{ background: "rgba(8,8,18,0.9)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+      >
+        <Waveform active={camOn || screenSharing || isRecording} color={isRecording ? "#EF4444" : "#00D485"} />
+      </div>
+
       {/* ── Main controls ── */}
-      <div className="px-4 py-4" style={{ background: "#13131E", borderTop: "1px solid rgba(255,255,255,0.07)" }}>
-        <div className="flex justify-around items-center mb-4">
-          {/* Camera toggle */}
+      <div
+        className="px-4 py-4 shrink-0"
+        style={{ background: "rgba(8,8,18,0.95)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+      >
+        <div className="flex justify-around items-center gap-4">
+          {/* Cam toggle */}
           <button
             onClick={camOn ? stopCamera : startCamera}
-            className="flex flex-col items-center gap-1 p-3 rounded-xl transition-all"
+            className="flex flex-col items-center gap-1.5 px-4 py-3 rounded-2xl transition-all"
             style={camOn
-              ? { background: "rgba(0,212,133,0.18)", border: "1px solid rgba(0,212,133,0.3)" }
-              : { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }
+              ? { background: "rgba(0,212,133,0.15)", border: "1px solid rgba(0,212,133,0.3)", boxShadow: "0 0 16px rgba(0,212,133,0.15)" }
+              : { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }
             }
           >
             {camOn
               ? <Camera size={22} style={{ color: "#00D485" }} />
-              : <CameraOff size={22} className="text-white/40" />}
-            <span className="text-xs" style={{ color: camOn ? "#00D485" : "rgba(255,255,255,0.4)" }}>
+              : <CameraOff size={22} style={{ color: "rgba(255,255,255,0.4)" }} />}
+            <span className="text-xs font-semibold" style={{ color: camOn ? "#00D485" : "rgba(255,255,255,0.4)" }}>
               {camOn ? "Cam On" : "Cam Off"}
             </span>
           </button>
@@ -415,14 +469,18 @@ export default function StudioPage() {
           {/* REC button */}
           <button
             onClick={isRecording ? stopRecording : startRecording}
-            className="w-20 h-20 rounded-full flex items-center justify-center transition-all"
-            style={{ border: `3px solid ${isRecording ? "#EF4444" : "#00D485"}` }}
+            className="w-20 h-20 rounded-full flex items-center justify-center transition-all relative"
+            style={{
+              border: `3px solid ${isRecording ? "#EF4444" : "#00D485"}`,
+              boxShadow: isRecording ? "0 0 30px rgba(239,68,68,0.5)" : "0 0 20px rgba(0,212,133,0.3)",
+            }}
           >
+            {isRecording && <div className="live-ring absolute inset-0 rounded-full" style={{ background: "#EF4444" }} />}
             <div
-              className="transition-all"
+              className="transition-all relative z-10"
               style={isRecording
-                ? { width: 28, height: 28, borderRadius: 4, background: "#EF4444" }
-                : { width: 52, height: 52, borderRadius: "50%", background: "#00D485" }
+                ? { width: 28, height: 28, borderRadius: 6, background: "#EF4444" }
+                : { width: 52, height: 52, borderRadius: "50%", background: "linear-gradient(135deg, #00D485, #00A86B)" }
               }
             />
           </button>
@@ -433,23 +491,25 @@ export default function StudioPage() {
               if (!limit.canGoLive) { navigate("/account"); return; }
               setIsStreaming(!isStreaming);
             }}
-            className="flex flex-col items-center gap-1 p-3 rounded-xl transition-all"
+            className="flex flex-col items-center gap-1.5 px-4 py-3 rounded-2xl transition-all"
             style={isStreaming
-              ? { background: "rgba(239,68,68,0.18)", border: "1px solid rgba(239,68,68,0.3)" }
-              : { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }
+              ? { background: "rgba(239,68,68,0.15)", border: "1px solid rgba(239,68,68,0.35)", boxShadow: "0 0 16px rgba(239,68,68,0.2)" }
+              : { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }
             }
           >
-            <Radio size={22} style={{ color: isStreaming ? "#EF4444" : limit.canGoLive ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.25)" }} />
-            <span className="text-xs" style={{ color: isStreaming ? "#EF4444" : "rgba(255,255,255,0.4)" }}>
+            <Radio size={22} style={{
+              color: isStreaming ? "#EF4444" : limit.canGoLive ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.25)"
+            }} />
+            <span className="text-xs font-semibold" style={{ color: isStreaming ? "#EF4444" : "rgba(255,255,255,0.4)" }}>
               {isStreaming ? "Stop Live" : !limit.canGoLive ? "🔒 Go Live" : "Go Live"}
             </span>
           </button>
         </div>
 
-        {/* Recording time bar */}
+        {/* Time bar */}
         {remaining !== Infinity && (
-          <div>
-            <div className="flex justify-between text-xs mb-1" style={{ color: "rgba(255,255,255,0.35)" }}>
+          <div className="mt-4">
+            <div className="flex justify-between text-xs mb-1.5" style={{ color: "rgba(255,255,255,0.3)" }}>
               <span>Daily time</span>
               <span style={{ color: "#00D485" }}>{fmt(remaining as number)} remaining</span>
             </div>
@@ -458,7 +518,8 @@ export default function StudioPage() {
                 className="h-full rounded-full transition-all"
                 style={{
                   width: `${Math.max(0, (1 - user.recordingSecondsUsedToday / (limit.dailyRecordingSeconds as number)) * 100)}%`,
-                  background: "linear-gradient(90deg, #00D485, #00A86B)",
+                  background: "linear-gradient(90deg, #00D485, #7C5CF6)",
+                  boxShadow: "0 0 8px rgba(0,212,133,0.5)",
                 }}
               />
             </div>
@@ -466,67 +527,64 @@ export default function StudioPage() {
         )}
       </div>
 
-      {/* ── Options + Skin + Stickers ── */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-5" style={{ background: "#0D0D14" }}>
+      {/* ── Scrollable options ── */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-5">
 
         {/* Studio Options */}
         <div>
-          <p className="text-white/60 font-bold text-sm mb-3 uppercase tracking-widest">Studio Options</p>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] mb-3" style={{ color: "rgba(255,255,255,0.3)" }}>
+            Studio Options
+          </p>
           <div className="space-y-2">
             {[
-              {
-                label: "Mic",
-                icon: micOn ? Mic : MicOff,
-                active: micOn,
-                toggle: () => setMicOn(!micOn),
-                locked: false,
-              },
+              { label: "Microphone", icon: micOn ? Mic : MicOff, active: micOn, toggle: () => setMicOn(!micOn), locked: false, note: "" },
               {
                 label: screenSharing ? "Stop Screen Share" : "Screen Share",
-                icon: Monitor,
-                active: screenSharing,
+                icon: Monitor, active: screenSharing,
                 toggle: screenSharing ? stopScreenShare : startScreenShare,
                 locked: false,
-                note: "Works in browser · Not supported on all mobile browsers",
+                note: "Works in browser · Not available on all mobile browsers",
               },
               {
-                label: "AI Enhancement",
-                icon: Sparkles,
-                active: aiOn,
+                label: "AI Enhancement", icon: Sparkles, active: aiOn,
                 toggle: () => { if (!limit.aiFeatures) { navigate("/account"); return; } setAiOn(!aiOn); },
-                locked: !limit.aiFeatures,
-                lockLabel: "Pro",
+                locked: !limit.aiFeatures, note: "",
               },
             ].map((item) => (
-              <div key={item.label} className="flex items-center gap-3 p-3 rounded-xl" style={DARK}>
+              <div
+                key={item.label}
+                className="flex items-center gap-3 p-3.5 rounded-2xl transition-all"
+                style={{
+                  background: item.active ? "rgba(0,212,133,0.06)" : "rgba(255,255,255,0.03)",
+                  border: `1px solid ${item.active ? "rgba(0,212,133,0.2)" : "rgba(255,255,255,0.06)"}`,
+                }}
+              >
                 <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
-                  style={{ background: "rgba(0,212,133,0.1)" }}
+                  className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                  style={{ background: item.active ? "rgba(0,212,133,0.15)" : "rgba(255,255,255,0.06)" }}
                 >
-                  <item.icon size={18} style={{ color: "#00D485" }} />
+                  <item.icon size={18} style={{ color: item.active ? "#00D485" : "rgba(255,255,255,0.5)" }} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <span className="text-white font-semibold text-sm">{item.label}</span>
-                  {"note" in item && (
-                    <p className="text-white/25 text-xs mt-0.5">{item.note}</p>
-                  )}
+                  <p className="text-white font-semibold text-sm">{item.label}</p>
+                  {item.note && <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.25)" }}>{item.note}</p>}
                 </div>
                 {item.locked ? (
                   <button
                     onClick={() => navigate("/account")}
-                    className="text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 transition-all hover:opacity-80"
+                    className="text-xs font-bold px-3 py-1.5 rounded-xl flex items-center gap-1 transition-all hover:opacity-80"
                     style={{ background: "rgba(124,92,246,0.15)", color: "#7C5CF6", border: "1px solid rgba(124,92,246,0.25)" }}
                   >
-                    <Lock size={10} />{"lockLabel" in item ? item.lockLabel : "Upgrade"}
+                    <Lock size={10} /> Pro
                   </button>
                 ) : (
                   <button
                     onClick={item.toggle}
-                    className="w-12 h-6 rounded-full relative transition-colors shrink-0"
-                    style={{ background: item.active ? "#00D485" : "rgba(255,255,255,0.1)" }}
+                    className="w-12 h-6 rounded-full relative transition-all shrink-0"
+                    style={{ background: item.active ? "#00D485" : "rgba(255,255,255,0.1)", boxShadow: item.active ? "0 0 10px rgba(0,212,133,0.4)" : "none" }}
                   >
                     <div
-                      className="w-5 h-5 bg-white rounded-full absolute top-0.5 transition-all"
+                      className="w-5 h-5 bg-white rounded-full absolute top-0.5 transition-all shadow-sm"
                       style={{ [item.active ? "right" : "left"]: 2 }}
                     />
                   </button>
@@ -536,20 +594,22 @@ export default function StudioPage() {
           </div>
         </div>
 
-        {/* Active Skin */}
+        {/* Skin selector */}
         <div>
-          <p className="text-white/60 font-bold text-sm mb-3 uppercase tracking-widest">Active Skin</p>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] mb-3" style={{ color: "rgba(255,255,255,0.3)" }}>
+            Active Skin
+          </p>
           <div className="flex gap-2 flex-wrap">
             <button
               onClick={() => setSelectedSkin(null)}
               className="w-14 h-14 rounded-xl border-2 flex flex-col items-center justify-center transition-all"
               style={!selectedSkinId
-                ? { background: "rgba(0,212,133,0.12)", borderColor: "#00D485" }
-                : { background: "rgba(255,255,255,0.04)", borderColor: "rgba(255,255,255,0.12)" }
+                ? { background: "rgba(0,212,133,0.1)", borderColor: "#00D485", boxShadow: "0 0 12px rgba(0,212,133,0.2)" }
+                : { background: "rgba(255,255,255,0.04)", borderColor: "rgba(255,255,255,0.1)" }
               }
             >
-              <X size={16} className="text-white/40" />
-              <span className="text-white/40 text-xs">None</span>
+              <X size={14} style={{ color: !selectedSkinId ? "#00D485" : "rgba(255,255,255,0.3)" }} />
+              <span className="text-xs mt-0.5" style={{ color: !selectedSkinId ? "#00D485" : "rgba(255,255,255,0.3)" }}>None</span>
             </button>
             {ALL_SKINS.filter((s) => !s.isPremium || user.unlockedSkins.includes(s.id)).slice(0, 8).map((skin) => (
               <button
@@ -559,6 +619,7 @@ export default function StudioPage() {
                 style={{
                   backgroundColor: skin.colors[0] + "CC",
                   borderColor: selectedSkinId === skin.id ? "#00D485" : "rgba(255,255,255,0.12)",
+                  boxShadow: selectedSkinId === skin.id ? "0 0 12px rgba(0,212,133,0.3)" : "none",
                 }}
               >
                 {skin.name}
@@ -567,34 +628,35 @@ export default function StudioPage() {
             <button
               onClick={() => navigate("/editor")}
               className="w-14 h-14 rounded-xl border-2 border-dashed flex flex-col items-center justify-center text-xs transition-all hover:opacity-80"
-              style={{ borderColor: "rgba(0,212,133,0.3)", color: "#00D485" }}
+              style={{ borderColor: "rgba(0,212,133,0.25)", color: "#00D485" }}
             >
               + More
             </button>
           </div>
         </div>
 
-        {/* ── Stickers ── */}
+        {/* Stickers */}
         <div>
-          <p className="text-white/60 font-bold text-sm mb-1 uppercase tracking-widest">Stickers</p>
-          <p className="text-white/30 text-xs mb-3">Tap to add/remove as overlays on your video</p>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] mb-1" style={{ color: "rgba(255,255,255,0.3)" }}>
+            Stickers
+          </p>
+          <p className="text-xs mb-3" style={{ color: "rgba(255,255,255,0.25)" }}>Tap to add / remove overlays</p>
 
-          {/* Free stickers */}
-          <p className="text-xs font-bold mb-2 uppercase tracking-wider" style={{ color: "#00D485" }}>✨ Free</p>
-          <div className="grid grid-cols-4 gap-2 mb-5">
+          <p className="text-xs font-bold mb-2 uppercase tracking-wider" style={{ color: "#00D485" }}>Free</p>
+          <div className="grid grid-cols-4 gap-2 mb-4">
             {freeStickers.map((s) => {
               const active = activeStickers.includes(s.id);
               return (
                 <button
                   key={s.id}
                   onClick={() => toggleSticker(s.id)}
-                  className="rounded-2xl p-2 flex flex-col items-center gap-1 border-2 transition-all"
+                  className="rounded-2xl p-2 flex flex-col items-center gap-1 border-2 transition-all card-lift"
                   style={active
-                    ? { borderColor: "#00D485", background: "rgba(0,212,133,0.1)" }
-                    : { borderColor: "rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.04)" }
+                    ? { borderColor: "#00D485", background: "rgba(0,212,133,0.1)", boxShadow: "0 0 12px rgba(0,212,133,0.15)" }
+                    : { borderColor: "rgba(255,255,255,0.07)", background: "rgba(255,255,255,0.03)" }
                   }
                 >
-                  <s.Component size={40}/>
+                  <s.Component size={36}/>
                   <span className="text-white text-xs font-semibold">{s.label}</span>
                   {active && <span className="text-xs font-bold" style={{ color: "#00D485" }}>ON</span>}
                 </button>
@@ -602,16 +664,13 @@ export default function StudioPage() {
             })}
           </div>
 
-          {/* Premium stickers — VISIBLE but unclickable for non-subscribers */}
           <div className="flex items-center gap-2 mb-2">
-            <p className="text-xs font-bold uppercase tracking-wider" style={{ color: "#F59E0B" }}>
-              ⭐ Premium Stickers
-            </p>
+            <p className="text-xs font-bold uppercase tracking-wider" style={{ color: "#F59E0B" }}>Premium</p>
             {user.tier === "free" && (
               <button
                 onClick={() => navigate("/account")}
                 className="ml-auto text-xs font-bold px-2.5 py-0.5 rounded-full transition-all hover:opacity-80"
-                style={{ background: "rgba(245,158,11,0.15)", color: "#F59E0B", border: "1px solid rgba(245,158,11,0.25)" }}
+                style={{ background: "rgba(245,158,11,0.12)", color: "#F59E0B", border: "1px solid rgba(245,158,11,0.2)" }}
               >
                 Upgrade to Unlock
               </button>
@@ -625,26 +684,24 @@ export default function StudioPage() {
                 <button
                   key={s.id}
                   onClick={() => unlocked ? toggleSticker(s.id) : navigate("/account")}
-                  className="relative rounded-2xl p-2 flex flex-col items-center gap-1 border-2 transition-all"
+                  className="relative rounded-2xl p-2 flex flex-col items-center gap-1 border-2 transition-all card-lift"
                   style={{
-                    borderColor: active && unlocked ? "#00D485" : unlocked ? "rgba(255,255,255,0.08)" : "rgba(245,158,11,0.25)",
-                    background: active && unlocked ? "rgba(0,212,133,0.1)" : unlocked ? "rgba(255,255,255,0.04)" : "rgba(245,158,11,0.04)",
+                    borderColor: active && unlocked ? "#00D485" : unlocked ? "rgba(255,255,255,0.07)" : "rgba(245,158,11,0.2)",
+                    background: active && unlocked ? "rgba(0,212,133,0.1)" : unlocked ? "rgba(255,255,255,0.03)" : "rgba(245,158,11,0.04)",
                     cursor: unlocked ? "pointer" : "default",
-                    // NOT hidden — sticker is fully visible even when locked
-                    opacity: unlocked ? 1 : 0.85,
                   }}
                 >
-                  <s.Component size={40}/>
+                  <s.Component size={36}/>
                   <span className="text-white text-xs font-semibold text-center leading-tight">{s.label}</span>
                   {active && unlocked && <span className="text-xs font-bold" style={{ color: "#00D485" }}>ON</span>}
-                  {/* Small tier badge in corner — NOT a dark overlay blocking the sticker */}
+                  {/* Small lock badge — sticker fully visible */}
                   {!unlocked && (
                     <div
                       className="absolute top-1 right-1 px-1.5 py-0.5 rounded-full flex items-center gap-0.5"
-                      style={{ background: "rgba(245,158,11,0.85)" }}
+                      style={{ background: "rgba(245,158,11,0.9)", boxShadow: "0 0 6px rgba(245,158,11,0.4)" }}
                     >
-                      <Lock size={8} className="text-white"/>
-                      <span className="text-white text-xs font-bold capitalize leading-none">
+                      <Lock size={7} className="text-white"/>
+                      <span className="text-white leading-none capitalize" style={{ fontSize: "0.6rem", fontWeight: 700 }}>
                         {s.unlocksAt}
                       </span>
                     </div>
@@ -654,7 +711,6 @@ export default function StudioPage() {
             })}
           </div>
         </div>
-
       </div>
     </div>
   );
