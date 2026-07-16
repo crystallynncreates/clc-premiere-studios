@@ -2,13 +2,53 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>CLC Premier Studios</title>
+
+    <!-- PWA manifest -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Theme / status bar colors -->
+    <meta name="theme-color" content="#00D485" />
+    <meta name="msapplication-TileColor" content="#080812" />
+
+    <!-- iOS PWA support -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="CLC Studios" />
+    <link rel="apple-touch-icon" href="/icons/icon-512.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192.png" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/icons/icon.svg" />
+
+    <!-- SEO / Open Graph -->
+    <meta name="description" content="Create, edit, and share music and videos with AI-powered tools. Your creative lab — anytime, anywhere." />
+    <meta property="og:title" content="CLC Premier Studios" />
+    <meta property="og:description" content="Create, edit, and share music and videos with AI-powered tools." />
+    <meta property="og:image" content="/icons/icon-512.png" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="CLC Premier Studios" />
+    <meta name="twitter:description" content="Your AI-powered creative studio — music, video, and social all in one." />
+
+    <!-- Prevent phone number detection on iOS -->
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- Preconnect for Google Fonts (used by the app) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet" />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <!-- Register service worker -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+          navigator.serviceWorker.register('/sw.js').catch(function () {});
+        });
+      }
+    </script>
   </body>
 </html>

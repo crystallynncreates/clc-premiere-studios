@@ -15,3 +15,5 @@ web-build/
 .env*.local
 ios/
 android/
+release.keystore
+*.xcarchive/

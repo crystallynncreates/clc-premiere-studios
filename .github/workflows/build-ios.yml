@@ -1,0 +1,134 @@
+name: Build iOS (App Store)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build web assets
+        run: npm run build
+
+      - name: Initialize Capacitor iOS project
+        run: npx cap add ios
+
+      - name: Sync web assets into iOS project
+        run: npx cap sync ios
+
+      - name: Install CocoaPods dependencies
+        run: |
+          cd ios/App
+          pod install
+
+      # ── CODE SIGNING SETUP ───────────────────────────────────────────────
+      # Before this step works, add these GitHub Repository Secrets:
+      #   APPLE_CERTIFICATE          — your .p12 distribution certificate, base64-encoded
+      #   APPLE_CERTIFICATE_PASSWORD — the .p12 export password
+      #   APPLE_PROVISIONING_PROFILE — your .mobileprovision file, base64-encoded
+      #   APPLE_TEAM_ID              — your 10-character Apple Developer Team ID
+      #   KEYCHAIN_PASSWORD          — any random password for the temp keychain
+      #
+      # How to get them:
+      #   1. In Xcode → Preferences → Accounts → Manage Certificates → export .p12
+      #   2. In developer.apple.com → Profiles → download .mobileprovision
+      #   3. base64 -i file.p12 | pbcopy  (then paste as secret)
+      - name: Import code signing certificate
+        if: ${{ secrets.APPLE_CERTIFICATE != '' }}
+        env:
+          CERTIFICATE_BASE64: ${{ secrets.APPLE_CERTIFICATE }}
+          CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          CERTIFICATE_PATH=$RUNNER_TEMP/cert.p12
+          KEYCHAIN_PATH=$RUNNER_TEMP/signing.keychain-db
+          echo "$CERTIFICATE_BASE64" | base64 --decode -o "$CERTIFICATE_PATH"
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security import "$CERTIFICATE_PATH" -P "$CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
+          security list-keychain -d user -s "$KEYCHAIN_PATH"
+
+      - name: Install provisioning profile
+        if: ${{ secrets.APPLE_PROVISIONING_PROFILE != '' }}
+        env:
+          PROVISIONING_PROFILE_BASE64: ${{ secrets.APPLE_PROVISIONING_PROFILE }}
+        run: |
+          PP_PATH=$RUNNER_TEMP/profile.mobileprovision
+          echo "$PROVISIONING_PROFILE_BASE64" | base64 --decode -o "$PP_PATH"
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp "$PP_PATH" ~/Library/MobileDevice/Provisioning\ Profiles/
+
+      # ── ARCHIVE & EXPORT ────────────────────────────────────────────────
+      - name: Build and archive (unsigned — for testing)
+        if: ${{ secrets.APPLE_CERTIFICATE == '' }}
+        run: |
+          xcodebuild \
+            -workspace ios/App/App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -destination "generic/platform=iOS Simulator" \
+            build
+
+      - name: Build and archive (signed — for App Store)
+        if: ${{ secrets.APPLE_CERTIFICATE != '' }}
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          xcodebuild \
+            -workspace ios/App/App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -destination "generic/platform=iOS" \
+            -archivePath $RUNNER_TEMP/App.xcarchive \
+            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
+            CODE_SIGN_STYLE=Manual \
+            archive
+
+      - name: Export IPA
+        if: ${{ secrets.APPLE_CERTIFICATE != '' }}
+        run: |
+          cat > $RUNNER_TEMP/export-options.plist << 'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key><string>app-store</string>
+            <key>teamID</key><string>${{ secrets.APPLE_TEAM_ID }}</string>
+            <key>uploadBitcode</key><false/>
+            <key>compileBitcode</key><false/>
+          </dict>
+          </plist>
+          EOF
+          xcodebuild \
+            -exportArchive \
+            -archivePath $RUNNER_TEMP/App.xcarchive \
+            -exportOptionsPlist $RUNNER_TEMP/export-options.plist \
+            -exportPath $RUNNER_TEMP/ipa
+
+      - name: Upload IPA
+        if: ${{ secrets.APPLE_CERTIFICATE != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: clc-release-ipa
+          path: ${{ runner.temp }}/ipa/CLC Premier Studios.ipa
+          retention-days: 90
+
+      - name: Clean up keychain
+        if: always() && ${{ secrets.APPLE_CERTIFICATE != '' }}
+        run: security delete-keychain $RUNNER_TEMP/signing.keychain-db
